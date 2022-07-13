@@ -184,7 +184,7 @@ public class skyblockfeatures {
     public void onChat(PlayerTickEvent event) {
         if(!a && getVersion() != VERSION) {
             a = true;
-            "TEST"
+            
             ClickEvent versionCheckChatClickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, 
             "https://drive.google.com/u/0/uc?id=1JTCpU6PoE1cBqQ2teOzv62HkGUpE_2Uz&export=download");
             ChatStyle clickableChatStyle = new ChatStyle().setChatClickEvent(versionCheckChatClickEvent);
