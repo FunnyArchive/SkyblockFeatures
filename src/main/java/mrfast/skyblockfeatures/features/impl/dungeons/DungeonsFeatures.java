@@ -91,6 +91,10 @@ public class DungeonsFeatures {
     @SubscribeEvent
     public void onWorldChanges(WorldEvent.Load event) {
         count = 0;
+        dungeonFloor = null;
+        hasBossSpawned = false;
+        bloodguy = null;
+        livid = null;
     }
 
     String delimiter = EnumChatFormatting.AQUA.toString() + EnumChatFormatting.STRIKETHROUGH.toString() + "" + EnumChatFormatting.BOLD + "--------------------------------------";
@@ -291,13 +295,5 @@ public class DungeonsFeatures {
                 }
             }
         }
-    }
-
-    @SubscribeEvent
-    public void onWorldChange(WorldEvent.Load event) {
-        dungeonFloor = null;
-        hasBossSpawned = false;
-        bloodguy = null;
-        livid = null;
     }
 }

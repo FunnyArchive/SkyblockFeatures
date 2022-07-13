@@ -22,7 +22,7 @@ public class PartyGlow {
     public static Thread partyThread = null;
 
     public static void dostuff() {
-        if(skyblockfeatures.config.glowingParty) {
+        if(skyblockfeatures.config.glowingParty && Utils.GetMC().thePlayer != null) {
             party.clear();
             repartyFailList.clear();
 

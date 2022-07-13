@@ -90,7 +90,7 @@ public class CommandAliases {
 	        if (aliases.containsKey(command)) {
                 event.setCanceled(true);
                 try {
-                    String msg = skyblockfeatures.config.commandAliasMode == 0 ? "/" + aliases.get(command) + " " + String.join(" ", args) : "/" + String.format(aliases.get(command), args.toArray());
+                    String msg = "/" + aliases.get(command) + " " + String.join(" ", args);
                     if (event.addToChat) {
                         mc.ingameGUI.getChatGUI().addToSentMessages(msg);
                     }

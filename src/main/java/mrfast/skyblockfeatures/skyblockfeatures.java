@@ -72,7 +72,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import mrfast.skyblockfeatures.commands.AHCommand;
 import mrfast.skyblockfeatures.commands.ArmorCommand;
 import mrfast.skyblockfeatures.commands.BankCommand;
 import mrfast.skyblockfeatures.commands.DungeonsCommand;
@@ -80,7 +79,6 @@ import mrfast.skyblockfeatures.commands.GetkeyCommand;
 import mrfast.skyblockfeatures.commands.GoodbyeCommand;
 import mrfast.skyblockfeatures.commands.HelloCommand;
 import mrfast.skyblockfeatures.commands.InventoryCommand;
-import mrfast.skyblockfeatures.commands.PlayersCommand;
 import mrfast.skyblockfeatures.commands.RepartyCommand;
 import mrfast.skyblockfeatures.commands.ShrugCommand;
 import mrfast.skyblockfeatures.commands.SkillsCommand;
@@ -117,7 +115,6 @@ import mrfast.skyblockfeatures.features.impl.events.JerryTimer;
 import mrfast.skyblockfeatures.features.impl.events.MayorJerry;
 import mrfast.skyblockfeatures.features.impl.glowingstuff.PartyGlow;
 import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
-import mrfast.skyblockfeatures.features.impl.handlers.CommandAliases;
 import mrfast.skyblockfeatures.features.impl.handlers.KeyShortcuts;
 import mrfast.skyblockfeatures.features.impl.hidestuff.HideStuff;
 import mrfast.skyblockfeatures.features.impl.mining.CommisionsTracker;
@@ -149,7 +146,7 @@ import mrfast.skyblockfeatures.utils.Utils;
 public class skyblockfeatures {
     public static final String MODID = "skyblockfeatures";
     public static final String MOD_NAME = "skyblockfeatures";
-    public static final String VERSION = "0.3-pre4";
+    public static final String VERSION = "1.0";
     public static final Minecraft mc = Minecraft.getMinecraft();
 
     public static Config config = new Config();
@@ -178,68 +175,56 @@ public class skyblockfeatures {
         ClientRegistry.registerKeyBinding(this.keyPerspective);
     }
     
-    boolean a = false;
-    String delimiter = EnumChatFormatting.AQUA.toString() + EnumChatFormatting.STRIKETHROUGH.toString() + "" + EnumChatFormatting.BOLD + "--------------------------------------";
-    @SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
-    public void onChat(PlayerTickEvent event) {
-        if(!a && getVersion() != VERSION) {
-            a = true;
+    // boolean a = false;
+    // String delimiter = EnumChatFormatting.AQUA.toString() + EnumChatFormatting.STRIKETHROUGH.toString() + "" + EnumChatFormatting.BOLD + "--------------------------------------";
+    // @SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
+    // public void onChat(PlayerTickEvent event) {
+    //     if(!a && getVersion() != VERSION) {
+    //         a = true;
             
-            ClickEvent versionCheckChatClickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, 
-            "https://drive.google.com/u/0/uc?id=1JTCpU6PoE1cBqQ2teOzv62HkGUpE_2Uz&export=download");
-            ChatStyle clickableChatStyle = new ChatStyle().setChatClickEvent(versionCheckChatClickEvent);
-            ChatComponentText versionWarningChatComponent = 
-            new ChatComponentText(EnumChatFormatting.RED+"Your running an outdated version of Skyblock! Click Here to update.");
-            versionWarningChatComponent.setChatStyle(clickableChatStyle);
-            // mc.thePlayer.addChatMessage(versionWarningChatComponent);
-            Utils.GetMC().thePlayer.addChatMessage(
-                    new ChatComponentText(delimiter)
-                    .appendText("\n")
-                    .appendSibling(versionWarningChatComponent)
-                    .appendText("\n")
-                    .appendSibling(new ChatComponentText(delimiter))
-            );
-        }
-    }
-
-    public static String versionURL = "https://raw.githubusercontent.com/MrFast-js/Why_Are_You_Here/main/version.txt"; // for template / example
-
-    public static String getVersion() {
-        String versionNumber = null;
-        try {
-            final URL url = new URL(versionURL);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-            String inputText = bufferedReader.readLine();
-            return inputText;
-        }catch (Exception exception){
-            FMLLog.getLogger().info("There was a error getting the version Number");
-        }
-        return versionNumber;
-    }
-    
-
-    // public static FriendManager GetFriendManager()
-    // {
-    //     return m_FriendManager;
+    //         ClickEvent versionCheckChatClickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, 
+    //         "https://drive.google.com/u/0/uc?id=1JTCpU6PoE1cBqQ2teOzv62HkGUpE_2Uz&export=download");
+    //         ChatStyle clickableChatStyle = new ChatStyle().setChatClickEvent(versionCheckChatClickEvent);
+    //         ChatComponentText versionWarningChatComponent = 
+    //         new ChatComponentText(EnumChatFormatting.RED+"Your running an outdated version of Skyblock! Click Here to update.");
+    //         versionWarningChatComponent.setChatStyle(clickableChatStyle);
+    //         // mc.thePlayer.addChatMessage(versionWarningChatComponent);
+    //         Utils.GetMC().thePlayer.addChatMessage(
+    //                 new ChatComponentText(delimiter)
+    //                 .appendText("\n")
+    //                 .appendSibling(versionWarningChatComponent)
+    //                 .appendText("\n")
+    //                 .appendSibling(new ChatComponentText(delimiter))
+    //         );
+    //     }
     // }
 
+    // public static String versionURL = ""; // for template
+
+    // public static String getVersion() {
+    //     String versionNumber = null;
+    //     try {
+    //         final URL url = new URL(versionURL);
+    //         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
+    //         String inputText = bufferedReader.readLine();
+    //         return inputText;
+    //     }catch (Exception exception){
+    //         FMLLog.getLogger().info("There was a error getting the version Number");
+    //     }
+    //     return versionNumber;
+    // }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        // GoldenEnchants.init();
         try {
             // DiscordRPC.INSTANCE.start();
         } catch (NoClassDefFoundError e) {
             e.printStackTrace();
         }
         config.preload();
-        // ModCoreInstaller.initializeModCore(mc.mcDataDir);
 
-        EssentialAPI.getCommandRegistry().registerCommand(new configCommand());
+        // EssentialAPI.getCommandRegistry().registerCommand(new configCommand());
         EssentialAPI.getCommandRegistry().registerCommand(new ViewModelCommand());
-        // ClientCommandHandler.instance.registerCommand(new testcommand());
-        // ClientCommandHandler.instance.registerCommand(new HollowWaypointCommand());
-        // EssentialAPI.getCommandRegistry().registerCommand(new TimerCommand());
 
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new ChatListener());
@@ -248,11 +233,9 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(SBInfo.getInstance());
 
         MinecraftForge.EVENT_BUS.register(new SpamHider());
-
         MinecraftForge.EVENT_BUS.register(new AuctionData());
         MinecraftForge.EVENT_BUS.register(new AuctionPriceOverlay());
         MinecraftForge.EVENT_BUS.register(new ChestProfit());
-        MinecraftForge.EVENT_BUS.register(new CommandAliases());
         MinecraftForge.EVENT_BUS.register(new DamageSplash());
         MinecraftForge.EVENT_BUS.register(new DungeonsFeatures());
         MinecraftForge.EVENT_BUS.register(new FarmingFeatures());
@@ -261,22 +244,15 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new MayorJerry());
         MinecraftForge.EVENT_BUS.register(new MiningFeatures());
         MinecraftForge.EVENT_BUS.register(new MiscFeatures());
-
-        // My Own Additions:
-        // Dungeon Stuff
         MinecraftForge.EVENT_BUS.register(new DungeonBlocks());
         MinecraftForge.EVENT_BUS.register(new DamageOverlays());
         MinecraftForge.EVENT_BUS.register(new Nametags());
-        
         MinecraftForge.EVENT_BUS.register(new ConjuringCooldown());
-        
         MinecraftForge.EVENT_BUS.register(new LockingSlots());
         MinecraftForge.EVENT_BUS.register(new PartyGlow());
-        // Action Bar Display Stuff
         MinecraftForge.EVENT_BUS.register(new FavoritePets());
         MinecraftForge.EVENT_BUS.register(new SpeedDisplay());
         MinecraftForge.EVENT_BUS.register(new EffectiveHealthDisplay());
-
         MinecraftForge.EVENT_BUS.register(new ManaDisplay());
         MinecraftForge.EVENT_BUS.register(new HealthDisplay());
         MinecraftForge.EVENT_BUS.register(new SecretDisplay());
@@ -285,20 +261,16 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new HideStuff());
         MinecraftForge.EVENT_BUS.register(new HealthBarFeature());
         MinecraftForge.EVENT_BUS.register(new ActionBarListener());
-        // Helpers
         MinecraftForge.EVENT_BUS.register(new CompactChat());
         MinecraftForge.EVENT_BUS.register(new BetterParties());
         MinecraftForge.EVENT_BUS.register(new CommisionsTracker());
         MinecraftForge.EVENT_BUS.register(new FairySoulWaypoints());
         MinecraftForge.EVENT_BUS.register(new JerryTimer());
         MinecraftForge.EVENT_BUS.register(new GiftCompassWaypoints());
-        // Items
         MinecraftForge.EVENT_BUS.register(new CropCounter());
-        // MinecraftForge.EVENT_BUS.register(new GoldenEnchants());
         MinecraftForge.EVENT_BUS.register(new HideGlass());
         MinecraftForge.EVENT_BUS.register(new FishingHelper());
         MinecraftForge.EVENT_BUS.register(new AuctionFeatures());
-        // MinecraftForge.EVENT_BUS.register(new DungeonMap2());
     }
 
     @Mod.EventHandler
@@ -314,6 +286,8 @@ public class skyblockfeatures {
 
         if (!cch.getCommands().containsKey("sky")) cch.registerCommand(new SkyCommand());
 
+        if (!cch.getCommands().containsKey("skyblockfeatures")) cch.registerCommand(new configCommand());
+
         if (!cch.getCommands().containsKey("reparty")) cch.registerCommand(new RepartyCommand());
 
         if (!cch.getCommands().containsKey("goodbye")) cch.registerCommand(new GoodbyeCommand());
@@ -322,8 +296,6 @@ public class skyblockfeatures {
 
         if (!cch.getCommands().containsKey("terminal")) cch.registerCommand(new TerminalCommand());
 
-        if (!cch.getCommands().containsKey("ah")) cch.registerCommand(new AHCommand());
-
         if (!cch.getCommands().containsKey("shrug")) cch.registerCommand(new ShrugCommand());
 
         if (!cch.getCommands().containsKey("bank")) cch.registerCommand(new BankCommand());
@@ -331,8 +303,6 @@ public class skyblockfeatures {
         if (!cch.getCommands().containsKey("armor")) cch.registerCommand(new ArmorCommand());
 
         if (!cch.getCommands().containsKey("inventory")) cch.registerCommand(new InventoryCommand());
-
-        if (!cch.getCommands().containsKey("players")) cch.registerCommand(new PlayersCommand());
 
         if (!cch.getCommands().containsKey("key")) cch.registerCommand(new GetkeyCommand());
 
@@ -374,18 +344,18 @@ public class skyblockfeatures {
 
         if (ticks % 20 == 0) {
             if (mc.thePlayer != null) {
-                try {
+                // try {
                     Utils.checkForSkyblock();
                     Utils.checkForDungeons();
-                    if(!auctionPricesLoaded)
-                    if(AuctionData.lowestBINs.get("GOBLIN_HELMET") != 0) {
-                        auctionPricesLoaded = true;
-                        Utils.GetMC().thePlayer.addChatMessage(new ChatComponentText(ChatFormatting.GREEN+"Auction Prices Loaded!"));
-                        Utils.GetMC().thePlayer.playSound("note.pling", 1, 2);
-                    }
-                } catch (Exception e) {
-                    //TODO: handle exception
-                }
+                //     if(!auctionPricesLoaded)
+                //     if(AuctionData.lowestBINs.get("GOBLIN_HELMET") != 0) {
+                //         auctionPricesLoaded = true;
+                //         Utils.GetMC().thePlayer.addChatMessage(new ChatComponentText(ChatFormatting.GREEN+"Auction Prices Loaded!"));
+                //         Utils.GetMC().thePlayer.playSound("note.pling", 1, 2);
+                //     }
+                // } catch (Exception e) {
+                //     //TODO: handle exception
+                // }
             }
             MinecraftForge.EVENT_BUS.post(new SecondPassedEvent());
             ticks = 0;

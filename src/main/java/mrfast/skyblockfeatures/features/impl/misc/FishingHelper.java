@@ -13,6 +13,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import mrfast.skyblockfeatures.skyblockfeatures;
+import mrfast.skyblockfeatures.core.GuiManager;
 import mrfast.skyblockfeatures.events.PacketEvent;
 import mrfast.skyblockfeatures.events.ReceivePacketEvent;
 import mrfast.skyblockfeatures.utils.Utils;
@@ -36,24 +37,14 @@ public class FishingHelper {
                 if(hook != null) {
                     if(hook.getDistance(packet.getXCoordinate(), packet.getYCoordinate(), packet.getZCoordinate())<0.15 && Utils.GetMC().thePlayer.canEntityBeSeen(hook)) {
                         if(Utils.GetMC().thePlayer.getHeldItem().getItem() instanceof ItemFishingRod) {
-                            double angleNeeded = calculateAngle(Utils.GetMC().thePlayer.posX,Utils.GetMC().thePlayer.posZ,hook.posX,hook.posZ);
-                            float headRotation = -(Utils.GetMC().thePlayer.rotationYawHead%360);
-                            double distance = Math.sqrt(Math.pow(Utils.GetMC().thePlayer.posX-hook.posX,2)+Math.pow(Utils.GetMC().thePlayer.posZ-hook.posZ,2));
-
-                            // if(headRotation>angleNeeded-Math.pow(distance, 2) && headRotation<angleNeeded+Math.pow(distance, 2)) {
-                                reelingIn = true;
-                                Utils.SendMessage(ChatFormatting.GREEN+"Reel it in!");
-                                Utils.GetMC().thePlayer.playSound("note.pling", 1, 2);
-                                Utils.setTimeout(()-> {
-                                    Utils.GetMC().playerController.sendUseItem(Utils.GetMC().thePlayer, Utils.GetMC().thePlayer.worldObj, Utils.GetMC().thePlayer.getHeldItem());
-                                },150);
-                            // }
+                            reelingIn = true;
+                            Utils.SendMessage(ChatFormatting.GREEN+"Reel it in!");
+                            Utils.GetMC().thePlayer.playSound("note.pling", 1, 2);
                         }
                         Utils.setTimeout(()->{
                             reelingIn = false;
                         }, 500);
                     }
-                    
                 }
             }
         }

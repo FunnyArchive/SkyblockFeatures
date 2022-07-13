@@ -10,7 +10,7 @@ apply plugin: 'java'
 
 version = "1.0"
 group = "mrfast.skyblockfeatures"
-archivesBaseName = "Skyblockfeatures"
+archivesBaseName = "Skyblock-Features"
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8

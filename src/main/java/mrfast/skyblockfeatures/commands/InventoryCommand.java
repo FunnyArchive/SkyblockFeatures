@@ -55,6 +55,9 @@ public class InventoryCommand extends CommandBase {
 	HashMap<String, List<String>> itemLores = new HashMap<String, List<String>>();
 	@Override
 	public void processCommand(ICommandSender arg0, String[] arg1) throws CommandException {
+		if(arg1.length == 0) {
+			Utils.SendMessage("§cMissing Arguments! Usage "+getCommandUsage(arg0));
+		}
 		InventoryBasic TargetInventory = new InventoryBasic(arg1[0]+"'s Inventory", true, 54);
 
 		new Thread(() -> {

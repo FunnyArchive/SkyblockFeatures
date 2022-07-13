@@ -44,6 +44,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import mrfast.skyblockfeatures.core.GuiManager;
 import mrfast.skyblockfeatures.events.PacketEvent;
 import mrfast.skyblockfeatures.features.impl.handlers.TextRenderer;
 import mrfast.skyblockfeatures.utils.graphics.colors.ColorFactory;
@@ -952,8 +953,7 @@ public class Utils {
 
     public static void SendMessage(String string)
     {
-        if (Utils.GetMC().ingameGUI != null || Utils.GetMC().thePlayer == null)
-            Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(string));
+        if (Utils.GetMC().ingameGUI != null || Utils.GetMC().thePlayer == null) Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(string));
     }
 
     public static BlockPos getNearbyBlock(Minecraft mc, BlockPos pos, Block... blockTypes) {
@@ -1050,29 +1050,6 @@ public class Utils {
     public static String cleanColour(String in) {
         return in.replaceAll("(?i)\\u00A7.", "");
     }
-
-    public static void drawTitle(String text) {
-		Minecraft mc = Minecraft.getMinecraft();
-		ScaledResolution scaledResolution = new ScaledResolution(mc);
-		
-		int height = scaledResolution.getScaledHeight();
-		int width = scaledResolution.getScaledWidth();
-		int drawHeight = 0;
-		String[] splitText = text.split("\n");
-		for (String title : splitText) {
-			int textLength = mc.fontRendererObj.getStringWidth(title);
-
-			double scale = 4;
-			if (textLength * scale > (width * 0.9F)) {
-				scale = (width * 0.9F) / (float) textLength;
-			}
-
-			int titleX = (int) ((width / 2) - (textLength * scale / 2));
-			int titleY = (int) ((height * 0.45) / scale) + (int) (drawHeight * scale);
-			new TextRenderer(mc, title, titleX, titleY, scale);
-			drawHeight += mc.fontRendererObj.FONT_HEIGHT;
-		}
-	}
     
     public static Minecraft GetMC()
     {
@@ -1461,5 +1438,5 @@ public class Utils {
         // Left
         Utils.drawTexturedRect(x, y, borderWidth, height, 0, 1, 0, 1, GL11.GL_NEAREST);
     }
-    
+
 }

@@ -45,6 +45,7 @@ public class Nametags {
     public Minecraft mc = Minecraft.getMinecraft();
     public RenderGlobal renderGlobal = mc.renderGlobal;
     public static Map<EntityPlayer, String> players = new HashMap<EntityPlayer, String>();
+    public static List<Vec3> NPCs = new ArrayList<>();
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
@@ -143,7 +144,6 @@ public class Nametags {
         GlStateManager.popMatrix();
         }
     }
-    public static List<Vec3> NPCs = new ArrayList<>();
 
     @SubscribeEvent
     public void onRender3Ds(RenderWorldLastEvent event) {

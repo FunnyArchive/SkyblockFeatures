@@ -54,7 +54,7 @@ import net.minecraft.util.EnumChatFormatting;
  */
 public class APIUtil {
 
-    public static CloseableHttpClient client = HttpClients.custom().setUserAgent("skytils/" + skyblockfeatures.VERSION).addInterceptorFirst((HttpRequestInterceptor) (request, context) -> {
+    public static CloseableHttpClient client = HttpClients.custom().setUserAgent("skyblockfeatures/" + skyblockfeatures.VERSION).addInterceptorFirst((HttpRequestInterceptor) (request, context) -> {
         if (!request.containsHeader("Pragma")) request.addHeader("Pragma", "no-cache");
         if (!request.containsHeader("Cache-Control")) request.addHeader("Cache-Control", "no-cache");
     }).build();
@@ -135,7 +135,7 @@ public class APIUtil {
 
                 return gson.fromJson(r.toString(), JsonArray.class);
             } else {
-                player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Request failed. HTTP Error Code: " + response.getStatusLine().getStatusCode()));
+                // player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Request failed. HTTP Error Code: " + response.getStatusLine().getStatusCode()));
             }
         } catch (IOException | URISyntaxException ex) {
             player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "An error has occured. See logs for more details."));

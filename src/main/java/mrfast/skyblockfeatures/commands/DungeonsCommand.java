@@ -40,6 +40,9 @@ public class DungeonsCommand extends CommandBase {
 	
 	@Override
 	public void processCommand(ICommandSender arg0, String[] arg1) throws CommandException {
+		if(arg1.length == 0) {
+			Utils.SendMessage("§cMissing Arguments! Usage "+getCommandUsage(arg0));
+		}
 		// MULTI THREAD DRIFTING
 		new Thread(() -> {
 			EntityPlayer player = (EntityPlayer) arg0;

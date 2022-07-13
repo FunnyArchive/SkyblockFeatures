@@ -45,6 +45,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 /**
  * Based off of chest profit from code by Quantizr
  * Licensed under GNU GPL v3, with permission given from author
@@ -92,23 +94,22 @@ public class ChestProfit {
                         }
                     }
                     if (chestType.items.size() > 0) {
-                        ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
-
-                        boolean leftAlign = element.getActualX() < sr.getScaledWidth() / 2f;
-                        SmartFontRenderer.TextAlignment alignment = leftAlign ? SmartFontRenderer.TextAlignment.LEFT_RIGHT : SmartFontRenderer.TextAlignment.RIGHT_LEFT;
-
+                        ArrayList<String> lines = new ArrayList<>();
                         GlStateManager.color(1, 1, 1, 1);
                         GlStateManager.disableLighting();
-
-                        int drawnLines = 1;
                         double profit = chestType.value - chestType.price;
-                        // ScreenRenderer.fontRenderer.drawString(chestType.displayText + "§f: §" + (profit > 0 ? "a" : "c") + NumberUtil.nf.format(profit), leftAlign ? element.getActualX() : element.getActualX() + element.getWidth(), element.getActualY(), chestType.displayColor, alignment, SmartFontRenderer.TextShadow.NORMAL);
-
-                        // for (DungeonChestLootItem item : chestType.items) {
-                        //     String line = item.item.getDisplayName() + "§f: §a" + NumberUtil.nf.format(item.value);
-                        //     ScreenRenderer.fontRenderer.drawString(line, leftAlign ? element.getActualX() : element.getActualX() + element.getWidth(), element.getActualY() + drawnLines * ScreenRenderer.fontRenderer.FONT_HEIGHT, CommonColors.WHITE, alignment, SmartFontRenderer.TextShadow.NORMAL);
-                        //     drawnLines++;
-                        // }
+                        for (DungeonChestLootItem item : chestType.items) {
+                            lines.add(item.item.getDisplayName() + "§f: §a" + NumberUtil.nf.format(item.value));
+                        }
+                        lines.add("");
+                        lines.add("Profit: §f:" + (profit > 0 ? "a" : "c")+NumberUtil.nf.format(profit));
+                        
+                        int lineCount = 0;
+                        for(String line:lines) {
+                            Utils.GetMC().fontRendererObj.drawString(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
+                            lineCount++;
+                        }
+                        Utils.drawGraySquareWithBorder(180, 0, 150, (lineCount+1)*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
                     }
                 }
             }

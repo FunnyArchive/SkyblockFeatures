@@ -33,7 +33,7 @@ public class Config extends Vigilant {
             subcategory = "API",
             hidden = true
     )
-    public String dataURL = "https://raw.githubusercontent.com/skytils/skytilssMod-Data/main/";
+    public String dataURL = "https://raw.githubusercontent.com/skyblockfeatures/skyblockfeaturessMod-Data/main/";
 
     @Property(
             type = PropertyType.TEXT,
@@ -45,16 +45,6 @@ public class Config extends Vigilant {
     public String apiKey = "";
 
     @Property(
-            type = PropertyType.SELECTOR,
-            name = "Command Alias Mode",
-            description = "Choose which mode to use for Command Aliases.",
-            category = "General",
-            subcategory = "Command Aliases",
-            options = {"Simple", "Advanced"}
-    )
-    public int commandAliasMode = 0;
-
-    @Property(
             type = PropertyType.SWITCH,
             name = "First Launch",
             description = "Used to see if the user is a new user of skyblockfeatures.",
@@ -63,24 +53,6 @@ public class Config extends Vigilant {
             hidden = true
     )
     public boolean firstLaunch = true;
-
-    @Property(
-            type = PropertyType.SWITCH,
-            name = "Config Button on Pause",
-            description = "Adds a button to configure skyblockfeatures to the pause menu.",
-            category = "General",
-            subcategory = "Other"
-    )
-    public boolean configButtonOnPause = true;
-
-    @Property(
-            type = PropertyType.SWITCH,
-            name = "Reopen Options Menu",
-            description = "Sets the menu to the skyblockfeatures options menu instead of exiting when on a skyblockfeatures config menu.",
-            category = "General",
-            subcategory = "Other"
-    )
-    public boolean reopenOptionsMenu = true;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -418,17 +390,6 @@ public class Config extends Vigilant {
     )
     public boolean glowingItems = false;
 
-    // Discord RPC
-
-    @Property(
-            type = PropertyType.SWITCH,
-            name = "Discord Rich Presence",
-            description = "",
-            category = "General",
-            subcategory = "Discord RPC"
-    )
-    public boolean DiscordRPC = true;
-
     @Property(
             type = PropertyType.SWITCH,
             name = "Hidden Jerry Alert",
@@ -482,24 +443,6 @@ public class Config extends Vigilant {
             subcategory = "Items"
     )
     public boolean egg = false;
-
-    @Property(
-            type = PropertyType.SWITCH,
-            name = "Show Potion Tier",
-            description = "Shows the tier of potions as the stack size.",
-            category = "Miscellaneous",
-            subcategory = "Items"
-    )
-    public boolean showPotionTier = false;
-
-    @Property(
-            type = PropertyType.SWITCH,
-            name = "Custom Auction Price Input",
-            description = "Displays skyblockfeatures' own auction input GUI instead of a sign.",
-            category = "Miscellaneous",
-            subcategory = "Quality of Life"
-    )
-    public boolean betterAuctionPriceInput = false;
 
     @Property(
         type = PropertyType.SELECTOR,

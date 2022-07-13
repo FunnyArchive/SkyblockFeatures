@@ -8,6 +8,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.utils.APIUtil;
+import mrfast.skyblockfeatures.utils.Utils;
 
 import java.text.NumberFormat;
 import java.util.Collections;
@@ -44,6 +45,9 @@ public class BankCommand extends CommandBase {
 	
 	@Override
 	public void processCommand(ICommandSender arg0, String[] arg1) throws CommandException {
+		if(arg1.length == 0) {
+			Utils.SendMessage("§cMissing Arguments! Usage "+getCommandUsage(arg0)+" "+Utils.inSkyblock);
+		}
 		// MULTI THREAD DRIFTING
 		new Thread(() -> {
 			EntityPlayer player = (EntityPlayer) arg0;

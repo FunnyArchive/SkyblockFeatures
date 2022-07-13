@@ -13,7 +13,7 @@ public class CapeUtils {
 
     public static ArrayList<String> get_uuids() {
         try {
-            URL url = new URL("https://raw.githubusercontent.com/MrFast-js/Why_Are_You_Here/main/capes.txt");
+            URL url = new URL("https://raw.githubusercontent.com/MrFast-js/skyblockFeatures-Capes/main/capes.txt");
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             final ArrayList<String> uuid_list = new ArrayList<>();
 

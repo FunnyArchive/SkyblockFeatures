@@ -9,15 +9,21 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiChest;
+import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntitySign;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
 import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
+import mrfast.skyblockfeatures.features.impl.overlays.AuctionPriceOverlay;
+import mrfast.skyblockfeatures.mixins.AccessorGuiEditSign;
 import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.NumberUtil;
+import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.StringUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 
@@ -30,6 +36,32 @@ public class AuctionFeatures {
         if (!Utils.inSkyblock) return;
         selfItems.clear();
     }
+
+    // @SubscribeEvent
+    // public void onGuiOpen(GuiOpenEvent event) {
+    //     if (!Utils.inSkyblock || !skyblockfeatures.config.auctionGuis) return;
+
+    //     if (event.gui instanceof GuiEditSign && Utils.equalsOneOf(SBInfo.getInstance().lastOpenContainerName, "Create Auction", "Create BIN Auction")) {
+    //         TileEntitySign sign = ((AccessorGuiEditSign) event.gui).getTileSign();
+    //         if (sign != null && sign.getPos().getY() == 0 && sign.signText[1].getUnformattedText().equals("^^^^^^^^^^^^^^^") && sign.signText[2].getUnformattedText().equals("Your auction") && sign.signText[3].getUnformattedText().equals("starting bid")) {
+    //             Utils.drawGraySquareWithBorder(180, 0, 150, 3*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
+    //             String identifier = AuctionData.getIdentifier(AuctionPriceOverlay.lastAuctionedStack);
+    //             if (identifier != null) {
+    //                 Double BinValue = AuctionData.lowestBINs.get(identifier);
+                    
+    //                 String[] lines = {
+    //                     ChatFormatting.WHITE+"Lowest BIN: "+ChatFormatting.GOLD+BinValue,
+    //                     ChatFormatting.WHITE+"Suggested Price: "+ChatFormatting.GOLD+(BinValue-(BinValue/100)*6),
+    //                 };
+    //                 int lineCount = 0;
+    //                 for(String line:lines) {
+    //                     Utils.GetMC().fontRendererObj.drawString(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
+    //                     lineCount++;
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
     @SubscribeEvent
     public void onDrawSlots(GuiContainerEvent.DrawSlotEvent.Pre event) {

@@ -67,12 +67,6 @@ public abstract class MixinRenderGlobal {
         return true;
     }
 
-    // Old method, using the above instead so I don't overwrite the conditions made by optifine
-//    @Overwrite
-//    public boolean isRenderEntityOutlines() {
-//        return this.entityOutlineFramebuffer != null && this.entityOutlineShader != null && this.mc.thePlayer != null && LobbyGlow.INSTANCE.getUtils().isInHypixelLobby();
-//    }
-
     @Inject(method = "renderEntities", at = @At(value = "INVOKE_STRING", target = "Lnet/minecraft/profiler/Profiler;endStartSection(Ljava/lang/String;)V", shift = At.Shift.BEFORE, ordinal = 2, args = {"ldc=entities"}), locals = LocalCapture.CAPTURE_FAILSOFT) // Optifine version
     private void renderEntities(Entity renderViewEntity, ICamera camera, float partialTicks, CallbackInfo ci, int pass, double d0, double d1, double d2, Entity entity, double d3, double d4, double d5, List<Entity> list, boolean bool0, boolean bool1) {
         displayOutlines(list, d0, d1, d2, camera, partialTicks);
@@ -128,30 +122,33 @@ public abstract class MixinRenderGlobal {
             GlStateManager.disableFog();
             mc.getRenderManager().setRenderOutlines(true);
             
-            // SBA options
             DrawUtils.enableOutlineMode();
             GlStateManager.depthFunc(GL11.GL_ALWAYS);
             try {
                 for (Entity entity : entities) {
                     boolean flag = (mc.getRenderViewEntity() instanceof EntityLivingBase && ((EntityLivingBase)mc.getRenderViewEntity()).isPlayerSleeping());
                     boolean flag1 = (entity.isInRangeToRender3d(x, y, z) && (entity.ignoreFrustumCheck || camera.isBoundingBoxInFrustum(entity.getEntityBoundingBox())) && entity instanceof EntityPlayer && !Utils.isNPC(entity));
+                    // Dungeon Player Glowing
                     if ((entity != mc.getRenderViewEntity() || mc.gameSettings.thirdPersonView != 0 || flag) && flag1 && Nametags.players.containsKey(entity) && skyblockfeatures.config.glowingPlayers && Utils.inDungeons) {
                         outlineColor(entity, (String)Nametags.players.get(entity));
                         renderManager.renderEntitySimple(entity, partialTicks);
                     }
-                    if ((entity != mc.getRenderViewEntity() || mc.gameSettings.thirdPersonView != 0 || flag) && flag1 && skyblockfeatures.config.playeresp) {
+                    // General Player Glowing
+                    if ((entity != mc.getRenderViewEntity() || mc.gameSettings.thirdPersonView != 0 || flag) && flag1 && skyblockfeatures.config.playeresp && mc.thePlayer.canEntityBeSeen(entity)) {
                         renderManager.renderEntitySimple(entity, partialTicks);
                     }
+                    // Item Glowing
                     boolean flag2 = (mc.thePlayer.getDistanceToEntity(entity) < 15.0F && entity instanceof EntityItem);
                     if (flag2 && skyblockfeatures.config.glowingItems) {
                         ItemRarity itemRarity = ItemUtil.getRarity(((EntityItem)entity).getEntityItem(), "");
                         outlineColor(itemRarity.getColorCode().getColor());
                         renderManager.renderEntitySimple(entity, partialTicks);
                     } 
+                    // Make party members glow blue
                     for (String name : PartyGlow.party) {
-                        if (entity.getName().contains(name) && !Utils.inDungeons && skyblockfeatures.config.glowingParty) {
-                        outlineColor(entity, "§1");
-                        this.renderManager.renderEntitySimple(entity, partialTicks);
+                        if (entity.getName().contains(name) && !Utils.inDungeons && skyblockfeatures.config.glowingParty && mc.thePlayer.canEntityBeSeen(entity)) {
+                            outlineColor(entity, "§1");
+                            this.renderManager.renderEntitySimple(entity, partialTicks);
                         }
                     }
                 }
