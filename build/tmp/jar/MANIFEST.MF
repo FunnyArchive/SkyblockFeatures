@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-TweakOrder: 0
-MixinConfigs: mixins.skyblockfeatures.json
-ModSide: CLIENT
-FMLAT: mrfast_at.cfg
-TweakClass: gg.essential.loader.stage0.EssentialSetupTweaker
-ForceLoadAsMod: true
-
