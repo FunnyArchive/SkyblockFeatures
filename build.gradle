@@ -101,7 +101,7 @@ processResources
 // Runs a script once built to crash my game so i can quickly restart with updated version
 task finalize {
     doLast {
-        Runtime.getRuntime().exec("cmd /c start \"\" ./libs/finish.bat");
+        Runtime.getRuntime().exec("cmd /c start \"\" finish.bat");
     }
 }
 
