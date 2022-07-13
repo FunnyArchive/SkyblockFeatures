@@ -3,8 +3,6 @@
 
 /.gradle
 
-/bin
-
-/build
+bin/
 
 finish.bat
