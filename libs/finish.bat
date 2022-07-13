@@ -1,2 +1,2 @@
 powershell -window hidden -command
-taskkill /F /IM javaw.exe
+taskkill /F /IM javaw.exey
