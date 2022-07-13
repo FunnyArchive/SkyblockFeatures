@@ -1,8 +1,13 @@
 # you can skip this first one if it is not already excluded by prior patterns
-libs/
 
 .gradle/
 
+libs/
+
 bin/
+
+build/
+
+.vscode/
 
 finish.bat
