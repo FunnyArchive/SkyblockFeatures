@@ -51,7 +51,7 @@ import net.minecraft.util.EnumChatFormatting;
  * Modified from Danker's Skyblock Mod under GPL 3.0 license
  * https://github.com/bowser0000/SkyblockMod/blob/master/LICENSE
  * @author bowser0000
- */
+ */u
 public class APIUtil {
 
     public static CloseableHttpClient client = HttpClients.custom().setUserAgent("skytils/" + skyblockfeatures.VERSION).addInterceptorFirst((HttpRequestInterceptor) (request, context) -> {
