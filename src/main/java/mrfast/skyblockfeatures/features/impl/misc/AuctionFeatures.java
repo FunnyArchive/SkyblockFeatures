@@ -146,6 +146,11 @@ public class AuctionFeatures {
                                 String a = b.replaceAll("[^0-9]", "");
                                 price = Float.parseFloat(a);
                             }
+                            if(line.contains("Sold for:")) {
+                                String b = StringUtils.stripControlCodes(line);
+                                String a = b.replaceAll("[^0-9]", "");
+                                price = Float.parseFloat(a);
+                            }
                         }
                         String identifier = AuctionData.getIdentifier(stack);
                         if (identifier != null && price != 0) {
@@ -176,6 +181,10 @@ public class AuctionFeatures {
                     for(String line : ItemUtil.getItemLore(stack)) {
                         if(line.contains("Ended")) {
                             unclaimed++;
+                        }
+                        if(line.contains("Sold")) {
+                            unclaimed++;
+                            endedAuctions.add(stack);
                         }
                         if(line.contains("Expired")) {
                             expired++;

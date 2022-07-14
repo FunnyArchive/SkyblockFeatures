@@ -1,21 +1,3 @@
-/*
- * skyblockfeatures - Hypixel Skyblock Quality of Life Mod
- * Copyright (C) 2021 skyblockfeatures
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published
- * by the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
 package mrfast.skyblockfeatures.utils;
 
 import com.google.gson.Gson;
@@ -69,7 +51,7 @@ public class SBInfo {
     private long lastLocRaw = -1;
     private long joinedWorld = -1;
     private static final String profilePrefix = "\u00a7r\u00a7e\u00a7lProfile: \u00a7r\u00a7a";
-    private JsonObject locraw = null;
+    public JsonObject locraw = null;
 
     public static SBInfo getInstance() {
         return INSTANCE;
@@ -170,9 +152,9 @@ public class SBInfo {
             
 
             if (lines.size() >= 5) {
-                date = StringUtils.stripControlCodes(lines.get(1)).trim();
+                date = StringUtils.stripControlCodes(lines.get(2)).trim();
                 //§74:40am
-                Matcher matcher = timePattern.matcher(lines.get(2));
+                Matcher matcher = timePattern.matcher(lines.get(3));
                 if (matcher.find()) {
                     time = StringUtils.stripControlCodes(matcher.group()).trim();
                     try {
@@ -182,7 +164,7 @@ public class SBInfo {
                     } catch (ParseException e) {
                     }
                 }
-                location = StringUtils.stripControlCodes(lines.get(3)).replaceAll("[^A-Za-z0-9() ]", "").trim();
+                location = StringUtils.stripControlCodes(lines.get(4)).replaceAll("[^A-Za-z0-9() ]", "").trim();
             }
             objective = null;
 

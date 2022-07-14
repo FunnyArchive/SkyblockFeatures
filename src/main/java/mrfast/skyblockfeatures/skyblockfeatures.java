@@ -1,21 +1,3 @@
-/*
- * skyblockfeatures - Hypixel Skyblock Quality of Life Mod
- * Copyright (C) 2021 skyblockfeatures
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published
- * by the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
 package mrfast.skyblockfeatures;
 
 import java.io.BufferedReader;
@@ -135,6 +117,7 @@ import mrfast.skyblockfeatures.features.impl.overlays.CompactChat;
 import mrfast.skyblockfeatures.features.impl.overlays.DamageOverlays;
 import mrfast.skyblockfeatures.features.impl.overlays.FairySoulWaypoints;
 import mrfast.skyblockfeatures.features.impl.overlays.GiftCompassWaypoints;
+import mrfast.skyblockfeatures.features.impl.overlays.ZealotSpawnLocations;
 import mrfast.skyblockfeatures.listeners.ChatListener;
 import mrfast.skyblockfeatures.mixins.AccessorCommandHandler;
 // import mrfast.skyblockfeatures.utils.Friend;
@@ -234,6 +217,7 @@ public class skyblockfeatures {
 
         MinecraftForge.EVENT_BUS.register(new SpamHider());
         MinecraftForge.EVENT_BUS.register(new AuctionData());
+        MinecraftForge.EVENT_BUS.register(new ZealotSpawnLocations());
         MinecraftForge.EVENT_BUS.register(new AuctionPriceOverlay());
         MinecraftForge.EVENT_BUS.register(new ChestProfit());
         MinecraftForge.EVENT_BUS.register(new DamageSplash());
@@ -275,7 +259,6 @@ public class skyblockfeatures {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        Display.setTitle("skyblockfeatures 2.0");
         usingDungeonRooms = Loader.isModLoaded("dungeonrooms");
         usingLabymod = Loader.isModLoaded("labymod");
         usingNEU = Loader.isModLoaded("notenoughupdates");
