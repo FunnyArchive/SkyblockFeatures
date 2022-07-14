@@ -52,7 +52,7 @@ public class ZealotSpawnLocations {
 
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
-        if(SBInfo.getInstance().location.contains("Dragon's Nest") && skyblockfeatures.config.showZealotSpawns) {
+        if(SBInfo.getInstance().location.contains("Dragons Nest") && skyblockfeatures.config.showZealotSpawns) {
             for(BlockPos pos:zealotSpawns) {
                 drawParticleESP(new Color(200,55,200), pos.getX() - Minecraft.getMinecraft().getRenderManager().viewerPosX,pos.getY() - Minecraft.getMinecraft().getRenderManager().viewerPosY, pos.getZ() - Minecraft.getMinecraft().getRenderManager().viewerPosZ, 5.0D);
             }
