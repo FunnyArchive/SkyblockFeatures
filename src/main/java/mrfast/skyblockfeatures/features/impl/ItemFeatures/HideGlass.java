@@ -89,7 +89,7 @@ public class HideGlass {
 
     public static boolean isEmptyGlassPane(ItemStack itemStack) {
         return itemStack != null && (itemStack.getItem() == Item.getItemFromBlock(Blocks.stained_glass_pane)
-                || itemStack.getItem() == Item.getItemFromBlock(Blocks.glass_pane)) && itemStack.hasDisplayName() && Utils.stripColor(itemStack.getDisplayName().trim()).isEmpty();
+                || itemStack.getItem() == Item.getItemFromBlock(Blocks.glass_pane)) && itemStack.hasDisplayName() && Utils.cleanColour(itemStack.getDisplayName().trim()).isEmpty();
     }
     @SubscribeEvent
     public void onSlotClick(ChestSlotClickedEvent event) {
