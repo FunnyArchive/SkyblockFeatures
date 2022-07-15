@@ -127,27 +127,6 @@ public class Nametags {
         }
     }
 
-    @SubscribeEvent
-    public void onRender3Ds(RenderWorldLastEvent event) {
-        if (!Utils.inSkyblock || !skyblockfeatures.config.HidePlayersNearNPC) {
-            return;
-        }
-        for(Entity e: Utils.GetMC().theWorld.playerEntities) {
-            if(Utils.isNPC(e) && !NPCs.contains(e.getPositionVector())) {
-                NPCs.add(e.getPositionVector());
-            }
-        }
-    }
-
-    public static boolean isNearNPC(Entity entityToCheck) {
-        for (Vec3 npcLocation : NPCs) {
-            if (getDistanceSquared(npcLocation, entityToCheck) <= 6) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public static double getDistanceSquared(Vec3 npcLocation, Entity entityToCheck) {
         double d0 = npcLocation.xCoord - entityToCheck.posX;
         double d1 = npcLocation.yCoord - entityToCheck.posY;

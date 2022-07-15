@@ -142,13 +142,7 @@ public abstract class MixinRenderGlobal {
                     }
                     // General Player Glowing
                     if ((entity != mc.getRenderViewEntity() || mc.gameSettings.thirdPersonView != 0 || flag) && flag1 && skyblockfeatures.config.playeresp && mc.thePlayer.canEntityBeSeen(entity)) {
-                        if(skyblockfeatures.config.HidePlayersNearNPC) {
-                            if(!Nametags.isNearNPC(entity) && !Utils.isNPC(entity)) {
-                                renderManager.renderEntitySimple(entity, partialTicks);
-                            }
-                        } else {
-                            renderManager.renderEntitySimple(entity, partialTicks);
-                        }
+                        renderManager.renderEntitySimple(entity, partialTicks);
                     }
                     // Item Glowing
                     boolean flag2 = (mc.thePlayer.getDistanceToEntity(entity) < 15.0F && entity instanceof EntityItem);

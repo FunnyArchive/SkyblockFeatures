@@ -273,15 +273,6 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "Hide Players Near Important NPCs",
-            description = "",
-            category = "Miscellaneous",
-            subcategory = "Quality of Life"
-    )
-    public boolean HidePlayersNearNPC = false;
-
-    @Property(
-            type = PropertyType.SWITCH,
             name = "1.7 Animations",
             description = "",
             category = "Miscellaneous",
@@ -561,6 +552,15 @@ public class Config extends Vigilant {
             subcategory = "Auction Utilities"
     )
     public boolean showLowestBINPrice = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Show Average BIN Price",
+            description = "Shows the average Buy It Now price for various items in Skyblock.",
+            category = "Miscellaneous",
+            subcategory = "Auction Utilities"
+    )
+    public boolean showAvgLowestBINPrice = false;
 
     @Property(
             type = PropertyType.SWITCH,

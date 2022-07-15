@@ -28,11 +28,6 @@ public abstract class MixinRender<T extends Entity> {
 
     @Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
     private void shouldRender(T livingEntity, ICamera camera, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> cir) {
-        if((livingEntity instanceof EntityPlayer) && Utils.inSkyblock && skyblockfeatures.config.HidePlayersNearNPC && !Utils.inDungeons) {
-            if(Nametags.isNearNPC(livingEntity) && !Utils.isNPC(livingEntity)) {
-                cir.setReturnValue(false);
-            }
-        }
         if(!Utils.isNPC(livingEntity) && livingEntity.getDistanceToEntity(Utils.GetMC().thePlayer) > 49 && Utils.inSkyblock && skyblockfeatures.config.HideFarEntity && !Utils.inDungeons) {
             cir.setReturnValue(false);
         }

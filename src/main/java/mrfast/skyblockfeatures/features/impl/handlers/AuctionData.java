@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.commons.lang3.time.StopWatch;
 import mrfast.skyblockfeatures.skyblockfeatures;
+import mrfast.skyblockfeatures.core.AuctionUtil;
 import mrfast.skyblockfeatures.utils.APIUtil;
 import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.Utils;
@@ -22,6 +23,7 @@ public class AuctionData {
 
     public static final String dataURL = "https://moulberry.codes/lowestbin.json";
     public static final HashMap<String, Double> lowestBINs = new HashMap<>();
+    public static final HashMap<String, Double> averageLowestBINs = new HashMap<>();
     public static final StopWatch reloadTimer = new StopWatch();
 
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -74,7 +76,6 @@ public class AuctionData {
         if (event.phase != TickEvent.Phase.START || !Utils.inSkyblock) return;
         
         if (reloadTimer.getTime() >= 90000 || !reloadTimer.isStarted()) {
-            System.out.println("A");
             if(reloadTimer.getTime() >= 90000) reloadTimer.reset();
             else reloadTimer.start();
             if (skyblockfeatures.config.showLowestBINPrice || skyblockfeatures.config.dungeonChestProfit) {
@@ -84,6 +85,11 @@ public class AuctionData {
                     for (Map.Entry<String, JsonElement> items : data.entrySet()) {
                         lowestBINs.put(items.getKey(), items.getValue().getAsDouble());
                     }
+                    AuctionUtil.getMyApiGZIPAsync("https://moulberry.codes/auction_averages_lbin/3day.json.gz", (jsonObject) -> {
+                        for (Map.Entry<String, JsonElement> items : jsonObject.entrySet()) {
+                            averageLowestBINs.put(items.getKey(), Math.floor(items.getValue().getAsDouble()));
+                        }
+                    }, ()->{});
                 }, "skyblockfeatures-FetchAuctionData").start();
             }
         }

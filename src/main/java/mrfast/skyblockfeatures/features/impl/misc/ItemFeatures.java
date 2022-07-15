@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
 import mrfast.skyblockfeatures.utils.ItemUtil;
@@ -57,13 +59,16 @@ public class ItemFeatures {
             if (skyblockfeatures.config.showLowestBINPrice) {
                 String auctionIdentifier = isSuperpairsReward ? itemId : AuctionData.getIdentifier(item);
                 if (auctionIdentifier != null) {
-                    // this might actually have multiple items as the price
                     Double valuePer = AuctionData.lowestBINs.get(auctionIdentifier);
-                    if (valuePer != null) {
-                        if (skyblockfeatures.config.showLowestBINPrice) {
-                            String total = isSuperpairsReward ? NumberUtil.nf.format(valuePer) : NumberUtil.nf.format(valuePer * item.stackSize);
-                            event.toolTip.add("§6Lowest BIN Price: §b" + total + (item.stackSize > 1 && !isSuperpairsReward ? " §7(" + NumberUtil.nf.format(Math.round(valuePer)) + " each§7)" : ""));
-                        }
+                    if (skyblockfeatures.config.showLowestBINPrice&&valuePer!=null) {
+                        String total = isSuperpairsReward ? NumberUtil.nf.format(valuePer) : NumberUtil.nf.format(valuePer * item.stackSize);
+                        event.toolTip.add("§6Lowest BIN Price: §b" + total + (item.stackSize > 1 && !isSuperpairsReward ? " §7(" + NumberUtil.nf.format(Math.round(valuePer)) + " each§7)" : ""));
+                    }
+
+                    Double avgValuePer = AuctionData.averageLowestBINs.get(auctionIdentifier);
+                    if (skyblockfeatures.config.showAvgLowestBINPrice && avgValuePer!=null) {
+                        String total = isSuperpairsReward ? NumberUtil.nf.format(valuePer) : NumberUtil.nf.format(avgValuePer * item.stackSize);
+                        event.toolTip.add("§6Average BIN Price: §b" + total + (item.stackSize > 1 && !isSuperpairsReward ? " §7(" + NumberUtil.nf.format(Math.round(avgValuePer)) + " each§7)" : ""));
                     }
                 }
             }
@@ -83,7 +88,11 @@ public class ItemFeatures {
                 Double valuePer = sellPrices.get(itemId);
                 if (valuePer != null) event.toolTip.add("§6NPC Value: §b" + NumberUtil.nf.format(valuePer * item.stackSize) + (item.stackSize > 1 ? " §7(" + NumberUtil.nf.format(valuePer) + " each§7)" : ""));
             }
-            if(AuctionFeatures.items.containsKey(item)) event.toolTip.add("§6BIN Flip Profit: §a"+ NumberUtil.nf.format(Math.round(AuctionFeatures.items.get(item)* item.stackSize)));
+            if(AuctionFeatures.items.containsKey(item)) {
+                long price = Math.round(AuctionFeatures.items.get(item)* item.stackSize);
+                String color = price>0?ChatFormatting.GREEN+"":ChatFormatting.RED+"";
+                event.toolTip.add("§6BIN Flip Profit: "+color+NumberUtil.nf.format(price));
+            }
         }
     }
 

@@ -12,6 +12,7 @@ import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -87,16 +88,15 @@ public class AuctionFeatures {
                         }
                         String identifier = AuctionData.getIdentifier(stack);
                         if (identifier != null && price != 0) {
-                            Double BinValue = AuctionData.lowestBINs.get(identifier);
-                            if(BinValue != null) {
-                                if (price < (BinValue)) {
-                                    Double profit = BinValue - price;
-
+                            Double avgBinValue = AuctionData.averageLowestBINs.get(identifier);
+                            if(avgBinValue != null) {
+                                Double profit = avgBinValue - price;
+                                if (price < (avgBinValue)) {
                                     if(profit > 100000) {
-                                        Gui.drawRect(x, y, x + 16, y + 16, new Color(255, 85, 85, 255).getRGB());
+                                        Gui.drawRect(x, y, x + 16, y + 16, new Color(85, 255, 85, 255).getRGB());
                                     }
-                                    items.put(stack, profit*stack.stackSize);
                                 }
+                                items.put(stack, profit*stack.stackSize);
                             }
                         }
                     }
@@ -107,25 +107,19 @@ public class AuctionFeatures {
                     if (event.slot.getHasStack()) {
                         ItemStack stack = event.slot.getStack();
                         float price = 0;
-                        boolean bidder = false;
                         for(String line : ItemUtil.getItemLore(stack)) {
                             if(line.contains("bid:")) {
                                 String b = StringUtils.stripControlCodes(line);
                                 String a = b.replaceAll("[^0-9]", "");
                                 price = Float.parseFloat(a);
                             }
-                            if(line.contains(Utils.GetMC().thePlayer.getName())) {
-                                bidder = true;
-                            }
                         }
                         String identifier = AuctionData.getIdentifier(stack);
                         if (identifier != null && price != 0) {
                             Double BinValue = AuctionData.lowestBINs.get(identifier);
                             if(BinValue != null) {
-                                // if (price < (BinValue) && bidder) {
-                                    Double profit = BinValue - price;
-                                    selfItems.put(stack, profit*stack.stackSize);
-                                // }
+                                Double profit = BinValue - price;
+                                selfItems.put(stack, profit*stack.stackSize);
                             }
                         }
                     }
@@ -171,6 +165,78 @@ public class AuctionFeatures {
             String chestName = inv.getDisplayName().getUnformattedText().trim();
             Double profit = (double) 0;
             for (Double f : selfItems.values()) profit += f;
+
+            if(chestName.contains("Auction View") && !chestName.contains("BIN")) {
+                for(Slot slot:gui.inventorySlots.inventorySlots) {
+                    if (slot.getHasStack() && slot.getSlotIndex() == 13) {
+                        ItemStack stack = slot.getStack();
+                        Utils.drawGraySquareWithBorder(180, 0, 150, 7*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
+                        String auctionIdentifier = AuctionData.getIdentifier(stack);
+                        Double lowestBin = 0.0;
+                        Double avgBin = 0.0;
+                        if (auctionIdentifier != null) {
+                            lowestBin = AuctionData.lowestBINs.get(auctionIdentifier);
+                            avgBin = AuctionData.lowestBINs.get(auctionIdentifier);
+                            Integer cost = 0;
+                            Double resellProfit = 0.0;
+                            for(String line : ItemUtil.getItemLore(stack)) {
+                                if(line.contains("bid:")) {
+                                    cost = Integer.parseInt(Utils.cleanColour(line).replaceAll("[^0-9]", ""));
+                                    if(avgBin!=null) resellProfit = avgBin-cost;
+                                    else if(lowestBin!=null) resellProfit = lowestBin-cost;
+                                }
+                            }
+                            if(resellProfit != 0) {
+                                String resellString = resellProfit>0? ChatFormatting.GREEN+"":ChatFormatting.RED+"";
+                                Boolean Manipulated = false;
+                                if(lowestBin != null && avgBin!=null) {
+                                    if(lowestBin > avgBin+150000 || avgBin > lowestBin+150000) {
+                                        Manipulated = true;
+                                    } else if(cost > avgBin+150000) {
+                                        Manipulated = true;
+                                    } else if(cost > lowestBin+150000) {
+                                        Manipulated = true;
+                                    }
+                                }
+                                if(lowestBin == null && avgBin!=null) {
+                                    if(cost > avgBin+150000) {
+                                        Manipulated = true;
+                                    }
+                                }
+                                if(avgBin == null && lowestBin!=null) {
+                                    if(cost > lowestBin+150000) {
+                                        Manipulated = true;
+                                    }
+                                }
+                            
+                                String avgBinString = avgBin != null?ChatFormatting.GOLD+NumberUtil.nf.format(avgBin):ChatFormatting.RED+"Unknown";
+                                String lowestBinString = lowestBin != null?ChatFormatting.GOLD+NumberUtil.nf.format(lowestBin):ChatFormatting.RED+"Unknown";
+                                String[] lines = {
+                                    ChatFormatting.WHITE+"Item Price: "+ChatFormatting.GOLD+NumberUtil.nf.format(cost),
+                                    ChatFormatting.WHITE+"Lowest BIN: "+lowestBinString,
+                                    ChatFormatting.WHITE+"Average BIN: "+avgBinString,
+                                    "",
+                                    ChatFormatting.WHITE+"Resell Profit: "+resellString+(NumberUtil.nf.format(resellProfit))
+                                };
+                                int lineCount = 0;
+                                for(String line:lines) {
+                                    Utils.GetMC().fontRendererObj.drawString(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
+                                    lineCount++;
+                                }
+                                if(Manipulated) {
+                                    Utils.drawGraySquareWithBorder(180, 8*Utils.GetMC().fontRendererObj.FONT_HEIGHT, 170, 3*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
+                                    Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+""+ChatFormatting.BOLD+"Warning! This items price", 190, 8*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
+                                    Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+""+ChatFormatting.BOLD+"is higher than usual!", 190, 9*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
+                                }
+                            } else {
+                                Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+"Error! Unable to get price", 190, 10, -1);
+                            }
+                        } else {
+                            Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+"Error! Unable to get item ID", 190, 10, -1);
+                        }
+                    }
+                }
+            }
             
             if(chestName.contains("Manage Auctions")) {
                 int unclaimed = 0;

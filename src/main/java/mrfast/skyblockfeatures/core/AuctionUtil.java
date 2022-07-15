@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 import java.util.zip.GZIPInputStream;
 
 import com.google.gson.Gson;
@@ -46,6 +49,16 @@ public class AuctionUtil {
         JsonObject json = gson.fromJson(response, JsonObject.class);
         return json;
     }
+    private final static ExecutorService es = Executors.newFixedThreadPool(3);
+    public static void getMyApiGZIPAsync(String urlS, Consumer<JsonObject> consumer, Runnable error) {
+		es.submit(() -> {
+			try {
+				consumer.accept(getApiGZIPSync(urlS));
+			} catch (Exception e) {
+				error.run();
+			}
+		});
+	}
 
     public static ItemStack jsonToStack(JsonObject json, boolean useCache) {
         return jsonToStack(json, useCache, true);
