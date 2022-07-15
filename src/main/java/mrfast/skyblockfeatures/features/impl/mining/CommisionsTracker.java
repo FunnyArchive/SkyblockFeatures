@@ -91,7 +91,7 @@ public class CommisionsTracker {
 
         @Override
         public boolean getToggled() {
-            return Utils.inSkyblock && mc.thePlayer != null && mc.theWorld !=null && SBInfo.getInstance().getLocation().equals("mining_3");
+            return mc.thePlayer != null && Utils.inSkyblock && skyblockfeatures.config.CommisionsTracker && SBInfo.getInstance().getLocation().equals("mining_3");
         }
 
         @Override

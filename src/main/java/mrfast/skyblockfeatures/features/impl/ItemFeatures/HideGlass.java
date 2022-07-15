@@ -9,10 +9,13 @@ import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.commands.TerminalCommand;
 import mrfast.skyblockfeatures.events.ChestSlotClickedEvent;
 import mrfast.skyblockfeatures.utils.Utils;
+import net.minecraft.block.BlockStainedGlass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
@@ -90,16 +93,19 @@ public class HideGlass {
     }
     @SubscribeEvent
     public void onSlotClick(ChestSlotClickedEvent event) {
-        if(event.inventoryName.contains("skyblockfeatures Terminal")) {
+        if(event.inventoryName.contains("Practice Terminal")) {
             for(int slot : TerminalCommand.slots) {
                 if(event.slot.slotNumber == slot) {
-                    if(!TerminalCommand.clicked.contains(event.slot.slotNumber)) {
+                    if(event.item.getUnlocalizedName().contains("red")) {
                         Utils.playLoudSound("note.pling", 2);
                         TerminalCommand.clicked.add(event.slot.slotNumber);
                         TerminalCommand.Terminal.setInventorySlotContents(event.slot.slotNumber, new ItemStack(Blocks.stained_glass_pane, 1, 5).setStackDisplayName(ChatFormatting.RESET+""));
                         if(TerminalCommand.clicked.size() == 14) {
                             Utils.SendMessage(ChatFormatting.GREEN+"You completed 'Correct all the panes!' in "+(System.currentTimeMillis()-TerminalCommand.start)+"ms");
                             mc.thePlayer.closeScreen();
+                        }
+                        if(TerminalCommand.start == 0) {
+                            TerminalCommand.start = System.currentTimeMillis();
                         }
                     }
                 }

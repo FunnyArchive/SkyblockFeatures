@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import club.sk1er.mods.core.transformers.RendererLivingEntityTransformer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -21,22 +22,28 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.culling.ICamera;
+import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.client.shader.ShaderGroup;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Team.EnumVisible;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.features.impl.dungeons.Nametags;
 import mrfast.skyblockfeatures.features.impl.glowingstuff.PartyGlow;
+import mrfast.skyblockfeatures.utils.ColorCode;
 import mrfast.skyblockfeatures.utils.DrawUtils;
 import mrfast.skyblockfeatures.utils.ItemRarity;
 import mrfast.skyblockfeatures.utils.ItemUtil;
+import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.Utils;
 
 @Mixin(RenderGlobal.class)
@@ -135,7 +142,13 @@ public abstract class MixinRenderGlobal {
                     }
                     // General Player Glowing
                     if ((entity != mc.getRenderViewEntity() || mc.gameSettings.thirdPersonView != 0 || flag) && flag1 && skyblockfeatures.config.playeresp && mc.thePlayer.canEntityBeSeen(entity)) {
-                        renderManager.renderEntitySimple(entity, partialTicks);
+                        if(skyblockfeatures.config.HidePlayersNearNPC) {
+                            if(!Nametags.isNearNPC(entity) && !Utils.isNPC(entity)) {
+                                renderManager.renderEntitySimple(entity, partialTicks);
+                            }
+                        } else {
+                            renderManager.renderEntitySimple(entity, partialTicks);
+                        }
                     }
                     // Item Glowing
                     boolean flag2 = (mc.thePlayer.getDistanceToEntity(entity) < 15.0F && entity instanceof EntityItem);
@@ -144,6 +157,9 @@ public abstract class MixinRenderGlobal {
                         outlineColor(itemRarity.getColorCode().getColor());
                         renderManager.renderEntitySimple(entity, partialTicks);
                     } 
+                    if(entity instanceof EntityEnderman && mc.thePlayer.canEntityBeSeen(entity) && SBInfo.getInstance().location.contains("Dragons Nest") && skyblockfeatures.config.glowingZealots) {
+                        renderManager.renderEntitySimple(entity, partialTicks);
+                    }
                     // Make party members glow blue
                     for (String name : PartyGlow.party) {
                         if (entity.getName().contains(name) && !Utils.inDungeons && skyblockfeatures.config.glowingParty && mc.thePlayer.canEntityBeSeen(entity)) {

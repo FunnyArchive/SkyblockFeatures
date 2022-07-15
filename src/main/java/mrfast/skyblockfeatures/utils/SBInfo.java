@@ -1,7 +1,15 @@
 package mrfast.skyblockfeatures.utils;
 
-import com.google.gson.Gson;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.google.gson.JsonObject;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.network.NetworkPlayerInfo;
@@ -10,22 +18,10 @@ import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import mrfast.skyblockfeatures.skyblockfeatures;
-import mrfast.skyblockfeatures.events.SendChatMessageEvent;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Taken from NotEnoughUpdates under Creative Commons Attribution-NonCommercial 3.0
@@ -38,7 +34,6 @@ public class SBInfo {
     private static final SBInfo INSTANCE = new SBInfo();
 
     private static final Pattern timePattern = Pattern.compile(".+(am|pm)");
-    private static final Pattern JSON_BRACKET_PATTERN = Pattern.compile("\\{.+}");
     public String location = "";
     public String date = "";
     public String currentProfile = null;
@@ -47,9 +42,6 @@ public class SBInfo {
     public String mode = "";
     public Date currentTimeDate = null;
     public String lastOpenContainerName = null;
-    private long lastManualLocRaw = -1;
-    private long lastLocRaw = -1;
-    private long joinedWorld = -1;
     private static final String profilePrefix = "\u00a7r\u00a7e\u00a7lProfile: \u00a7r\u00a7a";
     public JsonObject locraw = null;
 
@@ -72,40 +64,11 @@ public class SBInfo {
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
-        lastLocRaw = -1;
+        // lastLocRaw = -1;
         locraw = null;
         mode = null;
-        joinedWorld = System.currentTimeMillis();
+        System.currentTimeMillis();
         lastOpenContainerName = null;
-    }
-
-    @SubscribeEvent
-    public void onSendChatMessage(SendChatMessageEvent event) {
-        String msg = event.message;
-        if (msg.trim().startsWith("/locraw") || msg.trim().startsWith("/locraw ")) {
-            lastManualLocRaw = System.currentTimeMillis();
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOW, receiveCanceled = true)
-    public void onChatMessage(ClientChatReceivedEvent event) {
-        if (event.message.getUnformattedText().contains("{") && event.message.getUnformattedText().contains("}")) {
-            Matcher matcher = JSON_BRACKET_PATTERN.matcher(event.message.getUnformattedText());
-            if (matcher.find()) {
-                try {
-                    JsonObject obj = new Gson().fromJson(matcher.group(), JsonObject.class);
-                    if (obj.has("server")) {
-                        if (System.currentTimeMillis() - lastManualLocRaw > 5000) event.setCanceled(true);
-                        if (obj.has("gametype") && obj.has("mode") && obj.has("map")) {
-                            locraw = obj;
-                            mode = locraw.get("mode").getAsString();
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     public String getLocation() {
@@ -119,14 +82,6 @@ public class SBInfo {
     public void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.START || Minecraft.getMinecraft().thePlayer == null || Minecraft.getMinecraft().theWorld == null || !Utils.inSkyblock)
             return;
-        long currentTime = System.currentTimeMillis();
-
-        if (locraw == null &&
-                (currentTime - joinedWorld) > 1000 &&
-                (currentTime - lastLocRaw) > 15000) {
-            lastLocRaw = System.currentTimeMillis();
-            skyblockfeatures.sendMessageQueue.add("/locraw");
-        }
 
         try {
             Scoreboard scoreboard = Minecraft.getMinecraft().thePlayer.getWorldScoreboard();

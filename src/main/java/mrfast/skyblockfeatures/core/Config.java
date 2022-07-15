@@ -401,6 +401,15 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Commissions Tracker",
+            description = "Tracks your progress on commissions",
+            category = "Mining",
+            subcategory = "Quality of Life"
+    )
+    public boolean CommisionsTracker = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Puzzler Solver",
             description = "Shows which block to mine for Puzzler.",
             category = "Mining",
@@ -447,12 +456,30 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "Show Zealot Spawn Areas",
-            description = "Draws a square around the areas that zealots spawn in the end",
+            name = "Show Zealot Spawn Areas & Spawn Timer",
+            description = "Draws a square around the areas that zealots spawn in the end & shows a timer on screen of when the zealots will spawn",
             category = "§1§rFarming",
             subcategory = "Quality of Life"
     )
     public boolean showZealotSpawns = false;
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Make Zealots Glow",
+        description = "Applys the 1.9 glow effect to zealots",
+        category = "§1§rFarming",
+        subcategory = "Quality of Life"
+    )
+    public boolean glowingZealots = false;
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "1.18 Crop Hitbox",
+        description = "Applys full sized hitbox for crops",
+        category = "§1§rFarming",
+        subcategory = "Quality of Life"
+    )
+    public boolean cropBox = false;
 
     @Property(
             type = PropertyType.SWITCH,
