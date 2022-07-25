@@ -5,33 +5,42 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.UUID;
+
+import com.google.common.eventbus.Subscribe;
+
+import mrfast.skyblockfeatures.events.SecondPassedEvent;
+import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class CapeUtils {
+    static ArrayList<String> final_name_list = get_names();
 
-    final static ArrayList<String> final_uuid_list = get_uuids();
+    @SubscribeEvent
+    public void worldLoadEvent(WorldEvent.Load event) {
+        final_name_list = get_names();
+    }
 
-    public static ArrayList<String> get_uuids() {
+    public static ArrayList<String> get_names() {
         try {
             URL url = new URL("https://raw.githubusercontent.com/MrFast-js/skyblockFeatures-Capes/main/capes.txt");
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            final ArrayList<String> uuid_list = new ArrayList<>();
+            final ArrayList<String> name_list = new ArrayList<>();
 
             String s;
 
             while ((s = reader.readLine()) != null) {
-                uuid_list.add(s);
+                name_list.add(s);
             }
 
-            return uuid_list;
+            return name_list;
         } catch (Exception ignored){
             return null;
         }
     }
 
-    public static boolean is_uuid_valid(UUID uuid) {
-        for (String u : Objects.requireNonNull(final_uuid_list)) {
-            if (u.contains(uuid.toString())) {
+    public static boolean is_name_valid(String name) {
+        for (String u : Objects.requireNonNull(final_name_list)) {
+            if (u.contains(name.toString())) {
                 return true;
             }
         }

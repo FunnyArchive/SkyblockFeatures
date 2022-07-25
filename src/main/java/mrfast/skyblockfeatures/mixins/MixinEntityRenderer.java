@@ -23,24 +23,6 @@ public class MixinEntityRenderer {
 
     @Shadow private Minecraft mc;
 
-    @ModifyVariable(method={"orientCamera"}, ordinal=3, at=@At(value="STORE", ordinal=0), require=1)
-    public double changeCameraDistanceHook(double range) {
-        if (skyblockfeatures.perspectiveToggled) {
-            return 4;
-        } else {
-            return range;
-        }
-    }
-
-    @ModifyVariable(method={"orientCamera"}, ordinal=7, at=@At(value="STORE", ordinal=0), require=1)
-    public double orientCameraHook(double range) {
-        if (skyblockfeatures.perspectiveToggled) {
-            return 4;
-        } else {
-            return range;
-        }
-    }
-
     @Inject(method = "hurtCameraEffect", at = @At("HEAD"), cancellable = true)
     private void onHurtcam(float partialTicks, CallbackInfo ci) {
         if (Utils.inSkyblock && skyblockfeatures.config.noHurtcam) ci.cancel();

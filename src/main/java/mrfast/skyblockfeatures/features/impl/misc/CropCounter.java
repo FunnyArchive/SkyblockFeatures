@@ -10,6 +10,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.AuctionUtil;
 import mrfast.skyblockfeatures.core.structure.FloatPair;
@@ -25,12 +26,14 @@ import mrfast.skyblockfeatures.utils.graphics.colors.CommonColors;
 public class CropCounter {
     private static final Minecraft mc = Minecraft.getMinecraft();
     static String count = "0";
-    public static JsonObject auctionPricesAvgLowestBinJson = null;
+    static int oldCount = 0;
+    static int cropsPerSecond = 0;
+    static int ticks = 0;
 
     @SubscribeEvent
-    public void onSeconds(SecondPassedEvent event) {
+    public void onSeconds(TickEvent.ClientTickEvent event) {
         if(mc.thePlayer == null) return;
-        
+
         if (!skyblockfeatures.config.Counter) { return; }
         if(!Utils.inSkyblock) { return; }
 
@@ -39,12 +42,23 @@ public class CropCounter {
         if(item == null) return;
 
         if(!item.getDisplayName().contains("Hoe")) return;
-        
+        ticks++;
         List<String> lore = ItemUtil.getItemLore(item);
         for (int i = 0; i < lore.size(); i++) {
             String line = lore.get(i);
             if(line.contains("Counter: ")) {
                 count = line.replace("Counter: ", "");
+                int counter = Integer.parseInt(count.replaceAll("[^0-9]",""));
+                
+                if(ticks >= 10) {
+                    ticks = 0;
+                    if(oldCount == 0) {
+                        oldCount = counter;
+                    } else {
+                        cropsPerSecond = (counter-oldCount)*2;
+                        oldCount = counter;
+                    }
+                }
             }
         }
     }
@@ -66,7 +80,12 @@ public class CropCounter {
                     ItemStack item = mc.thePlayer.getHeldItem();
                     if(item == null) return;
                     String hoes = "Euclides, Gauss, Pythagorean, Turing, Newton";
-                    if(hoes.contains(Utils.cleanColour(item.getDisplayName()).split(" ")[0])) mc.fontRendererObj.drawString(ChatFormatting.RED+"Counter: "+ChatFormatting.YELLOW+ count, 0, 0, 0xFFFFFF, true);   
+                    for(String hoe: hoes.split(", ")) {
+                        if(Utils.cleanColour(item.getDisplayName()).contains(hoe)) {
+                            mc.fontRendererObj.drawString(ChatFormatting.RED+"Counter: "+ChatFormatting.YELLOW+count, 0, 0, 0xFFFFFF, true);   
+                            mc.fontRendererObj.drawString(ChatFormatting.RED+"Crops Per Second: "+ChatFormatting.YELLOW+cropsPerSecond, 0, ScreenRenderer.fontRenderer.FONT_HEIGHT, 0xFFFFFF, true);   
+                        }
+                    }
                 } catch (Exception e) {
                     //TODO: handle exception
                 }
@@ -75,7 +94,8 @@ public class CropCounter {
         @Override
         public void demoRender() {
             if(mc.thePlayer == null) return;
-            ScreenRenderer.fontRenderer.drawString(ChatFormatting.RED+"Counter: "+ChatFormatting.YELLOW+ count, 0, 0, CommonColors.WHITE, SmartFontRenderer.TextAlignment.LEFT_RIGHT, SmartFontRenderer.TextShadow.NORMAL);
+            ScreenRenderer.fontRenderer.drawString(ChatFormatting.RED+"Counter: "+ChatFormatting.YELLOW+count, 0, 0, CommonColors.WHITE, SmartFontRenderer.TextAlignment.LEFT_RIGHT, SmartFontRenderer.TextShadow.NORMAL);
+            ScreenRenderer.fontRenderer.drawString(ChatFormatting.RED+"Crops Per Second: "+ChatFormatting.YELLOW+cropsPerSecond, 0, ScreenRenderer.fontRenderer.FONT_HEIGHT, CommonColors.WHITE, SmartFontRenderer.TextAlignment.LEFT_RIGHT, SmartFontRenderer.TextShadow.NORMAL);
         }
 
         @Override
@@ -85,12 +105,12 @@ public class CropCounter {
 
         @Override
         public int getHeight() {
-            return ScreenRenderer.fontRenderer.FONT_HEIGHT;
+            return ScreenRenderer.fontRenderer.FONT_HEIGHT*2;
         }
 
         @Override
         public int getWidth() {
-            return 12 + ScreenRenderer.fontRenderer.getStringWidth(ChatFormatting.RED+"Counter: "+ChatFormatting.YELLOW+ count);
+            return 12 + ScreenRenderer.fontRenderer.getStringWidth(ChatFormatting.RED+"Crops Per Second: "+ChatFormatting.YELLOW+"102");
         }
     }
 }

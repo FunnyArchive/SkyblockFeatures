@@ -104,6 +104,7 @@ import mrfast.skyblockfeatures.features.impl.misc.MiscFeatures;
 import mrfast.skyblockfeatures.features.impl.misc.SpamHider;
 import mrfast.skyblockfeatures.features.impl.overlays.AuctionPriceOverlay;
 import mrfast.skyblockfeatures.features.impl.overlays.CompactChat;
+import mrfast.skyblockfeatures.features.impl.overlays.CrystalHollowsMap;
 import mrfast.skyblockfeatures.features.impl.overlays.DamageOverlays;
 import mrfast.skyblockfeatures.features.impl.overlays.FairySoulWaypoints;
 import mrfast.skyblockfeatures.features.impl.overlays.GiftCompassWaypoints;
@@ -145,7 +146,6 @@ public class skyblockfeatures {
         if (!modDir.exists()) modDir.mkdirs();
         GUIMANAGER = new GuiManager();
         jarFile = event.getSourceFile();
-        ClientRegistry.registerKeyBinding(this.keyPerspective);
     }
     
     // boolean a = false;
@@ -215,6 +215,7 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new FarmingFeatures());
         MinecraftForge.EVENT_BUS.register(new ItemFeatures());
         MinecraftForge.EVENT_BUS.register(new KeyShortcuts());
+        MinecraftForge.EVENT_BUS.register(new CrystalHollowsMap());
         MinecraftForge.EVENT_BUS.register(new MayorJerry());
         MinecraftForge.EVENT_BUS.register(new MiningFeatures());
         MinecraftForge.EVENT_BUS.register(new MiscFeatures());
@@ -477,68 +478,4 @@ public class skyblockfeatures {
             KeyBinding.setKeyBindState(mc.gameSettings.keyBindSprint.getKeyCode(), false);
         }
     }
-  
-    private KeyBinding keyPerspective = new KeyBinding("Toggle Perspective", 33, "skyblockfeatures 2.0");
-  
-    public static boolean returnOnRelease = true;
-    
-    public static boolean perspectiveToggled = false;
-    
-    private static float cameraYaw = 0.0F;
-    
-    private static float cameraPitch = 0.0F;
-    
-    private static int previousPerspective = 0;
-
-    @SubscribeEvent
-    public void onKeyPress(InputEvent.KeyInputEvent event) {
-    if (Keyboard.getEventKey() == this.keyPerspective.getKeyCode())
-      if (Keyboard.getEventKeyState()) {
-        perspectiveToggled = !perspectiveToggled;
-        cameraYaw = mc.thePlayer.rotationYaw;
-        cameraPitch = mc.thePlayer.rotationPitch;
-        if (perspectiveToggled) {
-          previousPerspective = mc.gameSettings.thirdPersonView;
-          mc.gameSettings.thirdPersonView = 1;
-        } else {
-          mc.gameSettings.thirdPersonView = previousPerspective;
-        }
-      } else if (returnOnRelease) {
-        perspectiveToggled = false;
-        mc.gameSettings.thirdPersonView = previousPerspective;
-      }
-    // if (Keyboard.getEventKey() == Keyboard.KEY_H) {
-    //     mc.displayGuiScreen(new GuiChest(mc.thePlayer.inventory, idk.auctionHouse));
-    // }
-    if (Keyboard.getEventKey() == mc.gameSettings.keyBindTogglePerspective.getKeyCode())
-      perspectiveToggled = false; 
-  }
-  
-  public static float getCameraYaw() {
-    return perspectiveToggled ? cameraYaw : mc.thePlayer.rotationYaw;
-  }
-  
-  public static float getCameraPitch() {
-    return perspectiveToggled ? cameraPitch : mc.thePlayer.rotationPitch;
-  }
-  
-  public static boolean overrideMouse() {
-    if (mc.inGameHasFocus && Display.isActive()) {
-      if (!perspectiveToggled)
-        return true; 
-      mc.mouseHelper.mouseXYChange();
-      float f1 = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
-      float f2 = f1 * f1 * f1 * 8.0F;
-      float f3 = mc.mouseHelper.deltaX * f2;
-      float f4 = mc.mouseHelper.deltaY * f2;
-      cameraYaw += f3 * 0.15F;
-      cameraPitch += f4 * 0.15F;
-      if (cameraPitch > 90.0F)
-        cameraPitch = 90.0F; 
-      if (cameraPitch < -90.0F)
-        cameraPitch = -90.0F; 
-    } 
-    return false;
-  }
-
 }

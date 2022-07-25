@@ -9,6 +9,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.utils.Utils;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,6 +30,7 @@ public abstract class MixinBlockCrops extends BlockBush {
     }
 
     private void updateCropsMaxY(World world, BlockPos pos, Block block) {
+        if(!skyblockfeatures.config.cropBox) return;
         final IBlockState blockState = world.getBlockState(pos);
 
         if (Utils.GetMC().theWorld != null) {

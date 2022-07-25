@@ -401,6 +401,15 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Crystal Hollows Map",
+            description = "Show a map of the crystal hollows",
+            category = "Mining",
+            subcategory = "Quality of Life"
+    )
+    public boolean CrystalHollowsMap = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Puzzler Solver",
             description = "Shows which block to mine for Puzzler.",
             category = "Mining",

@@ -23,9 +23,8 @@ public abstract class MixinAbstractClientPlayer {
     public void getLocationCape(CallbackInfoReturnable<ResourceLocation> callbackInfoReturnable) {
         NetworkPlayerInfo info = this.getPlayerInfo();
         assert info != null;
-        String uuid = info.getGameProfile().getId().toString();
 
-        if (CapeUtils.is_uuid_valid(info.getGameProfile().getId())) {
+        if (CapeUtils.is_name_valid(info.getGameProfile().getName())) {
             callbackInfoReturnable.setReturnValue(new ResourceLocation("skyblockfeatures","capes/cape.png"));
         }
     }

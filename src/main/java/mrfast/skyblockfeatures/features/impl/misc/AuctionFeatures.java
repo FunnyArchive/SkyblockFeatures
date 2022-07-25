@@ -182,8 +182,8 @@ public class AuctionFeatures {
                             for(String line : ItemUtil.getItemLore(stack)) {
                                 if(line.contains("bid:")) {
                                     cost = Integer.parseInt(Utils.cleanColour(line).replaceAll("[^0-9]", ""));
-                                    if(avgBin!=null) resellProfit = avgBin-cost;
-                                    else if(lowestBin!=null) resellProfit = lowestBin-cost;
+                                    if(lowestBin!=null) resellProfit = lowestBin-cost;
+                                    else if(avgBin!=null) resellProfit = avgBin-cost;
                                 }
                             }
                             if(resellProfit != 0) {

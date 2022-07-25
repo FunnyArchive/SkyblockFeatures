@@ -36,21 +36,8 @@ public class ActionBarListener {
 	@SubscribeEvent
 	public void onEvent(ClientChatReceivedEvent event) {
 		if (event.type == 2) {
-
 			String actionBar = event.message.getFormattedText();
 			String[] actionBarSplit = actionBar.split(" ");
-
-			// String hotbarMessage = EnumChatFormatting.getTextWithoutFormattingCodes(event.message.getUnformattedText());
-         	// String[] hotbarInfo = hotbarMessage.split("     ");
-
-			// String actualMessage = hotbarInfo.length == 3 ? hotbarInfo[1] : hotbarInfo[0];
-            // if (actualMessage.startsWith("+") && actualMessage.endsWith(")")) {
-            //    String[] expMessageSplit = actualMessage.split(" ");
-            //    skillName = expMessageSplit[1];
-            //    expGained = expMessageSplit[0].replace("+", "");
-            //    xppercent = expMessageSplit[2].replace("(", "").replace(")", "").replace("%", "");
-			//    latestExpMessage = "+"+expGained+" "+skillName+" ("+xppercent+"%)"+getProgressBar();
-            // } else latestExpMessage = " ";
 			
 			for (String piece : actionBarSplit) {
 				String trimmed = piece.trim();
