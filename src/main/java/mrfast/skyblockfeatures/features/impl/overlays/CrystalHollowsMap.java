@@ -7,33 +7,25 @@ import mrfast.skyblockfeatures.core.structure.FloatPair;
 import mrfast.skyblockfeatures.core.structure.GuiElement;
 import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.Utils;
-import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class CrystalHollowsMap {
     public static final ResourceLocation map = new ResourceLocation("skyblockfeatures","CrystalHollowsMap.png");
     public static final ResourceLocation playerIcon = new ResourceLocation("skyblockfeatures","mapIcon.png");
 
     public static void drawMap() {
-        if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock || !SBInfo.getInstance().getLocation().equals("crystal_hollows")) return;
+        if(Utils.GetMC().thePlayer == null || Utils.GetMC().theWorld == null || !Utils.inSkyblock || !SBInfo.getInstance().getLocation().equals("crystal_hollows")) return;
         Utils.GetMC().getTextureManager().bindTexture(map);
         GlStateManager.color(1, 1, 1, 1);
         Utils.drawTexturedRect(0, 0, 512/4,512/4, 0, 1, 0, 1, GL11.GL_NEAREST);
-        drawPlayer();
-    }
 
-    public static void drawPlayer() {
         Utils.GetMC().getTextureManager().bindTexture(playerIcon);
         EntityPlayerSP player = Utils.GetMC().thePlayer;
-        double x = Math.round((player.posX-202)/4.8);
-        double z = Math.round((player.posZ-202)/4.8);
+        double x = Math.round((player.posX-202)/4.9);
+        double z = Math.round((player.posZ-202)/4.9);
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, z, 0);
         GlStateManager.rotate(player.rotationYawHead-180, 0, 0, 1);
@@ -42,6 +34,22 @@ public class CrystalHollowsMap {
         GlStateManager.popMatrix();
     }
 
+    public static void drawDemoMap() {
+        if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock) return;
+        Utils.GetMC().getTextureManager().bindTexture(map);
+        GlStateManager.color(1, 1, 1, 1);
+        Utils.drawTexturedRect(0, 0, 512/4,512/4, 0, 1, 0, 1, GL11.GL_NEAREST);
+
+        Utils.GetMC().getTextureManager().bindTexture(playerIcon);
+        double x = Math.round((323-202)/4.9);
+        double z = Math.round((621-202)/4.9);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, z, 0);
+        GlStateManager.rotate(52-180, 0, 0, 1);
+        GlStateManager.translate(-x, -z, 0);
+        Utils.drawTexturedRect((float)(x-2.5),(float) (z-3.5), 5, 7, 0, 1, 0, 1, GL11.GL_NEAREST);
+        GlStateManager.popMatrix();
+    }
     static {
         new CHMap();
     }   
@@ -53,13 +61,13 @@ public class CrystalHollowsMap {
 
         @Override
         public void render() {
-            if (Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && this.getToggled()) {
+            if (Minecraft.getMinecraft().thePlayer != null && Utils.inSkyblock && Minecraft.getMinecraft().theWorld != null && this.getToggled()) {
                 drawMap();
             }
         }
         @Override
         public void demoRender() {
-            drawMap();
+            drawDemoMap();
         }
 
         @Override

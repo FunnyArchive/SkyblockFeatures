@@ -2,6 +2,9 @@ package mrfast.skyblockfeatures.features.impl.dungeons;
 
 import java.awt.Color;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -10,15 +13,22 @@ import java.util.regex.Pattern;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.skyblockfeatures.skyblockfeatures;
+import mrfast.skyblockfeatures.core.structure.FloatPair;
+import mrfast.skyblockfeatures.core.structure.GuiElement;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
 import mrfast.skyblockfeatures.utils.ItemRarity;
 import mrfast.skyblockfeatures.utils.ItemUtil;
+import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.ScoreboardUtil;
 import mrfast.skyblockfeatures.utils.StringUtils;
 import mrfast.skyblockfeatures.utils.Utils;
+import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
+import mrfast.skyblockfeatures.utils.graphics.SmartFontRenderer;
+import mrfast.skyblockfeatures.utils.graphics.colors.CommonColors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.renderer.GlStateManager;
@@ -77,11 +87,13 @@ public class DungeonsFeatures {
         hasBossSpawned = false;
         bloodguy = null;
         livid = null;
+        blessings.clear();
     }
 
     String delimiter = EnumChatFormatting.AQUA.toString() + EnumChatFormatting.STRIKETHROUGH.toString() + "" + EnumChatFormatting.BOLD + "--------------------------------------";
     int count = 0;
     EntityPlayer bloodguy;
+    static Map<String,Integer> blessings = new HashMap<String,Integer>();
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
     public void onChatMesaage(ClientChatReceivedEvent event) {
         if (!Utils.inDungeons || event.type == 2) return;
@@ -92,7 +104,21 @@ public class DungeonsFeatures {
             }
         }
 
-        // if(text.contains(s))
+        if(text.contains("Granted you ") && text.contains("and")) {
+            int stat1 = Integer.parseInt(text.split(" ")[2]);
+            String stat1Type = text.split(" ")[3];
+            if(blessings.get(stat1Type) == null) blessings.put(stat1Type, stat1);
+            else {
+                blessings.replace(stat1Type, blessings.get(stat1Type), blessings.get(stat1Type)+stat1);
+            }
+            int stat2 = Integer.parseInt(text.split(" ")[6]);
+            String stat2Type = text.split(" ")[7];
+            if(blessings.get(stat2Type) == null) blessings.put(stat2Type, stat2);
+            else {
+                blessings.replace(stat2Type, blessings.get(stat2Type), blessings.get(stat2Type)+stat2);
+            }
+        }
+
         if(!skyblockfeatures.config.quickStart) return;
         
         if (text.equals("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")) {
@@ -276,6 +302,59 @@ public class DungeonsFeatures {
                     }
                 }
             }
+        }
+    }
+
+    static {
+        new BlessingViewer();
+    }
+    
+    public static class BlessingViewer extends GuiElement {
+  
+        public BlessingViewer() {
+            super("Blessings Viewer", new FloatPair(0.45052084f, 0.86944443f));
+            skyblockfeatures.GUIMANAGER.registerElement(this);
+        }
+  
+        @Override
+        public void render() {
+            if(Utils.inDungeons) {
+                int i = 0;
+                GuiPlayerTabOverlay tabList = Minecraft.getMinecraft().ingameGUI.getTabList();
+                String footer = tabList.footer.getFormattedText();
+                Utils.drawText("§d§lBlessings",0,0);
+                i++;
+                for (String line : new ArrayList<>(Arrays.asList(footer.split("\n")))) {
+                    if(line.contains("Blessing")) {
+                        Utils.drawText("§d"+Utils.cleanColour(line), 0, i * ScreenRenderer.fontRenderer.FONT_HEIGHT);
+                        i++;
+                    }
+                }
+            }
+        }
+  
+        @Override
+        public void demoRender() {
+            Utils.drawText("§d§lBlessings",0,0);
+            Utils.drawText("§dBlessing of Power XI", 0, 1 * ScreenRenderer.fontRenderer.FONT_HEIGHT);
+            Utils.drawText("§dBlessing of Life XIII", 0, 2 * ScreenRenderer.fontRenderer.FONT_HEIGHT);
+            Utils.drawText("§dBlessing of Wisdom V", 0, 3 * ScreenRenderer.fontRenderer.FONT_HEIGHT);
+            Utils.drawText("§dBlessing of Stone VII", 0, 4 * ScreenRenderer.fontRenderer.FONT_HEIGHT);
+        }
+  
+        @Override
+        public boolean getToggled() {
+            return Utils.inSkyblock && skyblockfeatures.config.blessingViewer;
+        }
+  
+        @Override
+        public int getHeight() {
+            return ScreenRenderer.fontRenderer.FONT_HEIGHT*5;
+        }
+  
+        @Override
+        public int getWidth() {
+            return ScreenRenderer.fontRenderer.getStringWidth("§dBlessing of Life XIII")+12;
         }
     }
 }

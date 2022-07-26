@@ -24,6 +24,7 @@ public class AuctionData {
     public static final String dataURL = "https://moulberry.codes/lowestbin.json";
     public static final HashMap<String, Double> lowestBINs = new HashMap<>();
     public static final HashMap<String, Double> averageLowestBINs = new HashMap<>();
+    public static final HashMap<String, Float> bazaarPrices = new HashMap<>();
     public static final StopWatch reloadTimer = new StopWatch();
 
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -79,7 +80,6 @@ public class AuctionData {
             if(reloadTimer.getTime() >= 90000) reloadTimer.reset();
             else reloadTimer.start();
             if (skyblockfeatures.config.showLowestBINPrice || skyblockfeatures.config.dungeonChestProfit) {
-                System.out.println("Reloading Auction Prices");
                 new Thread(() -> {
                     JsonObject data = APIUtil.getJSONResponse(dataURL);
                     for (Map.Entry<String, JsonElement> items : data.entrySet()) {
@@ -91,6 +91,21 @@ public class AuctionData {
                         }
                     }, ()->{});
                 }, "skyblockfeatures-FetchAuctionData").start();
+            }
+            if (bazaarPrices.size() == 0 && (skyblockfeatures.config.showLowestBINPrice || skyblockfeatures.config.dungeonChestProfit) && skyblockfeatures.config.apiKey.length()>1) {
+                new Thread(() -> {
+                    JsonObject data = APIUtil.getJSONResponse("https://api.hypixel.net/skyblock/bazaar?key="+skyblockfeatures.config.apiKey);
+                    JsonObject products = data.get("products").getAsJsonObject();
+                    for (Map.Entry<String, JsonElement> entry : products.entrySet()) {
+                        if (entry.getValue().isJsonObject()) {
+                            JsonObject product = entry.getValue().getAsJsonObject();
+                            JsonObject quickStatus = product.get("quick_status").getAsJsonObject();
+                            Float sellPrice = quickStatus.get("sellPrice").getAsFloat();
+                            String id = quickStatus.get("productId").toString().split(":")[0];
+                            bazaarPrices.put(id.replace("\"", ""), sellPrice);
+                        }
+                    }
+                }, "skyblockfeatures-FetchBazaarData").start();
             }
         }
     }

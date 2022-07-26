@@ -112,7 +112,7 @@ public class HideGlass {
             }
         }
         try {
-            if(event.inventoryName.contains("'s Inventory")) event.setCanceled(true);
+            if(event.inventoryName.contains("✯")) event.setCanceled(true);
         } catch (Exception e) {
             //TODO: handle exception
         }

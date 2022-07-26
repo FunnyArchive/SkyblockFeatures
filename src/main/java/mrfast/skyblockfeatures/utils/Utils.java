@@ -15,6 +15,9 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
 import mrfast.skyblockfeatures.events.PacketEvent;
+import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
+import mrfast.skyblockfeatures.utils.graphics.SmartFontRenderer;
+import mrfast.skyblockfeatures.utils.graphics.colors.CommonColors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -138,6 +141,10 @@ public class Utils {
 		return 50D;
 	}
 
+    public static void drawText(String text, float x, float y) {
+        ScreenRenderer.fontRenderer.drawString(text, x, y, CommonColors.WHITE, SmartFontRenderer.TextAlignment.LEFT_RIGHT, SmartFontRenderer.TextShadow.OUTLINE);
+    }
+    
     public static void drawTextWithStyle(String text, float x, float y, int color) {
         Minecraft.getMinecraft().fontRendererObj.drawString(text,1, 0, 0x000000, false);
         Minecraft.getMinecraft().fontRendererObj.drawString(text, -1, 0, 0x000000, false);

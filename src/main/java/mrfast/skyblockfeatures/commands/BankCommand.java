@@ -48,7 +48,6 @@ public class BankCommand extends CommandBase {
 		if(arg1.length == 0) {
 			Utils.SendMessage("§cMissing Arguments! Usage "+getCommandUsage(arg0)+" "+Utils.inSkyblock);
 		}
-		// MULTI THREAD DRIFTING
 		new Thread(() -> {
 			EntityPlayer player = (EntityPlayer) arg0;
 			

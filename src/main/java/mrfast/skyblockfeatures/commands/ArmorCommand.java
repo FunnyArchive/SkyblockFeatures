@@ -55,7 +55,6 @@ public class ArmorCommand extends CommandBase {
 		if(arg1.length == 0) {
 			Utils.SendMessage("§cMissing Arguments! Usage "+getCommandUsage(arg0));
 		}
-		// MULTI THREAD DRIFTING
 		new Thread(() -> {
 			EntityPlayer player = (EntityPlayer) arg0;
 			

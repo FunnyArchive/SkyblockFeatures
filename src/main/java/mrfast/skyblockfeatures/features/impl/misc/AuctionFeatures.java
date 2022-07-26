@@ -7,26 +7,20 @@ import java.util.List;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import mrfast.skyblockfeatures.skyblockfeatures;
+import mrfast.skyblockfeatures.events.GuiContainerEvent;
+import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
+import mrfast.skyblockfeatures.utils.ItemUtil;
+import mrfast.skyblockfeatures.utils.NumberUtil;
+import mrfast.skyblockfeatures.utils.StringUtils;
+import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiChest;
-import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntitySign;
-import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import mrfast.skyblockfeatures.skyblockfeatures;
-import mrfast.skyblockfeatures.events.GuiContainerEvent;
-import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
-import mrfast.skyblockfeatures.features.impl.overlays.AuctionPriceOverlay;
-import mrfast.skyblockfeatures.mixins.AccessorGuiEditSign;
-import mrfast.skyblockfeatures.utils.ItemUtil;
-import mrfast.skyblockfeatures.utils.NumberUtil;
-import mrfast.skyblockfeatures.utils.SBInfo;
-import mrfast.skyblockfeatures.utils.StringUtils;
-import mrfast.skyblockfeatures.utils.Utils;
 
 public class AuctionFeatures {
     public static HashMap<ItemStack, Double> items = new HashMap<ItemStack, Double>();
@@ -170,7 +164,6 @@ public class AuctionFeatures {
                 for(Slot slot:gui.inventorySlots.inventorySlots) {
                     if (slot.getHasStack() && slot.getSlotIndex() == 13) {
                         ItemStack stack = slot.getStack();
-                        Utils.drawGraySquareWithBorder(180, 0, 150, 7*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
                         String auctionIdentifier = AuctionData.getIdentifier(stack);
                         Double lowestBin = 0.0;
                         Double avgBin = 0.0;
@@ -187,6 +180,7 @@ public class AuctionFeatures {
                                 }
                             }
                             if(resellProfit != 0) {
+                                Utils.drawGraySquareWithBorder(180, 0, 150, 7*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
                                 String resellString = resellProfit>0? ChatFormatting.GREEN+"":ChatFormatting.RED+"";
                                 Boolean Manipulated = false;
                                 if(lowestBin != null && avgBin!=null) {
@@ -228,15 +222,44 @@ public class AuctionFeatures {
                                     Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+""+ChatFormatting.BOLD+"Warning! This items price", 190, 8*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
                                     Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+""+ChatFormatting.BOLD+"is higher than usual!", 190, 9*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
                                 }
-                            } else {
-                                Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+"Error! Unable to get price", 190, 10, -1);
                             }
-                        } else {
-                            Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+"Error! Unable to get item ID", 190, 10, -1);
                         }
                     }
                 }
             }
+
+            // if(chestName.contains("Create") && (chestName.contains("BIN") || chestName.contains("Auction"))) {
+            //     for(Slot slot:gui.inventorySlots.inventorySlots) {
+            //         if (slot.getHasStack() && slot.getSlotIndex() == 13) {
+            //             ItemStack stack = slot.getStack();
+            //             String auctionIdentifier = AuctionData.getIdentifier(stack);
+            //             Double lowestBin = 0.0;
+            //             Double avgBin = 0.0;
+            //             if (auctionIdentifier != null) {
+            //                 lowestBin = AuctionData.lowestBINs.get(auctionIdentifier);
+            //                 avgBin = AuctionData.lowestBINs.get(auctionIdentifier);
+            //                 Double resellProfit = 0.0;
+            //                 if(resellProfit != 0) {
+            //                     Utils.drawGraySquareWithBorder(180, 0, 150, 6*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
+                            
+            //                     String avgBinString = avgBin != null?ChatFormatting.GOLD+NumberUtil.nf.format(avgBin):ChatFormatting.RED+"Unknown";
+            //                     String lowestBinString = lowestBin != null?ChatFormatting.GOLD+NumberUtil.nf.format(lowestBin):ChatFormatting.RED+"Unknown";
+            //                     String[] lines = {
+            //                         ChatFormatting.WHITE+"Item Price: "+ChatFormatting.GOLD+NumberUtil.nf.format(lowestBin-(0.03*lowestBin)),
+            //                         ChatFormatting.WHITE+"Lowest BIN: "+lowestBinString,
+            //                         ChatFormatting.WHITE+"Average BIN: "+avgBinString,
+            //                         ChatFormatting.WHITE+"Suggested Listing Price: "+avgBinString,
+            //                     };
+            //                     int lineCount = 0;
+            //                     for(String line:lines) {
+            //                         Utils.GetMC().fontRendererObj.drawString(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
+            //                         lineCount++;
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
             
             if(chestName.contains("Manage Auctions")) {
                 int unclaimed = 0;
@@ -269,7 +292,7 @@ public class AuctionFeatures {
                 Utils.drawGraySquareWithBorder(180, 0, 150, 8*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
 
                 String[] lines = {
-                    ChatFormatting.GREEN+""+unclaimed+ChatFormatting.WHITE+" Unclaimed",
+                    ChatFormatting.GREEN+""+(unclaimed/2)+ChatFormatting.WHITE+" Unclaimed",
                     ChatFormatting.RED+""+expired+ChatFormatting.WHITE+" Expired",
                     "",
                     ChatFormatting.WHITE+"Coins to collect: "+ChatFormatting.GOLD+NumberUtil.nf.format(coins),

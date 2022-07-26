@@ -84,6 +84,24 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Crypt Display",
+            description = "Big count of how many crypts have been killed",
+            category = "§1§rDungeons",
+            subcategory = "Miscellaneous"
+    )
+    public boolean cryptCount = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Blessings Viewer",
+            description = "Displays the current blessings in a dungeons",
+            category = "§1§rDungeons",
+            subcategory = "Miscellaneous"
+    )
+    public boolean blessingViewer = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Show Gift Compass Waypoints",
             description = "Shows waypoints for where to go when Gift Compass is held in hand.",
             category = "General",
@@ -308,19 +326,10 @@ public class Config extends Vigilant {
     )
     public boolean NameTags = false;
 
-    @Property(
-            type = PropertyType.SWITCH,
-            name = "Auto Frag",
-            description = "allows you to warp out of the dungeon for frag runs",
-            category = "§1§rDungeons",
-            subcategory = "Miscellaneous"
-    )
-    public boolean autoFrag = false;
-
      @Property(
             type = PropertyType.SWITCH,
             name = "Quick Start",
-            description = "Sends a chat message that can be used for stuff",
+            description = "Sends a chat message at the end of a dungeon that can be used to reparty or warp out of a dungeon",
             category = "§1§rDungeons",
             subcategory = "Miscellaneous"
     )
@@ -371,15 +380,6 @@ public class Config extends Vigilant {
             subcategory = "Mayor Jerry"
     )
     public boolean hiddenJerryAlert = false;
-
-    @Property(
-            type = PropertyType.SWITCH,
-            name = "Hide Farming RNG Titles",
-            description = "Removes the titles that show up after getting a drop with Pumpkin Dicer / Melon Dicer",
-            category = "§1§rFarming",
-            subcategory = "Quality of Life"
-    )
-    public boolean hideFarmingRNGTitles = false;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -579,6 +579,15 @@ public class Config extends Vigilant {
             subcategory = "Auction Utilities"
     )
     public boolean auctionGuis = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Minion Overlay",
+            description = "Shows the extra information inside the minion gui.",
+            category = "Miscellaneous",
+            subcategory = "Quality of Life"
+    )
+    public boolean minionOverlay = false;
 
     @Property(
             type = PropertyType.SWITCH,

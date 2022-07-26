@@ -1,7 +1,6 @@
 package mrfast.skyblockfeatures.features.impl.mining;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,7 +36,7 @@ public class CommisionsTracker {
       public void render() {
           ArrayList<String> text = new ArrayList<>();
           try {
-              if(mc.thePlayer == null || !Utils.inSkyblock || SBInfo.getInstance().getLocation() != "mining_3") return;
+              if(mc.thePlayer == null || !Utils.inSkyblock || !SBInfo.getInstance().getLocation().equals("mining_3")) return;
 
               text.add(ChatFormatting.BLUE+""+ChatFormatting.BOLD+"Commissions");
               List<String> commissions = new ArrayList<String>();

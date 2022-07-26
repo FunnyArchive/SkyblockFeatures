@@ -124,7 +124,7 @@ public class GuiManager {
                 element.render();
                 GlStateManager.popMatrix();
             } catch (Exception ex) {
-                ex.printStackTrace();
+                // ex.printStackTrace();
             }
         }
         renderTitles(event.resolution);
@@ -141,7 +141,7 @@ public class GuiManager {
             try {
                 e.getValue().render();
             } catch (Exception ex) {
-                ex.printStackTrace();
+                // ex.printStackTrace();
             }
         }
         renderTitles(event.resolution);

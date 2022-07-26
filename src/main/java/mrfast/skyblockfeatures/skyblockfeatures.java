@@ -44,6 +44,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import mrfast.skyblockfeatures.commands.AccessoriesCommand;
 import mrfast.skyblockfeatures.commands.ArmorCommand;
 import mrfast.skyblockfeatures.commands.BankCommand;
 import mrfast.skyblockfeatures.commands.DungeonsCommand;
@@ -90,27 +91,29 @@ import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
 import mrfast.skyblockfeatures.features.impl.handlers.KeyShortcuts;
 import mrfast.skyblockfeatures.features.impl.hidestuff.HideStuff;
 import mrfast.skyblockfeatures.features.impl.mining.CommisionsTracker;
+import mrfast.skyblockfeatures.features.impl.mining.MetalDetectorHelp;
 import mrfast.skyblockfeatures.features.impl.mining.MiningFeatures;
 import mrfast.skyblockfeatures.features.impl.misc.AuctionFeatures;
 import mrfast.skyblockfeatures.features.impl.misc.ConjuringCooldown;
 import mrfast.skyblockfeatures.features.impl.misc.CropCounter;
 import mrfast.skyblockfeatures.features.impl.misc.DamageSplash;
-import mrfast.skyblockfeatures.features.impl.misc.FarmingFeatures;
 import mrfast.skyblockfeatures.features.impl.misc.FavoritePets;
 import mrfast.skyblockfeatures.features.impl.misc.FishingHelper;
 import mrfast.skyblockfeatures.features.impl.misc.ItemFeatures;
 import mrfast.skyblockfeatures.features.impl.misc.LockingSlots;
 import mrfast.skyblockfeatures.features.impl.misc.MiscFeatures;
 import mrfast.skyblockfeatures.features.impl.misc.SpamHider;
-import mrfast.skyblockfeatures.features.impl.overlays.AuctionPriceOverlay;
 import mrfast.skyblockfeatures.features.impl.overlays.CompactChat;
 import mrfast.skyblockfeatures.features.impl.overlays.CrystalHollowsMap;
 import mrfast.skyblockfeatures.features.impl.overlays.DamageOverlays;
+import mrfast.skyblockfeatures.features.impl.overlays.DungeonMap;
 import mrfast.skyblockfeatures.features.impl.overlays.FairySoulWaypoints;
 import mrfast.skyblockfeatures.features.impl.overlays.GiftCompassWaypoints;
+import mrfast.skyblockfeatures.features.impl.overlays.MinionOverlay;
 import mrfast.skyblockfeatures.features.impl.overlays.ZealotSpawnLocations;
 import mrfast.skyblockfeatures.listeners.ChatListener;
 import mrfast.skyblockfeatures.mixins.AccessorCommandHandler;
+import mrfast.skyblockfeatures.utils.CapeUtils;
 // import mrfast.skyblockfeatures.utils.Friend;
 // import mrfast.skyblockfeatures.utils.FriendManager;
 import mrfast.skyblockfeatures.utils.SBInfo;
@@ -208,11 +211,10 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new SpamHider());
         MinecraftForge.EVENT_BUS.register(new AuctionData());
         MinecraftForge.EVENT_BUS.register(new ZealotSpawnLocations());
-        MinecraftForge.EVENT_BUS.register(new AuctionPriceOverlay());
         MinecraftForge.EVENT_BUS.register(new ChestProfit());
+        MinecraftForge.EVENT_BUS.register(new DungeonMap());
         MinecraftForge.EVENT_BUS.register(new DamageSplash());
         MinecraftForge.EVENT_BUS.register(new DungeonsFeatures());
-        MinecraftForge.EVENT_BUS.register(new FarmingFeatures());
         MinecraftForge.EVENT_BUS.register(new ItemFeatures());
         MinecraftForge.EVENT_BUS.register(new KeyShortcuts());
         MinecraftForge.EVENT_BUS.register(new CrystalHollowsMap());
@@ -246,6 +248,9 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new HideGlass());
         MinecraftForge.EVENT_BUS.register(new FishingHelper());
         MinecraftForge.EVENT_BUS.register(new AuctionFeatures());
+        MinecraftForge.EVENT_BUS.register(new CapeUtils());
+        MinecraftForge.EVENT_BUS.register(new MetalDetectorHelp());
+        MinecraftForge.EVENT_BUS.register(new MinionOverlay());
     }
 
     @Mod.EventHandler
@@ -261,6 +266,8 @@ public class skyblockfeatures {
         if (!cch.getCommands().containsKey("sky")) cch.registerCommand(new SkyCommand());
 
         if (!cch.getCommands().containsKey("skyblockfeatures")) cch.registerCommand(new configCommand());
+
+        if (!cch.getCommands().containsKey("accessories")) cch.registerCommand(new AccessoriesCommand());
 
         if (!cch.getCommands().containsKey("reparty")) cch.registerCommand(new RepartyCommand());
 

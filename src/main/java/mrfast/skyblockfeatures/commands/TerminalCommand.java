@@ -36,7 +36,7 @@ public class TerminalCommand extends CommandBase {
 		20, 21, 22, 23, 24,
 		29, 30, 31, 32, 33
 	};
-	public static InventoryBasic Terminal = new InventoryBasic(ChatFormatting.WHITE+"Practice Terminal", true, 45);
+	public static InventoryBasic Terminal = new InventoryBasic(ChatFormatting.GREEN+"✯ Practice Terminal", true, 45);
 	public static List<Integer> clicked = new ArrayList<Integer>();
 	public static long start = 0;
 	@Override
