@@ -53,7 +53,7 @@ public class MinionOverlay {
                     String identifier = AuctionData.getIdentifier(generating);
                     if (identifier != null) {
                         Utils.drawGraySquareWithBorder(180, 0, 150, 7*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
-                        if(skyblockfeatures.config.apiKey.length()>1) {
+                        if(skyblockfeatures.config.apiKey.length()<1) {
                             Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+"API Key Required! /api new", 190, 0, -1);
                             return;
                         }

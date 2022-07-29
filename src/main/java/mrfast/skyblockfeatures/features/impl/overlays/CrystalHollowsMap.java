@@ -18,14 +18,18 @@ public class CrystalHollowsMap {
 
     public static void drawMap() {
         if(Utils.GetMC().thePlayer == null || Utils.GetMC().theWorld == null || !Utils.inSkyblock || !SBInfo.getInstance().getLocation().equals("crystal_hollows")) return;
-        Utils.GetMC().getTextureManager().bindTexture(map);
+        GlStateManager.enableBlend();
         GlStateManager.color(1, 1, 1, 1);
+        GlStateManager.pushMatrix();
+        Utils.GetMC().getTextureManager().bindTexture(map);
         Utils.drawTexturedRect(0, 0, 512/4,512/4, 0, 1, 0, 1, GL11.GL_NEAREST);
+        GlStateManager.popMatrix();
 
-        Utils.GetMC().getTextureManager().bindTexture(playerIcon);
         EntityPlayerSP player = Utils.GetMC().thePlayer;
         double x = Math.round((player.posX-202)/4.9);
         double z = Math.round((player.posZ-202)/4.9);
+
+        Utils.GetMC().getTextureManager().bindTexture(playerIcon);
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, z, 0);
         GlStateManager.rotate(player.rotationYawHead-180, 0, 0, 1);
@@ -36,20 +40,25 @@ public class CrystalHollowsMap {
 
     public static void drawDemoMap() {
         if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock) return;
-        Utils.GetMC().getTextureManager().bindTexture(map);
+        GlStateManager.enableBlend();
         GlStateManager.color(1, 1, 1, 1);
+        GlStateManager.pushMatrix();
+        Utils.GetMC().getTextureManager().bindTexture(map);
         Utils.drawTexturedRect(0, 0, 512/4,512/4, 0, 1, 0, 1, GL11.GL_NEAREST);
+        GlStateManager.popMatrix();
 
-        Utils.GetMC().getTextureManager().bindTexture(playerIcon);
         double x = Math.round((323-202)/4.9);
         double z = Math.round((621-202)/4.9);
+
+        Utils.GetMC().getTextureManager().bindTexture(playerIcon);
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, z, 0);
-        GlStateManager.rotate(52-180, 0, 0, 1);
+        GlStateManager.rotate(-128, 0, 0, 1);
         GlStateManager.translate(-x, -z, 0);
         Utils.drawTexturedRect((float)(x-2.5),(float) (z-3.5), 5, 7, 0, 1, 0, 1, GL11.GL_NEAREST);
         GlStateManager.popMatrix();
     }
+    
     static {
         new CHMap();
     }   

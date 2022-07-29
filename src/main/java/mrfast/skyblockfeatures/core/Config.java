@@ -326,6 +326,15 @@ public class Config extends Vigilant {
     )
     public boolean NameTags = false;
 
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Dungeon Map",
+            description = "Render a moveable dungeon map on screen",
+            category = "§1§rDungeons",
+            subcategory = "Miscellaneous"
+    )
+    public boolean dungeonMap = false;
+
      @Property(
             type = PropertyType.SWITCH,
             name = "Quick Start",

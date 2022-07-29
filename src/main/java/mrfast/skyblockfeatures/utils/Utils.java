@@ -96,9 +96,7 @@ public class Utils {
     public static void drawTexturedRect(float x, float y, float width, float height, float uMin, float uMax, float vMin, float vMax, int filter) {
         GlStateManager.enableBlend();
         GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
         drawTexturedRectNoBlend(x, y, width, height, uMin, uMax, vMin, vMax, filter);
-
         GlStateManager.disableBlend();
     }
 

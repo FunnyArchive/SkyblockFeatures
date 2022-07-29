@@ -124,7 +124,7 @@ public class DungeonMap {
 
         @Override
         public boolean getToggled() {
-            return true;
+            return skyblockfeatures.config.dungeonMap;
         }
 
         @Override

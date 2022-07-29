@@ -462,13 +462,13 @@ public class skyblockfeatures {
         ClientRegistry.registerKeyBinding(favoritePetKeybind);
         ClientRegistry.registerKeyBinding(reloadAH);
 
-        this.toggleSprint = new KeyBinding("Toggle Sprint", Keyboard.KEY_I, "skyblockfeatures 2.0");
-        ClientRegistry.registerKeyBinding(this.toggleSprint);
+        toggleSprint = new KeyBinding("Toggle Sprint", Keyboard.KEY_I, "skyblockfeatures 2.0");
+        ClientRegistry.registerKeyBinding(toggleSprint);
     }
 
     @SubscribeEvent
     public void onTsick(TickEvent.ClientTickEvent e) {
-        if (this.toggleSprint.isPressed()) {
+        if (toggleSprint.isPressed()) {
             if (toggled) {
                 mc.thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Togglesprint disabled."));
             } else {
