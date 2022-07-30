@@ -55,13 +55,14 @@ public class configCommand extends CommandBase {
                     " §3/skyblockfeatures config §l➡ §bOpens the configuration GUI." + "\n" +
                     " §3/skyblockfeatures setkey §l➡ §bSets your Hypixel API key." + "\n" +
                     " §3/skyblockfeatures help §l➡ §bShows this help menu." + "\n" +
-                    " §3/skyblockfeatures editlocations §l➡ §bOpens the location editing GUI." + "\n" +
+                    " §3/skyblockfeatures edit §l➡ §bOpens the location editing GUI." + "\n" +
                     "§9§l➜ Miscellaneous:" + "\n" +
                     " §3/terminal §l➡ §bDisplays a gui with a f7 terminal for practice." + "\n" +
                     " §3/vm §l➡ §bDisplays a gui with item position offsets." + "\n" +
                     " §3/shrug §l➡ §bSends a chat message with '¯\\_(ツ)_/¯'" + "\n" +
                     " §3/reparty §l➡ §bDisbands and re-invites everyone in your party. §7(Alias: §f/rp§7)" + "\n" +
                     " §3/inventory §l➡ §bOpens a gui displaying the specified players inventory & armor." + "\n"+
+                    " §3/accessories §l➡ §bOpens a gui displaying the specified players accessory bag." + "\n"+
                     " §3/bank §l➡ §bDisplays in chat the specified players bank and purse balance." + "\n"+
                     " §3/armor §l➡ §bDisplays in chat the specified players armor." + "\n"+
                     " §3/skills §l➡ §bDisplays in chat the specified players skills." + "\n"+
@@ -95,6 +96,7 @@ public class configCommand extends CommandBase {
             case "location":
             case "locations":
             case "loc":
+            case "edits":
             case "gui":
                 GuiUtil.open(Objects.requireNonNull(new LocationEditGui()));
                 break;

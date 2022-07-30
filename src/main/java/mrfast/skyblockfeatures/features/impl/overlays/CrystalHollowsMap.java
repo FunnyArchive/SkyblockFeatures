@@ -15,6 +15,7 @@ import net.minecraft.util.ResourceLocation;
 public class CrystalHollowsMap {
     public static final ResourceLocation map = new ResourceLocation("skyblockfeatures","CrystalHollowsMap.png");
     public static final ResourceLocation playerIcon = new ResourceLocation("skyblockfeatures","mapIcon.png");
+    public static final ResourceLocation playerIcon2 = new ResourceLocation("skyblockfeatures","mapIcon2.png");
 
     public static void drawMap() {
         if(Utils.GetMC().thePlayer == null || Utils.GetMC().theWorld == null || !Utils.inSkyblock || !SBInfo.getInstance().getLocation().equals("crystal_hollows")) return;

@@ -138,11 +138,15 @@ public abstract class MixinRenderGlobal {
                     // Dungeon Player Glowing
                     if ((entity != mc.getRenderViewEntity() || mc.gameSettings.thirdPersonView != 0 || flag) && flag1 && Nametags.players.containsKey(entity) && skyblockfeatures.config.glowingPlayers && Utils.inDungeons) {
                         outlineColor(entity, (String)Nametags.players.get(entity));
-                        renderManager.renderEntitySimple(entity, partialTicks);
+                        Entity copy = entity;
+                        copy.setInvisible(false);
+                        renderManager.renderEntitySimple(copy, partialTicks);
                     }
                     // General Player Glowing
                     if ((entity != mc.getRenderViewEntity() || mc.gameSettings.thirdPersonView != 0 || flag) && flag1 && skyblockfeatures.config.playeresp && mc.thePlayer.canEntityBeSeen(entity)) {
-                        renderManager.renderEntitySimple(entity, partialTicks);
+                        Entity copy = entity;
+                        copy.setInvisible(false);
+                        renderManager.renderEntitySimple(copy, partialTicks);
                     }
                     // Item Glowing
                     boolean flag2 = (mc.thePlayer.getDistanceToEntity(entity) < 15.0F && entity instanceof EntityItem);

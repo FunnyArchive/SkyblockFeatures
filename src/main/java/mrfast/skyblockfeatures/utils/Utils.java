@@ -297,30 +297,21 @@ public class Utils {
         mc.thePlayer.playSound(sound, 1, (float) pitch);
         shouldBypassVolume = false;
     }
-
-    /**
-     * Checks if an object is equal to any of the other objects
-     * @param object Object to compare
-     * @param other Objects being compared
-     * @return boolean
-     */
-    public static boolean equalsOneOf(@Nullable Object object, @NotNull Object... other) {
-        for (Object obj : other) {
-            if (Objects.equals(object, obj)) return true;
-        }
-        return false;
-    }
     
+	public static int getDungeonFloor() {
+        String floor="";
+        for (String l : ScoreboardUtil.getSidebarLines()) {
+            String line = ScoreboardUtil.cleanSB(l);
+            if(line.contains("Catacombs")) {
+                floor = line;
+            }
+        }
 
-    /**
-     * Cancels a chat packet and posts the chat event to the event bus if other mods need it
-     * @param ReceivePacketEvent packet to cancel
-     */
-    public static void cancelChatPacket(PacketEvent.ReceiveEvent ReceivePacketEvent) {
-        if (!(ReceivePacketEvent.packet instanceof S02PacketChat)) return;
-        ReceivePacketEvent.setCanceled(true);
-        S02PacketChat packet = ((S02PacketChat) ReceivePacketEvent.packet);
-        MinecraftForge.EVENT_BUS.post(new ClientChatReceivedEvent(packet.getType(), packet.getChatComponent()));
+        if(floor.replaceAll("[^0-9]", "") != "") {
+            return Integer.parseInt(floor.replaceAll("[^0-9]", ""));
+        } else {
+            return 0;
+        }
     }
 
     public final static void drawBox(AxisAlignedBB axisAlignedBB) {

@@ -546,6 +546,24 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Hide Geyser Particles",
+            description = "Hides the annoying particles in the §6Blazing Volcano.",
+            category = "Miscellaneous",
+            subcategory = "Quality of Life"
+    )
+    public boolean hideGeyserParticles = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Highlight Geyser Box",
+            description = "Creates a box of where the geyser area is in the §6Blazing Volcano",
+            category = "Miscellaneous",
+            subcategory = "Quality of Life"
+    )
+    public boolean geyserBoundingBox = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "No Fire",
             description = "Removes first-person fire overlay when you are burning.",
             category = "Miscellaneous",
