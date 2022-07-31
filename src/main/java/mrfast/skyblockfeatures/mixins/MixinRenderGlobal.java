@@ -143,10 +143,8 @@ public abstract class MixinRenderGlobal {
                         renderManager.renderEntitySimple(copy, partialTicks);
                     }
                     // General Player Glowing
-                    if ((entity != mc.getRenderViewEntity() || mc.gameSettings.thirdPersonView != 0 || flag) && flag1 && skyblockfeatures.config.playeresp && mc.thePlayer.canEntityBeSeen(entity) && !Utils.isNPC(entity)) {
-                        Entity copy = entity;
-                        copy.setInvisible(false);
-                        renderManager.renderEntitySimple(copy, partialTicks);
+                    if ((entity != mc.getRenderViewEntity() || mc.gameSettings.thirdPersonView != 0 || flag) && flag1 && skyblockfeatures.config.playeresp && mc.thePlayer.canEntityBeSeen(entity)) {
+                        renderManager.renderEntitySimple(entity, partialTicks);
                     }
                     // Item Glowing
                     boolean flag2 = (mc.thePlayer.getDistanceToEntity(entity) < 15.0F && entity instanceof EntityItem);
