@@ -25,6 +25,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import mrfast.skyblockfeatures.skyblockfeatures;
@@ -49,6 +50,11 @@ public class AccessoriesCommand extends CommandBase {
     public List<String> getCommandAliases() {
         return Collections.singletonList("acc");
     }
+
+	@Override
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+        return (args.length >= 1) ? getListOfStringsMatchingLastWord(args, Utils.getListOfPlayerUsernames()) : null;
+    }
 	
 	@Override
 	public int getRequiredPermissionLevel() {
@@ -57,9 +63,6 @@ public class AccessoriesCommand extends CommandBase {
 	HashMap<String, List<String>> itemLores = new HashMap<String, List<String>>();
 	@Override
 	public void processCommand(ICommandSender arg0, String[] arg1) throws CommandException {
-		if(arg1.length == 0) {
-			Utils.SendMessage("§cMissing Arguments! Usage "+getCommandUsage(arg0));
-		}
 		String title = ChatFormatting.GREEN+"✯ "+arg1[0]+"'s Accessory Bag";
 		if(title.length() > 30) title = title.substring(0, 30);
 		InventoryBasic TargetInventory = new InventoryBasic(title, true, 54);
@@ -76,7 +79,7 @@ public class AccessoriesCommand extends CommandBase {
 			// Get UUID for Hypixel API requests
 			String username;
 			String uuid;
-			username = arg1[0];
+			username = arg1[0] != null?arg1[0]:Utils.GetMC().thePlayer.getName();
 			player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Checking Accessory Bag of " + EnumChatFormatting.DARK_GREEN + username));
 			uuid = APIUtil.getUUID(username);
 			

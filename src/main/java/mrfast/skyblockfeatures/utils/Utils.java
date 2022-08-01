@@ -1,5 +1,7 @@
 package mrfast.skyblockfeatures.utils;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,11 +16,14 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
+import com.mojang.realmsclient.client.Ping;
+
 import mrfast.skyblockfeatures.events.PacketEvent;
 import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
 import mrfast.skyblockfeatures.utils.graphics.SmartFontRenderer;
 import mrfast.skyblockfeatures.utils.graphics.colors.CommonColors;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -152,11 +157,29 @@ public class Utils {
     }
 
     public static void drawTextWithStyle2(String text, float x, float y, int color) {
-        Minecraft.getMinecraft().fontRendererObj.drawString(text,x+1, y, 0x000000, false);
-        Minecraft.getMinecraft().fontRendererObj.drawString(text, x-1, y, 0x000000, false);
-        Minecraft.getMinecraft().fontRendererObj.drawString(text, x, y+1, 0x000000, false);
-        Minecraft.getMinecraft().fontRendererObj.drawString(text, x, y-1, 0x000000, false);
-        Minecraft.getMinecraft().fontRendererObj.drawString(text, x, y, color, false);
+        String shadowText = Utils.cleanColour(text);
+        Minecraft.getMinecraft().fontRendererObj.drawString(shadowText,1, 0, 0x000000, false);
+        Minecraft.getMinecraft().fontRendererObj.drawString(shadowText, -1, 0, 0x000000, false);
+        Minecraft.getMinecraft().fontRendererObj.drawString(shadowText, 0, 1, 0x000000, false);
+        Minecraft.getMinecraft().fontRendererObj.drawString(shadowText, 0, -1, 0x000000, false);
+        Minecraft.getMinecraft().fontRendererObj.drawString(text, 0, 0, 0xFFFFFF, false);
+    }
+
+    public static String secondsToTime(int seconds) {
+        String time = "";
+        if(seconds/3600>1) time=Math.floor(seconds/3600)+"h ";
+        if(seconds/60>1) time+=Math.floor(seconds/60)-1+"m ";
+        time+=Math.floor(seconds%60)+"s";
+        return time.replace(".0", "");
+    }
+
+    public static String[] getListOfPlayerUsernames() {
+        final Collection<NetworkPlayerInfo> players = Utils.GetMC().getNetHandler().getPlayerInfoMap();
+        final List<String> list = new ArrayList<>();
+        for (final NetworkPlayerInfo info : players) {
+            list.add(info.getGameProfile().getName());
+        }
+        return list.toArray(new String[0]);
     }
 
     public static int getAlpha(int color) {

@@ -20,6 +20,7 @@ import net.minecraft.event.HoverEvent;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import mrfast.skyblockfeatures.skyblockfeatures;
@@ -43,6 +44,11 @@ public class ArmorCommand extends CommandBase {
 	public String getCommandUsage(ICommandSender arg0) {
 		return "/" + getCommandName() + " [name]";
 	}
+
+	@Override
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+        return (args.length >= 1) ? getListOfStringsMatchingLastWord(args, Utils.getListOfPlayerUsernames()) : null;
+    }
 	
 	@Override
 	public int getRequiredPermissionLevel() {
@@ -52,9 +58,6 @@ public class ArmorCommand extends CommandBase {
 	
 	@Override
 	public void processCommand(ICommandSender arg0, String[] arg1) throws CommandException {
-		if(arg1.length == 0) {
-			Utils.SendMessage("§cMissing Arguments! Usage "+getCommandUsage(arg0));
-		}
 		new Thread(() -> {
 			EntityPlayer player = (EntityPlayer) arg0;
 			

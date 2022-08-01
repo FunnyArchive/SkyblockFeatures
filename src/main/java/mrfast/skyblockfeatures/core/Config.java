@@ -401,6 +401,15 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Automaton Loot Tracker",
+            description = "Tracks the loot from Automatons. Starts after a Automaton is killed",
+            category = "Mining",
+            subcategory = "Trackers"
+    )
+    public boolean AutomatonTracker = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Commissions Tracker",
             description = "Tracks your progress on commissions",
             category = "Mining",

@@ -4,6 +4,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import mrfast.skyblockfeatures.skyblockfeatures;
@@ -39,15 +40,17 @@ public class BankCommand extends CommandBase {
 	}
 
 	@Override
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+        return (args.length >= 1) ? getListOfStringsMatchingLastWord(args, Utils.getListOfPlayerUsernames()) : null;
+    }
+
+	@Override
 	public int getRequiredPermissionLevel() {
 		return 0;
 	}
 	
 	@Override
 	public void processCommand(ICommandSender arg0, String[] arg1) throws CommandException {
-		if(arg1.length == 0) {
-			Utils.SendMessage("§cMissing Arguments! Usage "+getCommandUsage(arg0)+" "+Utils.inSkyblock);
-		}
 		new Thread(() -> {
 			EntityPlayer player = (EntityPlayer) arg0;
 			

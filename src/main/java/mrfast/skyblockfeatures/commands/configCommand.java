@@ -11,6 +11,7 @@ import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.gui.LocationEditGui;
 import mrfast.skyblockfeatures.gui.OptionsGui;
 import mrfast.skyblockfeatures.utils.APIUtil;
+import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -42,7 +43,8 @@ public class configCommand extends CommandBase {
 
     @Override
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-        return null;
+        String[] commands = {"config","setkey","edit","config","config"};
+        return (args.length >= 1) ? getListOfStringsMatchingLastWord(args, Utils.getListOfPlayerUsernames()) : null;
     }
 
     @Override
@@ -60,7 +62,7 @@ public class configCommand extends CommandBase {
                     " §3/terminal §l➡ §bDisplays a gui with a f7 terminal for practice." + "\n" +
                     " §3/vm §l➡ §bDisplays a gui with item position offsets." + "\n" +
                     " §3/shrug §l➡ §bSends a chat message with '¯\\_(ツ)_/¯'" + "\n" +
-                    " §3/reparty §l➡ §bDisbands and re-invites everyone in your party. §7(Alias: §f/rp§7)" + "\n" +
+                    " §3/reparty §l➡ §bDisbands and re-invites everyone in your party." + "\n" +
                     " §3/inventory §l➡ §bOpens a gui displaying the specified players inventory & armor." + "\n"+
                     " §3/accessories §l➡ §bOpens a gui displaying the specified players accessory bag." + "\n"+
                     " §3/bank §l➡ §bDisplays in chat the specified players bank and purse balance." + "\n"+
@@ -96,7 +98,7 @@ public class configCommand extends CommandBase {
             case "location":
             case "locations":
             case "loc":
-            case "edits":
+            case "edit":
             case "gui":
                 GuiUtil.open(Objects.requireNonNull(new LocationEditGui()));
                 break;

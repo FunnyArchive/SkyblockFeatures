@@ -4,11 +4,14 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.utils.APIUtil;
 import mrfast.skyblockfeatures.utils.Utils;
+
+import java.util.List;
 
 import com.google.gson.JsonObject;
 
@@ -27,6 +30,11 @@ public class SkillsCommand extends CommandBase {
 	public static String usage(ICommandSender arg0) {
 		return new SkillsCommand().getCommandUsage(arg0);
 	}
+
+	@Override
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+        return (args.length >= 1) ? getListOfStringsMatchingLastWord(args, Utils.getListOfPlayerUsernames()) : null;
+    }
 
 	@Override
 	public int getRequiredPermissionLevel() {

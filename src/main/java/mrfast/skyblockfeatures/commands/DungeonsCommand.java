@@ -5,6 +5,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.HoverEvent;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import mrfast.skyblockfeatures.skyblockfeatures;
@@ -12,6 +13,7 @@ import mrfast.skyblockfeatures.utils.APIUtil;
 import mrfast.skyblockfeatures.utils.Utils;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -33,6 +35,11 @@ public class DungeonsCommand extends CommandBase {
 	}
 
 	@Override
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+        return (args.length >= 1) ? getListOfStringsMatchingLastWord(args, Utils.getListOfPlayerUsernames()) : null;
+    }
+
+	@Override
 	public int getRequiredPermissionLevel() {
 		return 0;
 	}
@@ -40,9 +47,6 @@ public class DungeonsCommand extends CommandBase {
 	
 	@Override
 	public void processCommand(ICommandSender arg0, String[] arg1) throws CommandException {
-		if(arg1.length == 0) {
-			Utils.SendMessage("§cMissing Arguments! Usage "+getCommandUsage(arg0));
-		}
 		// MULTI THREAD DRIFTING
 		new Thread(() -> {
 			EntityPlayer player = (EntityPlayer) arg0;

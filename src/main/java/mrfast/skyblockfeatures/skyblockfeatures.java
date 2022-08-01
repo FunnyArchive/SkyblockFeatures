@@ -111,6 +111,7 @@ import mrfast.skyblockfeatures.features.impl.overlays.FairySoulWaypoints;
 import mrfast.skyblockfeatures.features.impl.overlays.GiftCompassWaypoints;
 import mrfast.skyblockfeatures.features.impl.overlays.MinionOverlay;
 import mrfast.skyblockfeatures.features.impl.overlays.ZealotSpawnLocations;
+import mrfast.skyblockfeatures.features.impl.trackers.AutomatonTracker;
 import mrfast.skyblockfeatures.listeners.ChatListener;
 import mrfast.skyblockfeatures.mixins.AccessorCommandHandler;
 import mrfast.skyblockfeatures.utils.CapeUtils;
@@ -251,6 +252,7 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new CapeUtils());
         MinecraftForge.EVENT_BUS.register(new MetalDetectorHelp());
         MinecraftForge.EVENT_BUS.register(new MinionOverlay());
+        MinecraftForge.EVENT_BUS.register(new AutomatonTracker());
     }
 
     @Mod.EventHandler

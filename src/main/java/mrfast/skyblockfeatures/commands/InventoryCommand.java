@@ -24,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import mrfast.skyblockfeatures.skyblockfeatures;
@@ -46,6 +47,11 @@ public class InventoryCommand extends CommandBase {
     public List<String> getCommandAliases() {
         return Collections.singletonList("inv");
     }
+
+	@Override
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+        return (args.length >= 1) ? getListOfStringsMatchingLastWord(args, Utils.getListOfPlayerUsernames()) : null;
+    }
 	
 	@Override
 	public int getRequiredPermissionLevel() {
@@ -55,9 +61,6 @@ public class InventoryCommand extends CommandBase {
 	HashMap<String, List<String>> itemLores = new HashMap<String, List<String>>();
 	@Override
 	public void processCommand(ICommandSender arg0, String[] arg1) throws CommandException {
-		if(arg1.length == 0) {
-			Utils.SendMessage("§cMissing Arguments! Usage "+getCommandUsage(arg0));
-		}
 		InventoryBasic TargetInventory = new InventoryBasic(ChatFormatting.GREEN+"✯ "+arg1[0]+"'s Inventory", true, 54);
 
 		new Thread(() -> {
