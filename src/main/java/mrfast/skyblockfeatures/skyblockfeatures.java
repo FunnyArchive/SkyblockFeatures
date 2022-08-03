@@ -108,6 +108,7 @@ import mrfast.skyblockfeatures.features.impl.overlays.CrystalHollowsMap;
 import mrfast.skyblockfeatures.features.impl.overlays.DamageOverlays;
 import mrfast.skyblockfeatures.features.impl.overlays.DungeonMap;
 import mrfast.skyblockfeatures.features.impl.overlays.FairySoulWaypoints;
+import mrfast.skyblockfeatures.features.impl.overlays.GemstoneMiningOverlay;
 import mrfast.skyblockfeatures.features.impl.overlays.GiftCompassWaypoints;
 import mrfast.skyblockfeatures.features.impl.overlays.MinionOverlay;
 import mrfast.skyblockfeatures.features.impl.overlays.ZealotSpawnLocations;
@@ -253,6 +254,8 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new MetalDetectorHelp());
         MinecraftForge.EVENT_BUS.register(new MinionOverlay());
         MinecraftForge.EVENT_BUS.register(new AutomatonTracker());
+        MinecraftForge.EVENT_BUS.register(new GemstoneMiningOverlay());
+
     }
 
     @Mod.EventHandler

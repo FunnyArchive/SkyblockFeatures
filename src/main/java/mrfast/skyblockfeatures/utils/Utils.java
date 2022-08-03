@@ -167,9 +167,12 @@ public class Utils {
 
     public static String secondsToTime(int seconds) {
         String time = "";
-        if(seconds/3600>1) time=Math.floor(seconds/3600)+"h ";
-        if(seconds/60>1) time+=Math.floor(seconds/60)-1+"m ";
-        time+=Math.floor(seconds%60)+"s";
+        int sec = seconds % 60;
+        int min = (seconds / 60)%60;
+        int hours = (seconds/60)/60;
+        if(seconds>3600) time=Math.floor(hours)+"h ";
+        if(seconds>60) time+=Math.floor(min)+"m ";
+        time+=Math.floor(sec)+"s";
         return time.replace(".0", "");
     }
 

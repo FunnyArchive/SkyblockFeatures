@@ -410,6 +410,15 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Gemstone Tracker",
+            description = "Tracks the stats from mining gemstones like Coins per hour",
+            category = "Mining",
+            subcategory = "Trackers"
+    )
+    public boolean gemstoneTracker = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Commissions Tracker",
             description = "Tracks your progress on commissions",
             category = "Mining",
