@@ -15,6 +15,10 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
 import gg.essential.api.EssentialAPI;
+import gg.essential.vigilance.Vigilance;
+import gg.essential.vigilance.Vigilant;
+import gg.essential.vigilance.data.Category;
+import gg.essential.vigilance.data.CategoryItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.settings.KeyBinding;
@@ -264,6 +268,12 @@ public class skyblockfeatures {
         usingDungeonRooms = Loader.isModLoaded("dungeonrooms");
         usingLabymod = Loader.isModLoaded("labymod");
         usingNEU = Loader.isModLoaded("notenoughupdates");
+        // for(Category category:config.getCategories()) {
+        //     System.out.println(category.getName());
+        //     for(CategoryItem item:category.getItems()) {
+        //         System.out.println(item);
+        //     }
+        // }
 
         ClientCommandHandler cch = ClientCommandHandler.instance;
 

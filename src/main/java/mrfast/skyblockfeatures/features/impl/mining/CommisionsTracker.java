@@ -36,7 +36,7 @@ public class CommisionsTracker {
       public void render() {
           ArrayList<String> text = new ArrayList<>();
           try {
-              if(mc.thePlayer == null || !Utils.inSkyblock || !SBInfo.getInstance().getLocation().equals("mining_3")) return;
+              if(mc.thePlayer == null || !Utils.inSkyblock || !SBInfo.getInstance().getLocation().equals("mining_3") || !skyblockfeatures.config.CommisionsTracker) return;
 
               text.add(ChatFormatting.BLUE+""+ChatFormatting.BOLD+"Commissions");
               List<String> commissions = new ArrayList<String>();
@@ -45,6 +45,9 @@ public class CommisionsTracker {
 
               if(!Utils.cleanColour(mc.ingameGUI.getTabList().getPlayerName(TabListUtils.getTabEntries().get(52))).isEmpty()) {
                 commissions.add(mc.ingameGUI.getTabList().getPlayerName(TabListUtils.getTabEntries().get(52)));
+              }
+              if(!Utils.cleanColour(mc.ingameGUI.getTabList().getPlayerName(TabListUtils.getTabEntries().get(53))).isEmpty()) {
+                commissions.add(mc.ingameGUI.getTabList().getPlayerName(TabListUtils.getTabEntries().get(53)));
               }
               for(String commission : commissions) {
                 commission = Utils.cleanColour(commission);

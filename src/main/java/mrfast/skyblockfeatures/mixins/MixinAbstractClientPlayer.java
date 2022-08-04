@@ -22,10 +22,10 @@ public abstract class MixinAbstractClientPlayer {
     @Inject(method={"getLocationCape"}, at={@At(value="HEAD")}, cancellable=true)
     public void getLocationCape(CallbackInfoReturnable<ResourceLocation> callbackInfoReturnable) {
         NetworkPlayerInfo info = this.getPlayerInfo();
-        assert info != null;
-
-        if (CapeUtils.is_name_valid(info.getGameProfile().getName())) {
-            callbackInfoReturnable.setReturnValue(new ResourceLocation("skyblockfeatures","capes/cape.png"));
+        if(info != null) {
+            if (CapeUtils.is_name_valid(info.getGameProfile().getName())) {
+                callbackInfoReturnable.setReturnValue(new ResourceLocation("skyblockfeatures","capes/cape.png"));
+            }
         }
     }
 }

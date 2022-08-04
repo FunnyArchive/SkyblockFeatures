@@ -9,6 +9,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
+import mrfast.skyblockfeatures.events.SecondPassedEvent;
 import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
 import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.NumberUtil;
@@ -21,15 +22,54 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 public class AuctionFeatures {
     public static HashMap<ItemStack, Double> items = new HashMap<ItemStack, Double>();
-    public static HashMap<ItemStack, Double> selfItems = new HashMap<ItemStack, Double>();
+    public static List<Auction> selfItems = new ArrayList<>();
+
+    // Fixing neu bug with it
+    public static int sec = 0;
+    public static double itemCount = 0;
+    @SubscribeEvent
+    public void onSeconds(SecondPassedEvent event) {
+        selfItems.clear();
+    }
+
+    @SubscribeEvent
+    public void onTick(ClientTickEvent event) {
+        if (!Utils.inSkyblock || !skyblockfeatures.usingNEU) return;
+        itemCount = 0;
+        for(ItemStack stack:Utils.GetMC().thePlayer.openContainer.inventoryItemStacks) {
+            if(ItemUtil.getRarity(stack) != null) {
+                itemCount++;
+            }
+        }
+        if(skyblockfeatures.usingNEU) {
+            // if(itemCount > selfItems.size()) {
+            //     selfItems = selfItems.subList(0, (int) (itemCount-1));
+            // }
+            System.out.println(itemCount+" "+selfItems.size()+" "+selfItems);
+        }
+    }
 
     @SubscribeEvent
     public void onCloseWindow(GuiContainerEvent.CloseWindowEvent event) {
         if (!Utils.inSkyblock) return;
-        selfItems.clear();
+        items.clear();
+        sec=0;
+    }
+
+    public class Auction {
+        public Double profit;
+        public ItemStack stack;
+        public String identifer;
+        
+        public Auction(Double p,ItemStack s,String i) {
+            profit = p;
+            stack = s;
+            identifer = i;
+        }
     }
 
     // @SubscribeEvent
@@ -57,7 +97,7 @@ public class AuctionFeatures {
     //         }
     //     }
     // }
-
+    Integer menuProfit = 0;
     @SubscribeEvent
     public void onDrawSlots(GuiContainerEvent.DrawSlotEvent.Pre event) {
         if (event.gui instanceof GuiChest ) {
@@ -82,7 +122,7 @@ public class AuctionFeatures {
                         }
                         String identifier = AuctionData.getIdentifier(stack);
                         if (identifier != null && price != 0) {
-                            Double avgBinValue = AuctionData.averageLowestBINs.get(identifier);
+                            Double avgBinValue = AuctionData.lowestBINs.get(identifier);
                             if(avgBinValue != null) {
                                 Double profit = avgBinValue - price;
                                 if (price < (avgBinValue)) {
@@ -112,8 +152,18 @@ public class AuctionFeatures {
                         if (identifier != null && price != 0) {
                             Double BinValue = AuctionData.lowestBINs.get(identifier);
                             if(BinValue != null) {
-                                Double profit = BinValue - price;
-                                selfItems.put(stack, profit*stack.stackSize);
+                                Double profit = (BinValue - price)*stack.stackSize;
+                                Boolean dupe = false;
+                                Auction auction = new Auction(profit, stack, identifier);
+
+                                for(Auction auc:selfItems) {
+                                    if(auc.stack == auction.stack || auc.identifer == auction.identifer || auc.profit == auction.profit) {
+                                        dupe = true;
+                                    }
+                                }
+                                if(!dupe && (selfItems.size()<itemCount || selfItems.size() == 0)) {
+                                    selfItems.add(auction);
+                                }
                             }
                         }
                     }
@@ -142,7 +192,19 @@ public class AuctionFeatures {
                         }
                         String identifier = AuctionData.getIdentifier(stack);
                         if (identifier != null && price != 0) {
-                            selfItems.put(stack, (double) price);
+                            // selfItems.put(stack, (double) price);
+                            Double profit = (double) price;
+                            Boolean dupe = false;
+                            Auction auction = new Auction(profit, stack, identifier);
+
+                            for(Auction auc:selfItems) {
+                                if(auc.stack == auction.stack || auc.identifer == auction.identifer || auc.profit == auction.profit) {
+                                    dupe = true;
+                                }
+                            }
+                            if(!dupe && (selfItems.size()<itemCount || selfItems.size() == 0)) {
+                                selfItems.add(auction);
+                            }
                         }
                     }
                 }
@@ -158,7 +220,7 @@ public class AuctionFeatures {
             IInventory inv = chest.getLowerChestInventory();
             String chestName = inv.getDisplayName().getUnformattedText().trim();
             Double profit = (double) 0;
-            for (Double f : selfItems.values()) profit += f;
+            for (Auction auction:selfItems) profit += auction.profit;
 
             if(chestName.contains("Auction View") && !chestName.contains("BIN")) {
                 for(Slot slot:gui.inventorySlots.inventorySlots) {
@@ -266,7 +328,8 @@ public class AuctionFeatures {
                 int expired = 0;
                 int coins = 0;
                 List<ItemStack> endedAuctions = new ArrayList<ItemStack>();
-                for (ItemStack stack : selfItems.keySet()) {
+                for (Auction auction : selfItems) {
+                    ItemStack stack = auction.stack;
                     for(String line : ItemUtil.getItemLore(stack)) {
                         if(line.contains("Ended")) {
                             unclaimed++;
@@ -290,7 +353,7 @@ public class AuctionFeatures {
                 }
 
                 Utils.drawGraySquareWithBorder(180, 0, 150, 8*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
-
+ 
                 String[] lines = {
                     ChatFormatting.GREEN+""+(unclaimed/2)+ChatFormatting.WHITE+" Unclaimed",
                     ChatFormatting.RED+""+expired+ChatFormatting.WHITE+" Expired",
@@ -304,6 +367,7 @@ public class AuctionFeatures {
                     lineCount++;
                 }
             }
+            
             if(chestName.contains("Your Bids")) {
                 int ended = 0;
                 int winning = 0;
@@ -311,13 +375,16 @@ public class AuctionFeatures {
                 int coins = 0;
                 int coinsSpent = 0;
                 List<ItemStack> endedAuctions = new ArrayList<ItemStack>();
-                for (ItemStack stack : selfItems.keySet()) {
+                List<String> winningAuctions = new ArrayList<String>();
+                for (Auction auction : selfItems) {
+                    ItemStack stack = auction.stack;
                     for(String line : ItemUtil.getItemLore(stack)) {
                         if(line.contains("Ended")) {
                             ended++;
                         }
-                        if(line.contains("Bidder") && line.contains(Utils.GetMC().thePlayer.getName())) {
+                        if(line.contains("Bidder") && line.contains(Utils.GetMC().thePlayer.getName()) && !winningAuctions.contains(auction.identifer)) {
                             winning++;
+                            winningAuctions.add(auction.identifer);
                             try {
                                 coinsSpent+=Integer.parseInt(Utils.cleanColour(line).replaceAll("[^0-9]", ""));
                             } catch (Exception e) {
@@ -327,13 +394,14 @@ public class AuctionFeatures {
                         if(line.contains("Bidder") && !line.contains(Utils.GetMC().thePlayer.getName())) {
                             losing++;
                             endedAuctions.add(stack);
-                            profit -= selfItems.get(stack);
+                            profit -= auction.profit;
                         }
                     }
                 }
 
                 Utils.drawGraySquareWithBorder(180, 0, 150, 8*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
-
+                
+                
                 String[] lines = {
                     ChatFormatting.GREEN+""+winning+ChatFormatting.WHITE+" Winning Auctions",
                     ChatFormatting.RED+""+losing+ChatFormatting.WHITE+" Losing Auctions",

@@ -29,7 +29,7 @@ public class CapeUtils {
             String s;
 
             while ((s = reader.readLine()) != null) {
-                name_list.add(s);
+                name_list.add(s.toLowerCase());
             }
 
             return name_list;
@@ -40,7 +40,7 @@ public class CapeUtils {
 
     public static boolean is_name_valid(String name) {
         for (String u : Objects.requireNonNull(final_name_list)) {
-            if (u.contains(name.toString())) {
+            if (u.contains(name.toLowerCase())) {
                 return true;
             }
         }
