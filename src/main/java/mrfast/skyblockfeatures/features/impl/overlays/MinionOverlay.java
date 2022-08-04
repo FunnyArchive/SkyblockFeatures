@@ -26,7 +26,7 @@ public class MinionOverlay {
             ContainerChest chest = (ContainerChest) gui.inventorySlots;
             IInventory inv = chest.getLowerChestInventory();
             String chestName = inv.getDisplayName().getUnformattedText().trim();
-            if(chestName.contains(" Minion ")) {
+            if(chestName.contains(" Minion ") && !chestName.contains("Recipe")) {
                 int secondsPerAction = 0;
                 ItemStack generating = null;
                 for(Slot slot:gui.inventorySlots.inventorySlots) {
@@ -42,11 +42,24 @@ public class MinionOverlay {
                             }
                         }
                     }
-                    if(slot.getHasStack() && ItemUtil.getRarity(slot.getStack()) == ItemRarity.COMMON) {
+                    if(slot.getHasStack() && generating == null && ItemUtil.getRarity(slot.getStack()) == ItemRarity.COMMON && !slot.getStack().getDisplayName().contains("Block")) {
                         if(slot.getSlotIndex() == 21) generating = slot.getStack();
                         if(slot.getSlotIndex() == 22) generating = slot.getStack();
                         if(slot.getSlotIndex() == 23) generating = slot.getStack();
                         if(slot.getSlotIndex() == 24) generating = slot.getStack();
+                        if(slot.getSlotIndex() == 25) generating = slot.getStack();
+
+                        if(slot.getSlotIndex() == 30) generating = slot.getStack();
+                        if(slot.getSlotIndex() == 31) generating = slot.getStack();
+                        if(slot.getSlotIndex() == 32) generating = slot.getStack();
+                        if(slot.getSlotIndex() == 33) generating = slot.getStack();
+                        if(slot.getSlotIndex() == 34) generating = slot.getStack();
+
+                        if(slot.getSlotIndex() == 39) generating = slot.getStack();
+                        if(slot.getSlotIndex() == 40) generating = slot.getStack();
+                        if(slot.getSlotIndex() == 41) generating = slot.getStack();
+                        if(slot.getSlotIndex() == 42) generating = slot.getStack();
+                        if(slot.getSlotIndex() == 43) generating = slot.getStack();
                     }
                 }
                 if(generating != null && ItemUtil.getRarity(generating) == ItemRarity.COMMON) {
@@ -72,7 +85,25 @@ public class MinionOverlay {
                                 lineCount++;
                             }
                         } else {
-                            Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+"Unable to get item price!", 190, 0, -1);
+                            String[] lines = {
+                                ChatFormatting.RED+"Unable to get item price!",
+                                ChatFormatting.RED+"Minion Generates: "+identifier
+                            };
+                            int lineCount = 0;
+                            for(String line:lines) {
+                                Utils.GetMC().fontRendererObj.drawString(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
+                                lineCount++;
+                            }
+                        }
+                    } else {
+                        String[] lines = {
+                            ChatFormatting.RED+"Unable to get item id!",
+                            ChatFormatting.RED+"Minion Generates: "+identifier
+                        };
+                        int lineCount = 0;
+                        for(String line:lines) {
+                            Utils.GetMC().fontRendererObj.drawString(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
+                            lineCount++;
                         }
                     }
                 }

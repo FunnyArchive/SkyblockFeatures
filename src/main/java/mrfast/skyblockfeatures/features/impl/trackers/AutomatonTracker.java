@@ -164,6 +164,7 @@ public class AutomatonTracker {
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && !hidden) {
                 String[] lines = {
                     ChatFormatting.GREEN+"Time Elapsed: §r"+Utils.secondsToTime(totalSeconds),
+                    ChatFormatting.GREEN+"Automatons Killed: §r"+NumberUtil.nf.format(kills),
                     ChatFormatting.BLUE+"Control Switch: §r"+Control+" §7("+NumberUtil.nf.format(ControlPrice)+")",
                     ChatFormatting.BLUE+"FTX 3070: §r"+FTX+" §7("+NumberUtil.nf.format(FTXPrice)+")",
                     ChatFormatting.BLUE+"Electron Transmitter: §r"+Electron+" §7("+NumberUtil.nf.format(ElectronPrice)+")",

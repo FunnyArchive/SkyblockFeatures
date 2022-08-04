@@ -103,6 +103,7 @@ import mrfast.skyblockfeatures.features.impl.misc.ItemFeatures;
 import mrfast.skyblockfeatures.features.impl.misc.LockingSlots;
 import mrfast.skyblockfeatures.features.impl.misc.MiscFeatures;
 import mrfast.skyblockfeatures.features.impl.misc.SpamHider;
+import mrfast.skyblockfeatures.features.impl.misc.TreecapCooldown;
 import mrfast.skyblockfeatures.features.impl.overlays.CompactChat;
 import mrfast.skyblockfeatures.features.impl.overlays.CrystalHollowsMap;
 import mrfast.skyblockfeatures.features.impl.overlays.DamageOverlays;
@@ -255,7 +256,7 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new MinionOverlay());
         MinecraftForge.EVENT_BUS.register(new AutomatonTracker());
         MinecraftForge.EVENT_BUS.register(new GemstoneMiningOverlay());
-
+        MinecraftForge.EVENT_BUS.register(new TreecapCooldown());
     }
 
     @Mod.EventHandler

@@ -41,7 +41,7 @@ public class FishingHelper {
             GlStateManager.enableCull();
             Color color = 
                 fishingHook!=null?
-                    fishingHook.getDistance(x, fishingHook.posY, z)<=1?
+                    fishingHook.getDistance(geyser.getXCoordinate(), fishingHook.posY, geyser.getZCoordinate())<=1?
                         new Color(85,255,85): // Green
                     new Color(255,85,255): // Magenta
                 new Color(255,85,255); // Magenta

@@ -66,14 +66,14 @@ public class ChestProfit {
                     ArrayList<String> lines = new ArrayList<>();
                     GlStateManager.color(1, 1, 1, 1);
                     GlStateManager.disableLighting();
-                    Utils.drawGraySquareWithBorder(180, 0, 150, (items.keySet().size()+3)*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
+                    Utils.drawGraySquareWithBorder(180, 0, 150, (items.keySet().size()+4)*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
 
                     double profit = chestValue - price;
                     for (ItemStack item : items.keySet()) {
                         lines.add(item.getDisplayName() + "§f: §a" + NumberUtil.nf.format(items.get(item)));
                     }
                     lines.add("");
-                    lines.add("Profit: §f:" + (profit > 0 ? "a" : "c")+NumberUtil.nf.format(profit));
+                    lines.add("Profit: §" + (profit > 0 ? "a" : "c")+NumberUtil.nf.format(profit));
                     
                     int lineCount = 0;
                     for(String line:lines) {
