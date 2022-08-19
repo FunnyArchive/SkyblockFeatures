@@ -27,10 +27,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 public class AuctionFeatures {
     public static HashMap<ItemStack, Double> items = new HashMap<ItemStack, Double>();
     public static List<Auction> selfItems = new ArrayList<>();
-
-    // Fixing neu bug with it
     public static int sec = 0;
     public static double itemCount = 0;
+
     @SubscribeEvent
     public void onSeconds(SecondPassedEvent event) {
         selfItems.clear();
@@ -45,12 +44,9 @@ public class AuctionFeatures {
                 itemCount++;
             }
         }
-        if(skyblockfeatures.usingNEU) {
-            // if(itemCount > selfItems.size()) {
-            //     selfItems = selfItems.subList(0, (int) (itemCount-1));
-            // }
-            System.out.println(itemCount+" "+selfItems.size()+" "+selfItems);
-        }
+        // if(itemCount > selfItems.size()) {
+        //     selfItems = selfItems.subList(0, (int) (itemCount-1));
+        // }
     }
 
     @SubscribeEvent
@@ -97,7 +93,7 @@ public class AuctionFeatures {
     //         }
     //     }
     // }
-    Integer menuProfit = 0;
+
     @SubscribeEvent
     public void onDrawSlots(GuiContainerEvent.DrawSlotEvent.Pre event) {
         if (event.gui instanceof GuiChest ) {
@@ -161,6 +157,7 @@ public class AuctionFeatures {
                                         dupe = true;
                                     }
                                 }
+
                                 if(!dupe && (selfItems.size()<itemCount || selfItems.size() == 0)) {
                                     selfItems.add(auction);
                                 }
@@ -202,7 +199,7 @@ public class AuctionFeatures {
                                     dupe = true;
                                 }
                             }
-                            if(!dupe && (selfItems.size()<itemCount || selfItems.size() == 0)) {
+                            if(!skyblockfeatures.usingNEU || (skyblockfeatures.usingNEU && !dupe && (selfItems.size()<itemCount || selfItems.size() == 0))) {
                                 selfItems.add(auction);
                             }
                         }
@@ -290,61 +287,69 @@ public class AuctionFeatures {
                 }
             }
 
-            // if(chestName.contains("Create") && (chestName.contains("BIN") || chestName.contains("Auction"))) {
-            //     for(Slot slot:gui.inventorySlots.inventorySlots) {
-            //         if (slot.getHasStack() && slot.getSlotIndex() == 13) {
-            //             ItemStack stack = slot.getStack();
-            //             String auctionIdentifier = AuctionData.getIdentifier(stack);
-            //             Double lowestBin = 0.0;
-            //             Double avgBin = 0.0;
-            //             if (auctionIdentifier != null) {
-            //                 lowestBin = AuctionData.lowestBINs.get(auctionIdentifier);
-            //                 avgBin = AuctionData.lowestBINs.get(auctionIdentifier);
-            //                 Double resellProfit = 0.0;
-            //                 if(resellProfit != 0) {
-            //                     Utils.drawGraySquareWithBorder(180, 0, 150, 6*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
+            if(chestName.contains("Create") && (chestName.contains("BIN") || chestName.contains("Auction"))) {
+                for(Slot slot:gui.inventorySlots.inventorySlots) {
+                    if (slot.getHasStack() && slot.getSlotIndex() == 13) {
+                        ItemStack stack = slot.getStack();
+                        String auctionIdentifier = AuctionData.getIdentifier(stack);
+                        Double lowestBin = 0.0;
+                        Double avgBin = 0.0;
+                        if (auctionIdentifier != null) {
+                            lowestBin = AuctionData.lowestBINs.get(auctionIdentifier);
+                            avgBin = AuctionData.lowestBINs.get(auctionIdentifier);
+                            Double resellProfit = 0.0;
+                            if(resellProfit != 0) {
+                                Utils.drawGraySquareWithBorder(180, 0, 150, 6*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
                             
-            //                     String avgBinString = avgBin != null?ChatFormatting.GOLD+NumberUtil.nf.format(avgBin):ChatFormatting.RED+"Unknown";
-            //                     String lowestBinString = lowestBin != null?ChatFormatting.GOLD+NumberUtil.nf.format(lowestBin):ChatFormatting.RED+"Unknown";
-            //                     String[] lines = {
-            //                         ChatFormatting.WHITE+"Item Price: "+ChatFormatting.GOLD+NumberUtil.nf.format(lowestBin-(0.03*lowestBin)),
-            //                         ChatFormatting.WHITE+"Lowest BIN: "+lowestBinString,
-            //                         ChatFormatting.WHITE+"Average BIN: "+avgBinString,
-            //                         ChatFormatting.WHITE+"Suggested Listing Price: "+avgBinString,
-            //                     };
-            //                     int lineCount = 0;
-            //                     for(String line:lines) {
-            //                         Utils.GetMC().fontRendererObj.drawString(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
-            //                         lineCount++;
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
+                                String avgBinString = avgBin != null?ChatFormatting.GOLD+NumberUtil.nf.format(avgBin):ChatFormatting.RED+"Unknown";
+                                String lowestBinString = lowestBin != null?ChatFormatting.GOLD+NumberUtil.nf.format(lowestBin):ChatFormatting.RED+"Unknown";
+                                String[] lines = {
+                                    ChatFormatting.WHITE+"Item Price: "+ChatFormatting.GOLD+NumberUtil.nf.format(lowestBin-(0.03*lowestBin)),
+                                    ChatFormatting.WHITE+"Lowest BIN: "+lowestBinString,
+                                    ChatFormatting.WHITE+"Average BIN: "+avgBinString,
+                                    ChatFormatting.WHITE+"Suggested Listing Price: "+avgBinString,
+                                };
+                                int lineCount = 0;
+                                for(String line:lines) {
+                                    Utils.GetMC().fontRendererObj.drawString(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
+                                    lineCount++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             
             if(chestName.contains("Manage Auctions")) {
                 int unclaimed = 0;
                 int expired = 0;
                 int coins = 0;
+                int toCollect = 0;
                 List<ItemStack> endedAuctions = new ArrayList<ItemStack>();
+
                 for (Auction auction : selfItems) {
                     ItemStack stack = auction.stack;
                     for(String line : ItemUtil.getItemLore(stack)) {
+                        line = Utils.cleanColour(line);
                         if(line.contains("Ended")) {
                             unclaimed++;
                         }
-                        if(line.contains("Sold")) {
+                        if(line.contains("Sold for: ") || line.contains("Status: Sold")) {
                             unclaimed++;
+                            try {
+                                toCollect+=Integer.parseInt(line.replaceAll("[^0-9]", ""));
+                            } catch (Exception e) {
+                                //TODO: handle exception
+                            }
                             endedAuctions.add(stack);
                         }
                         if(line.contains("Expired")) {
                             expired++;
                             endedAuctions.add(stack);
                         }
-                        if((line.contains("Buy it now:") || line.contains("Top bid:")) && endedAuctions.contains(stack)) {
+                        if((line.contains("Buy it now:") || line.contains("Top bid:"))) {
                             try {
-                                coins+=Integer.parseInt(Utils.cleanColour(line).replaceAll("[^0-9]", ""));
+                                coins+=Integer.parseInt(line.replaceAll("[^0-9]", ""));
                             } catch (Exception e) {
                                 //TODO: handle exception
                             }
@@ -358,8 +363,8 @@ public class AuctionFeatures {
                     ChatFormatting.GREEN+""+(unclaimed/2)+ChatFormatting.WHITE+" Unclaimed",
                     ChatFormatting.RED+""+expired+ChatFormatting.WHITE+" Expired",
                     "",
-                    ChatFormatting.WHITE+"Coins to collect: "+ChatFormatting.GOLD+NumberUtil.nf.format(coins),
-                    ChatFormatting.WHITE+"Total Value: "+ChatFormatting.GOLD+NumberUtil.nf.format(profit)
+                    ChatFormatting.WHITE+"Coins to collect: "+ChatFormatting.GOLD+NumberUtil.nf.format(toCollect),
+                    ChatFormatting.WHITE+"Total Ask Value: "+ChatFormatting.GOLD+NumberUtil.nf.format(coins)
                 };
                 int lineCount = 0;
                 for(String line:lines) {
@@ -379,6 +384,7 @@ public class AuctionFeatures {
                 for (Auction auction : selfItems) {
                     ItemStack stack = auction.stack;
                     for(String line : ItemUtil.getItemLore(stack)) {
+                        line = Utils.cleanColour(line);
                         if(line.contains("Ended")) {
                             ended++;
                         }

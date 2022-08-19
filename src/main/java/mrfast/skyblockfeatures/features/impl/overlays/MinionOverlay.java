@@ -36,7 +36,7 @@ public class MinionOverlay {
                             String line = Utils.cleanColour(lore.get(i));
                             if(line.contains("Actions:")) {
                                 secondsPerAction = Integer.parseInt(line.replaceAll("[^0-9]", ""));
-                                if(secondsPerAction>100) {
+                                if(line.contains(".")) {
                                     secondsPerAction/=10;
                                 }
                             }
@@ -70,9 +70,9 @@ public class MinionOverlay {
                             Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+"API Key Required! /api new", 190, 0, -1);
                             return;
                         }
-                        Float sellPrice = AuctionData.bazaarPrices.get(identifier);
+                        Double sellPrice = AuctionData.bazaarPrices.get(identifier);
                         if(sellPrice != null) {
-                            Float perHour = (3600/secondsPerAction)*sellPrice;
+                            Double perHour = (3600/secondsPerAction)*sellPrice;
 
                             String[] lines = {
                                 ChatFormatting.LIGHT_PURPLE+chestName,

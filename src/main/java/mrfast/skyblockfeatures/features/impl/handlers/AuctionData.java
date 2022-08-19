@@ -24,7 +24,7 @@ public class AuctionData {
     public static final String dataURL = "https://moulberry.codes/lowestbin.json";
     public static final HashMap<String, Double> lowestBINs = new HashMap<>();
     public static final HashMap<String, Double> averageLowestBINs = new HashMap<>();
-    public static final HashMap<String, Float> bazaarPrices = new HashMap<>();
+    public static final HashMap<String, Double> bazaarPrices = new HashMap<>();
     public static final StopWatch reloadTimer = new StopWatch();
 
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -101,7 +101,7 @@ public class AuctionData {
                         if (entry.getValue().isJsonObject()) {
                             JsonObject product = entry.getValue().getAsJsonObject();
                             JsonObject quickStatus = product.get("quick_status").getAsJsonObject();
-                            Float sellPrice = quickStatus.get("sellPrice").getAsFloat();
+                            Double sellPrice = quickStatus.get("sellPrice").getAsDouble();
                             String id = quickStatus.get("productId").toString().split(":")[0];
                             bazaarPrices.put(id.replace("\"", ""), sellPrice);
                         }

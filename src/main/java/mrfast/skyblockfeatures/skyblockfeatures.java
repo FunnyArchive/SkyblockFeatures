@@ -95,7 +95,6 @@ import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
 import mrfast.skyblockfeatures.features.impl.handlers.KeyShortcuts;
 import mrfast.skyblockfeatures.features.impl.hidestuff.HideStuff;
 import mrfast.skyblockfeatures.features.impl.mining.CommisionsTracker;
-import mrfast.skyblockfeatures.features.impl.mining.MetalDetectorHelp;
 import mrfast.skyblockfeatures.features.impl.mining.MiningFeatures;
 import mrfast.skyblockfeatures.features.impl.misc.AuctionFeatures;
 import mrfast.skyblockfeatures.features.impl.misc.ConjuringCooldown;
@@ -256,7 +255,6 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new FishingHelper());
         MinecraftForge.EVENT_BUS.register(new AuctionFeatures());
         MinecraftForge.EVENT_BUS.register(new CapeUtils());
-        MinecraftForge.EVENT_BUS.register(new MetalDetectorHelp());
         MinecraftForge.EVENT_BUS.register(new MinionOverlay());
         MinecraftForge.EVENT_BUS.register(new AutomatonTracker());
         MinecraftForge.EVENT_BUS.register(new GemstoneMiningOverlay());

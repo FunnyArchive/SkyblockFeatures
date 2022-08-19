@@ -38,10 +38,9 @@ public class ActionBarListener {
 		if (event.type == 2) {
 			String actionBar = event.message.getFormattedText();
 			String[] actionBarSplit = actionBar.split(" ");
-			
 			for (String piece : actionBarSplit) {
 				String trimmed = piece.trim();
-				String coloursStripped = trimmed.replaceAll("\247.", "");
+				String coloursStripped = trimmed.replaceAll("\247.", "").replaceAll(",", "");;
 
 				if(trimmed.isEmpty())
 					continue;
@@ -54,7 +53,6 @@ public class ActionBarListener {
 					parseAndSetMana(coloursStripped.substring(0, coloursStripped.length() - 1));
 				}
 				
-
 				actionBar = actionBar.trim();
 
 				event.message = new ChatComponentText(actionBar);

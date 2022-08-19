@@ -51,6 +51,7 @@ public class CommisionsTracker {
               }
               for(String commission : commissions) {
                 commission = Utils.cleanColour(commission);
+                if(commission.contains("Forges")) continue;
                 Pattern regex = Pattern.compile("(\\d+(?:\\.\\d+)?)");
                 Matcher matcher = regex.matcher(commission);
                 

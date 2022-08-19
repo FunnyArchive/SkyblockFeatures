@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import mrfast.skyblockfeatures.utils.CapeUtils;
+import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.util.ResourceLocation;
@@ -23,6 +24,7 @@ public abstract class MixinAbstractClientPlayer {
     public void getLocationCape(CallbackInfoReturnable<ResourceLocation> callbackInfoReturnable) {
         NetworkPlayerInfo info = this.getPlayerInfo();
         if(info != null) {
+            if(Utils.GetMC().thePlayer.getName()==info.getGameProfile().getName()) Utils.SendMessage(CapeUtils.is_name_valid(info.getGameProfile().getName())+"");
             if (CapeUtils.is_name_valid(info.getGameProfile().getName())) {
                 callbackInfoReturnable.setReturnValue(new ResourceLocation("skyblockfeatures","capes/cape.png"));
             }

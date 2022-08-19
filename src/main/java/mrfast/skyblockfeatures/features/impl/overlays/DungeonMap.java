@@ -50,7 +50,7 @@ public class DungeonMap {
 			case 2: return 0;
 			case 3: return -2;
 			case 4: return -16;
-			case 5: return -10;
+			case 5: return 0;
 		}
 		return 0;
 	}
@@ -60,7 +60,7 @@ public class DungeonMap {
 			case 2: return 0;
 			case 3: return 0;
 			case 4: return 0;
-			case 5: return -8;
+			case 5: return 0;
 		}
 		return 0;
 	}

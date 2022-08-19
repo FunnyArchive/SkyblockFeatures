@@ -55,8 +55,10 @@ public class ChestProfit {
                         ItemStack lootSlot = inv.getStackInSlot(i);
                         String identifier = AuctionData.getIdentifier(lootSlot);
                         if (identifier != null) {
-                            Double value = AuctionData.lowestBINs.get(identifier);
-                            if (value == null) value = 0D;
+                            Double value = AuctionData.averageLowestBINs.get(identifier);
+                            if (value == null) {
+                                value = AuctionData.bazaarPrices.get(identifier);
+                            }
                             chestValue += value;
                             items.put(lootSlot, value);
                         }
@@ -70,7 +72,8 @@ public class ChestProfit {
 
                     double profit = chestValue - price;
                     for (ItemStack item : items.keySet()) {
-                        lines.add(item.getDisplayName() + "§f: §a" + NumberUtil.nf.format(items.get(item)));
+                        String name = item.getDisplayName().contains("Enchanted")?ItemUtil.getItemLore(item).get(0):item.getDisplayName();
+                        lines.add(name + "§f: §a" + NumberUtil.nf.format(items.get(item)));
                     }
                     lines.add("");
                     lines.add("Profit: §" + (profit > 0 ? "a" : "c")+NumberUtil.nf.format(profit));
