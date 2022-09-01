@@ -42,6 +42,7 @@ public class HideGlass {
         event.message = orignal;
     }
 
+    // Just cuz i think it looks better idk
     @SubscribeEvent
     public void onTooltipLow(ItemTooltipEvent event) {
         if(event.itemStack.getItem() instanceof ItemArmor && !Utils.inSkyblock) {
@@ -118,10 +119,4 @@ public class HideGlass {
             event.setCanceled(true);
         }
     }
-
-
-
-
-    
-
 }
