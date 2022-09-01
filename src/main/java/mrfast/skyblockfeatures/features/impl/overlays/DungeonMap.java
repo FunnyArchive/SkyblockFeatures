@@ -121,6 +121,7 @@ public class DungeonMap {
 		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
 		float z = 1.0F;
 		for (Entry<String,Vec4b> entry : mapData.mapDecorations.entrySet()) {
+			if(self == entry.getKey()) continue;
 			Vec4b vec4b = entry.getValue();
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(0, 0, z);
@@ -154,49 +155,49 @@ public class DungeonMap {
 		GlStateManager.pushMatrix();
 		for (Entry<String,Vec4b> entry : mapData.mapDecorations.entrySet()) {
 			if(entry.getKey() == self) {
-				
-			double x = Math.round((Utils.GetMC().thePlayer.posX)/(mapData.scale*0.8))+140+getMapFloorXOffset();
-			double z = Math.round((Utils.GetMC().thePlayer.posZ)/(mapData.scale*0.8))+140+getMapFloorZOffset();
+				Utils.SendMessage(entry.getValue()+"");
+				double x = Math.round((Utils.GetMC().thePlayer.posX)/(mapData.scale*0.8))+140+getMapFloorXOffset();
+				double z = Math.round((Utils.GetMC().thePlayer.posZ)/(mapData.scale*0.8))+140+getMapFloorZOffset();
 
-			AbstractClientPlayer aplayer = (AbstractClientPlayer) Utils.GetMC().thePlayer;
-			ResourceLocation skin = aplayer.getLocationSkin();
-			int k = 0;
+				AbstractClientPlayer aplayer = (AbstractClientPlayer) Utils.GetMC().thePlayer;
+				ResourceLocation skin = aplayer.getLocationSkin();
+				int k = 0;
 
-			if(skin != DefaultPlayerSkin.getDefaultSkin(aplayer.getUniqueID())) { 
-				Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
+				if(skin != DefaultPlayerSkin.getDefaultSkin(aplayer.getUniqueID())) { 
+					Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
 
-				GlStateManager.pushMatrix();
+					GlStateManager.pushMatrix();
 
-				GlStateManager.disableDepth();
-				GlStateManager.enableBlend();
-				GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
+					GlStateManager.disableDepth();
+					GlStateManager.enableBlend();
+					GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-				GlStateManager.translate(x, z, -0.02F);
-				GlStateManager.scale(1.0f, 1.0f, 1);
-				GlStateManager.rotate(Utils.GetMC().thePlayer.rotationYawHead-180, 0.0F, 0.0F, 1.0F);
-				GlStateManager.translate(-0.5F, 0.5F, 0.0F);
-				
-				Gui.drawRect(-8/2-1,-8/2-1, 8/2+1, 8/2+1, 0xff111111);
-				GlStateManager.color(1, 1, 1, 1);
+					GlStateManager.translate(x, z, -0.02F);
+					GlStateManager.scale(1.0f, 1.0f, 1);
+					GlStateManager.rotate(Utils.GetMC().thePlayer.rotationYawHead-180, 0.0F, 0.0F, 1.0F);
+					GlStateManager.translate(-0.5F, 0.5F, 0.0F);
+					
+					Gui.drawRect(-8/2-1,-8/2-1, 8/2+1, 8/2+1, 0xff111111);
+					GlStateManager.color(1, 1, 1, 1);
 
-				Tessellator tessellator = Tessellator.getInstance();
-				WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+					Tessellator tessellator = Tessellator.getInstance();
+					WorldRenderer worldrenderer = tessellator.getWorldRenderer();
 
-				worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-				worldrenderer.pos(-8/2f, 8/2f, 30+((float)k * -0.005F)).tex(8/64f, 8/64f).endVertex();
-				worldrenderer.pos(8/2f, 8/2f, 30+((float)k * -0.005F)).tex(16/64f, 8/64f).endVertex();
-				worldrenderer.pos(8/2f, -8/2f, 30+((float)k * -0.005F)).tex(16/64f, 16/64f).endVertex();
-				worldrenderer.pos(-8/2f, -8/2f, 30+((float)k * -0.005F)).tex(8/64f, 16/64f).endVertex();
-				tessellator.draw();
+					worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+					worldrenderer.pos(-8/2f, 8/2f, 30+((float)k * -0.005F)).tex(8/64f, 8/64f).endVertex();
+					worldrenderer.pos(8/2f, 8/2f, 30+((float)k * -0.005F)).tex(16/64f, 8/64f).endVertex();
+					worldrenderer.pos(8/2f, -8/2f, 30+((float)k * -0.005F)).tex(16/64f, 16/64f).endVertex();
+					worldrenderer.pos(-8/2f, -8/2f, 30+((float)k * -0.005F)).tex(8/64f, 16/64f).endVertex();
+					tessellator.draw();
 
-				worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-				worldrenderer.pos(-8/2f, 8/2f, 30+((float)k * -0.005F)+0.001f).tex(8/64f+0.5f, 8/64f).endVertex();
-				worldrenderer.pos(8/2f, 8/2f, 30+((float)k * -0.005F)+0.001f).tex(16/64f+0.5f, 8/64f).endVertex();
-				worldrenderer.pos(8/2f, -8/2f, 30+((float)k * -0.005F)+0.001f).tex(16/64f+0.5f, 16/64f).endVertex();
-				worldrenderer.pos(-8/2f, -8/2f, 30+((float)k * -0.005F)+0.001f).tex(8/64f+0.5f, 16/64f).endVertex();
-				tessellator.draw();
+					worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+					worldrenderer.pos(-8/2f, 8/2f, 30+((float)k * -0.005F)+0.001f).tex(8/64f+0.5f, 8/64f).endVertex();
+					worldrenderer.pos(8/2f, 8/2f, 30+((float)k * -0.005F)+0.001f).tex(16/64f+0.5f, 8/64f).endVertex();
+					worldrenderer.pos(8/2f, -8/2f, 30+((float)k * -0.005F)+0.001f).tex(16/64f+0.5f, 16/64f).endVertex();
+					worldrenderer.pos(-8/2f, -8/2f, 30+((float)k * -0.005F)+0.001f).tex(8/64f+0.5f, 16/64f).endVertex();
+					tessellator.draw();
 
-				GlStateManager.popMatrix();
+					GlStateManager.popMatrix();
 				}
 			}
 		}

@@ -59,7 +59,7 @@ public class AuctionData {
                     NBTTagCompound enchants = extraAttr.getCompoundTag("enchantments");
                     if (!enchants.hasNoTags()) {
                         String enchant = enchants.getKeySet().iterator().next();
-                        id = enchant.toUpperCase(Locale.US) + ";" + enchants.getInteger(enchant);
+                        id = "ENCHANTMENT_"+enchant.toUpperCase(Locale.US) + "_" + enchants.getInteger(enchant);
                     }
                 }
             break;

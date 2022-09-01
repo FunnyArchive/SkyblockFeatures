@@ -65,6 +65,12 @@ public class ItemFeatures {
                         event.toolTip.add("§6Lowest BIN Price: §b" + total + (item.stackSize > 1 && !isSuperpairsReward ? " §7(" + NumberUtil.nf.format(Math.round(valuePer)) + " each§7)" : ""));
                     }
 
+                    valuePer = AuctionData.bazaarPrices.get(auctionIdentifier);
+                    if (valuePer != null) {
+                        String total = isSuperpairsReward ? NumberUtil.nf.format(valuePer) : NumberUtil.nf.format(valuePer * item.stackSize);
+                        event.toolTip.add("§6Lowest Bazaar Price: §b" + total + (item.stackSize > 1 && !isSuperpairsReward ? " §7(" + NumberUtil.nf.format(Math.round(valuePer)) + " each§7)" : ""));
+                    }
+
                     Double avgValuePer = AuctionData.averageLowestBINs.get(auctionIdentifier);
                     if (skyblockfeatures.config.showAvgLowestBINPrice && avgValuePer!=null) {
                         String total = isSuperpairsReward ? NumberUtil.nf.format(valuePer) : NumberUtil.nf.format(avgValuePer * item.stackSize);

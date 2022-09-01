@@ -51,32 +51,37 @@ public class FishingHelper {
         }
         // Diana event testing - waiting for reelection to keep on developing
 
-        // Vec3 prev = null;
-        // try {
-        //     double xDif = 0;
-        //     double zDif = 0;
-        //     double index = 0;
-        //     for(Vec3 particle : particles) {
-        //         index++;
-        //         if(prev == null) {
-        //             prev = particle;
-        //             continue;
-        //         }
-        //         GlStateManager.disableCull();
-        //         RenderUtil.draw3DLine(prev, particle, 5, new Color(255, 85, 85), event.partialTicks);
-        //         GlStateManager.enableCull();
-        //         xDif = prev.xCoord-particle.xCoord;
-        //         zDif = prev.zCoord-particle.zCoord;
-        //         if(index == particles.size()) {
-        //             GlStateManager.disableCull();
-        //             RenderUtil.draw3DLine(particle, new Vec3(particle.xCoord+xDif*-300,particle.yCoord,particle.zCoord+zDif*-300), 5, new Color(255, 255, 255), event.partialTicks);
-        //             GlStateManager.enableCull();
-        //         }
-        //         prev = particle;
-        //     }
-        // } catch (Exception e) {
-        //     //TODO: handle exception
-        // }
+        Vec3 prev = null;
+        try {
+            double xDif = 0;
+            double zDif = 0;
+            double yDif = 0;
+            double index = 0;
+            for(Vec3 particle : particles) {
+                index++;
+                if(prev == null) {
+                    prev = particle;
+                    continue;
+                }
+                GlStateManager.disableCull();
+                RenderUtil.draw3DLine(prev, particle, 5, new Color(255, 85, 85), event.partialTicks);
+                GlStateManager.enableCull();
+                xDif = prev.xCoord-particle.xCoord;
+                zDif = prev.zCoord-particle.zCoord;
+                yDif = prev.yCoord-particle.yCoord;
+                if(index == particles.size()) {
+                    for(int i=0;i<300;i++) {
+                        GlStateManager.disableCull();
+                        RenderUtil.draw3DLine(prev, new Vec3(particle.xCoord+xDif*-(i),particle.yCoord-yDif*i,particle.zCoord+zDif*-(i)), 5, new Color(255, 255, 255), event.partialTicks);
+                        GlStateManager.enableCull();
+                        prev = new Vec3(particle.xCoord+xDif*-(i),particle.yCoord-yDif*i,particle.zCoord+zDif*-(i));
+                    }
+                }
+                prev = particle;
+            }
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
     }
     Vec3 oldParticle = null;
     S2APacketParticles geyser = null;
@@ -115,8 +120,8 @@ public class FishingHelper {
                 }
             }
             
-            if(type == EnumParticleTypes.DRIP_LAVA && Utils.GetMC().thePlayer.getHeldItem() != null) {
-                if(Utils.GetMC().thePlayer.getHeldItem().getDisplayName().contains("Ancestral")) {
+            if(Utils.GetMC().thePlayer.getHeldItem() != null && Utils.GetMC().thePlayer.getHeldItem().getDisplayName().contains("Ancestral")) {
+                if(type == EnumParticleTypes.DRIP_LAVA) {
                     double dist = Utils.GetMC().thePlayer.getDistance(packet.getXCoordinate(), packet.getYCoordinate(), packet.getZCoordinate());
                     if(dist>3 && dist<5) {
                         particles.clear();

@@ -56,7 +56,7 @@ public class ChestProfit {
                         String identifier = AuctionData.getIdentifier(lootSlot);
                         if (identifier != null) {
                             Double value = AuctionData.averageLowestBINs.get(identifier);
-                            if (value == null) {
+                            if (value == null || identifier.contains("ENCHANTMENT_")) {
                                 value = AuctionData.bazaarPrices.get(identifier);
                             }
                             chestValue += value;

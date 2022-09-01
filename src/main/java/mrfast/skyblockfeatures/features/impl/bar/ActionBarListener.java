@@ -38,6 +38,7 @@ public class ActionBarListener {
 		if (event.type == 2) {
 			String actionBar = event.message.getFormattedText();
 			String[] actionBarSplit = actionBar.split(" ");
+			actionBar = actionBar.replaceAll(",", "");
 			for (String piece : actionBarSplit) {
 				String trimmed = piece.trim();
 				String coloursStripped = trimmed.replaceAll("\247.", "").replaceAll(",", "");;
