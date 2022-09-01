@@ -68,32 +68,6 @@ public class AuctionFeatures {
         }
     }
 
-    // @SubscribeEvent
-    // public void onGuiOpen(GuiOpenEvent event) {
-    //     if (!Utils.inSkyblock || !skyblockfeatures.config.auctionGuis) return;
-
-    //     if (event.gui instanceof GuiEditSign && Utils.equalsOneOf(SBInfo.getInstance().lastOpenContainerName, "Create Auction", "Create BIN Auction")) {
-    //         TileEntitySign sign = ((AccessorGuiEditSign) event.gui).getTileSign();
-    //         if (sign != null && sign.getPos().getY() == 0 && sign.signText[1].getUnformattedText().equals("^^^^^^^^^^^^^^^") && sign.signText[2].getUnformattedText().equals("Your auction") && sign.signText[3].getUnformattedText().equals("starting bid")) {
-    //             Utils.drawGraySquareWithBorder(180, 0, 150, 3*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
-    //             String identifier = AuctionData.getIdentifier(AuctionPriceOverlay.lastAuctionedStack);
-    //             if (identifier != null) {
-    //                 Double BinValue = AuctionData.lowestBINs.get(identifier);
-                    
-    //                 String[] lines = {
-    //                     ChatFormatting.WHITE+"Lowest BIN: "+ChatFormatting.GOLD+BinValue,
-    //                     ChatFormatting.WHITE+"Suggested Price: "+ChatFormatting.GOLD+(BinValue-(BinValue/100)*6),
-    //                 };
-    //                 int lineCount = 0;
-    //                 for(String line:lines) {
-    //                     Utils.GetMC().fontRendererObj.drawString(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
-    //                     lineCount++;
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
     @SubscribeEvent
     public void onDrawSlots(GuiContainerEvent.DrawSlotEvent.Pre event) {
         if (event.gui instanceof GuiChest ) {
@@ -228,7 +202,7 @@ public class AuctionFeatures {
                         Double avgBin = 0.0;
                         if (auctionIdentifier != null) {
                             lowestBin = AuctionData.lowestBINs.get(auctionIdentifier);
-                            avgBin = AuctionData.lowestBINs.get(auctionIdentifier);
+                            avgBin = AuctionData.averageLowestBINs.get(auctionIdentifier);
                             Integer cost = 0;
                             Double resellProfit = 0.0;
                             for(String line : ItemUtil.getItemLore(stack)) {
@@ -287,7 +261,7 @@ public class AuctionFeatures {
                 }
             }
 
-            if(chestName.contains("Create") && (chestName.contains("BIN") || chestName.contains("Auction"))) {
+            if(chestName.contains("Create")) {
                 for(Slot slot:gui.inventorySlots.inventorySlots) {
                     if (slot.getHasStack() && slot.getSlotIndex() == 13) {
                         ItemStack stack = slot.getStack();
@@ -296,24 +270,20 @@ public class AuctionFeatures {
                         Double avgBin = 0.0;
                         if (auctionIdentifier != null) {
                             lowestBin = AuctionData.lowestBINs.get(auctionIdentifier);
-                            avgBin = AuctionData.lowestBINs.get(auctionIdentifier);
-                            Double resellProfit = 0.0;
-                            if(resellProfit != 0) {
-                                Utils.drawGraySquareWithBorder(180, 0, 150, 6*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
-                            
-                                String avgBinString = avgBin != null?ChatFormatting.GOLD+NumberUtil.nf.format(avgBin):ChatFormatting.RED+"Unknown";
-                                String lowestBinString = lowestBin != null?ChatFormatting.GOLD+NumberUtil.nf.format(lowestBin):ChatFormatting.RED+"Unknown";
-                                String[] lines = {
-                                    ChatFormatting.WHITE+"Item Price: "+ChatFormatting.GOLD+NumberUtil.nf.format(lowestBin-(0.03*lowestBin)),
-                                    ChatFormatting.WHITE+"Lowest BIN: "+lowestBinString,
-                                    ChatFormatting.WHITE+"Average BIN: "+avgBinString,
-                                    ChatFormatting.WHITE+"Suggested Listing Price: "+avgBinString,
-                                };
-                                int lineCount = 0;
-                                for(String line:lines) {
-                                    Utils.GetMC().fontRendererObj.drawString(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
-                                    lineCount++;
-                                }
+                            avgBin = AuctionData.averageLowestBINs.get(auctionIdentifier);
+                            Utils.drawGraySquareWithBorder(180, 0, 6*("Suggested Listing Price: "+lowestBin.toString()).length(), 5*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
+                        
+                            String avgBinString = avgBin != null?ChatFormatting.GOLD+NumberUtil.nf.format(avgBin):ChatFormatting.RED+"Unknown";
+                            String lowestBinString = lowestBin != null?ChatFormatting.GOLD+NumberUtil.nf.format(lowestBin):ChatFormatting.RED+"Unknown";
+                            String[] lines = {
+                                ChatFormatting.WHITE+"Lowest BIN: "+lowestBinString,
+                                ChatFormatting.WHITE+"Average BIN: "+avgBinString,
+                                ChatFormatting.WHITE+"Suggested Listing Price: "+ChatFormatting.GOLD+NumberUtil.nf.format(((lowestBin+avgBin)/2)-0.03),
+                            };
+                            int lineCount = 0;
+                            for(String line:lines) {
+                                Utils.GetMC().fontRendererObj.drawString(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
+                                lineCount++;
                             }
                         }
                     }

@@ -49,8 +49,8 @@ public class FishingHelper {
             RenderUtil.drawFilledBoundingBox(new AxisAlignedBB(x-1, y-0.1, z-1, x+1, y-0.09, z+1),color,0.5f);
             GlStateManager.disableCull();
         }
-        // Diana event testing - waiting for reelection to keep on developing
-
+        // Diana helper
+        if(skyblockfeatures.config.MythologicalHelper) return;
         Vec3 prev = null;
         try {
             double xDif = 0;

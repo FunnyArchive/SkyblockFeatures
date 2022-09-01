@@ -18,13 +18,10 @@ import mrfast.skyblockfeatures.core.structure.GuiElement;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
 import mrfast.skyblockfeatures.utils.ItemRarity;
 import mrfast.skyblockfeatures.utils.ItemUtil;
-import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.ScoreboardUtil;
 import mrfast.skyblockfeatures.utils.StringUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
-import mrfast.skyblockfeatures.utils.graphics.SmartFontRenderer;
-import mrfast.skyblockfeatures.utils.graphics.colors.CommonColors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -59,7 +56,6 @@ public class DungeonsFeatures {
     private static final Pattern playerPattern = Pattern.compile("(?:\\[.+?] )?(\\w+)");
     public static String dungeonFloor = null;
     public static boolean hasBossSpawned = false;
-    private static Entity livid = null;
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
@@ -86,7 +82,6 @@ public class DungeonsFeatures {
         dungeonFloor = null;
         hasBossSpawned = false;
         bloodguy = null;
-        livid = null;
         blessings.clear();
     }
 
@@ -318,7 +313,7 @@ public class DungeonsFeatures {
   
         @Override
         public void render() {
-            if(Utils.inDungeons) {
+            if(Utils.inDungeons && getToggled()) {
                 int i = 0;
                 GuiPlayerTabOverlay tabList = Minecraft.getMinecraft().ingameGUI.getTabList();
                 String footer = tabList.footer.getFormattedText();

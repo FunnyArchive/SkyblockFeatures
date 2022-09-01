@@ -99,7 +99,7 @@ public class DungeonMap {
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			Minecraft.getMinecraft().entityRenderer.getMapItemRenderer().renderMap(mapData, true);
 			drawPlayersOnMap();
-			drawHeadOnMap();
+			// drawHeadOnMap();
 			GlStateManager.popMatrix();
 		} catch (Error error) {
 			Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Error! Check your console!"));

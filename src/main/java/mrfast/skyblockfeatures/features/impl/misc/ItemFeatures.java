@@ -2,7 +2,6 @@ package mrfast.skyblockfeatures.features.impl.misc;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 

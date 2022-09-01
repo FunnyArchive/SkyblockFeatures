@@ -12,42 +12,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 
 import gg.essential.api.EssentialAPI;
-import gg.essential.vigilance.Vigilance;
-import gg.essential.vigilance.Vigilant;
-import gg.essential.vigilance.data.Category;
-import gg.essential.vigilance.data.CategoryItem;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiChest;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.command.ICommand;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ContainerChest;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.client.C01PacketChatMessage;
-import net.minecraft.scoreboard.Score;
-import net.minecraft.scoreboard.ScoreObjective;
-import net.minecraft.scoreboard.ScorePlayerTeam;
-import net.minecraft.scoreboard.Scoreboard;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import mrfast.skyblockfeatures.commands.AccessoriesCommand;
 import mrfast.skyblockfeatures.commands.ArmorCommand;
 import mrfast.skyblockfeatures.commands.BankCommand;
@@ -124,6 +90,34 @@ import mrfast.skyblockfeatures.utils.CapeUtils;
 // import mrfast.skyblockfeatures.utils.FriendManager;
 import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.Utils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiChest;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.command.ICommand;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerChest;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.client.C01PacketChatMessage;
+import net.minecraft.scoreboard.Score;
+import net.minecraft.scoreboard.ScoreObjective;
+import net.minecraft.scoreboard.ScorePlayerTeam;
+import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 @Mod(modid = skyblockfeatures.MODID, name = skyblockfeatures.MOD_NAME, version = skyblockfeatures.VERSION, acceptedMinecraftVersions = "[1.8.9]", clientSideOnly = true)
 public class skyblockfeatures {
@@ -165,7 +159,7 @@ public class skyblockfeatures {
     //         a = true;
             
     //         ClickEvent versionCheckChatClickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, 
-    //         "https://drive.google.com/u/0/uc?id=1JTCpU6PoE1cBqQ2teOzv62HkGUpE_2Uz&export=download");
+    //         "");
     //         ChatStyle clickableChatStyle = new ChatStyle().setChatClickEvent(versionCheckChatClickEvent);
     //         ChatComponentText versionWarningChatComponent = 
     //         new ChatComponentText(EnumChatFormatting.RED+"Your running an outdated version of Skyblock! Click Here to update.");
@@ -266,13 +260,6 @@ public class skyblockfeatures {
         usingDungeonRooms = Loader.isModLoaded("dungeonrooms");
         usingLabymod = Loader.isModLoaded("labymod");
         usingNEU = Loader.isModLoaded("notenoughupdates");
-        // for(Category category:config.getCategories()) {
-        //     System.out.println(category.getName());
-        //     for(CategoryItem item:category.getItems()) {
-        //         System.out.println(item);
-        //     }
-        // }
-
         ClientCommandHandler cch = ClientCommandHandler.instance;
 
         if (!cch.getCommands().containsKey("getnbt")) cch.registerCommand(new getNbtCommand());
@@ -463,7 +450,6 @@ public class skyblockfeatures {
     private static boolean toggled = true;
 
     public final static KeyBinding slotLockKeybind = new KeyBinding("Lock Slot", Keyboard.KEY_L, "skyblockfeatures 2.0");
-    public final static KeyBinding ghostBlockKeybind = new KeyBinding("Ghost Block", Keyboard.KEY_G, "skyblockfeatures 2.0");
     public final static KeyBinding favoritePetKeybind = new KeyBinding("Toggle Favorite Pet", Keyboard.KEY_F, "skyblockfeatures 2.0");
     public final static KeyBinding reloadAH = new KeyBinding("Reload AH", Keyboard.KEY_R, "skyblockfeatures 2.0");
 
@@ -472,7 +458,6 @@ public class skyblockfeatures {
     public void inist(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
         ClientRegistry.registerKeyBinding(slotLockKeybind);
-        ClientRegistry.registerKeyBinding(ghostBlockKeybind);
         ClientRegistry.registerKeyBinding(favoritePetKeybind);
         ClientRegistry.registerKeyBinding(reloadAH);
 
@@ -488,11 +473,8 @@ public class skyblockfeatures {
             } else {
                 mc.thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Togglesprint enabled."));
             }
-
             toggled = !toggled;
-
         }
-
         if (toggled) {
             KeyBinding.setKeyBindState(mc.gameSettings.keyBindSprint.getKeyCode(), true);
         } else {

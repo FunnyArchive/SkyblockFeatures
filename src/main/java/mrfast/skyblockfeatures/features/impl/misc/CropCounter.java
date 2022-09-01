@@ -1,10 +1,7 @@
 package mrfast.skyblockfeatures.features.impl.misc;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.client.Minecraft;
@@ -12,11 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import mrfast.skyblockfeatures.skyblockfeatures;
-import mrfast.skyblockfeatures.core.AuctionUtil;
 import mrfast.skyblockfeatures.core.structure.FloatPair;
 import mrfast.skyblockfeatures.core.structure.GuiElement;
-import mrfast.skyblockfeatures.events.SecondPassedEvent;
-import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
 import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.Utils;
 import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;

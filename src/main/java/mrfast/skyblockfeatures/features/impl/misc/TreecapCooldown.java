@@ -2,6 +2,10 @@ package mrfast.skyblockfeatures.features.impl.misc;
 
 import java.awt.Color;
 
+import mrfast.skyblockfeatures.skyblockfeatures;
+import mrfast.skyblockfeatures.events.BlockChangeEvent;
+import mrfast.skyblockfeatures.events.SecondPassedEvent;
+import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLog;
 import net.minecraft.client.Minecraft;
@@ -10,13 +14,8 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
-import mrfast.skyblockfeatures.events.BlockChangeEvent;
-import mrfast.skyblockfeatures.events.SecondPassedEvent;
-import mrfast.skyblockfeatures.utils.Utils;
 
 public class TreecapCooldown {
     public static int seconds = 2;
@@ -39,8 +38,8 @@ public class TreecapCooldown {
     }
 
     @SubscribeEvent
-	public void getBone(RenderTickEvent event) {
-		if(!Utils.inSkyblock ) { return; }
+	public void onTick(RenderTickEvent event) {
+		if(!Utils.inSkyblock || !skyblockfeatures.config.treecapitatorCooldown) { return; }
 		if (Minecraft.getMinecraft().currentScreen instanceof GuiScreen) return;
 		
 		ItemStack item = Minecraft.getMinecraft().thePlayer.getHeldItem();

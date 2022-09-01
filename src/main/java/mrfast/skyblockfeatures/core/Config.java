@@ -261,6 +261,15 @@ public class Config extends Vigilant {
             subcategory = "Quality of Life"
     )
     public boolean fishthing = false;
+    
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Display Tree Capitator Cooldown",
+            description = "Display a message when you need to pull the fish up.",
+            category = "Miscellaneous",
+            subcategory = "Quality of Life"
+    )
+    public boolean treecapitatorCooldown = false;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -270,6 +279,15 @@ public class Config extends Vigilant {
             subcategory = "Mayor Jerry"
     )
     public boolean jerry = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Mythological Helper",
+            description = "Draw an extended line of where the Mythological burrow could be",
+            category = "§1§rEvents",
+            subcategory = "Mythological Event"
+    )
+    public boolean MythologicalHelper = false;
 
     @Property(
             type = PropertyType.SWITCH,

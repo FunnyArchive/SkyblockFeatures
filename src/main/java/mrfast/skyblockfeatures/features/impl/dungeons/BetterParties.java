@@ -16,7 +16,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import mrfast.skyblockfeatures.skyblockfeatures;
-import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.StringUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 
@@ -67,7 +66,6 @@ public class BetterParties {
         GlStateManager.translate(left, top, 0);
         FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
         try {
-
             for (int i1 = 0; i1 < Integer.min(54, cont.inventorySlots.size()); i1++) {
                 Slot s = cont.inventorySlots.get(i1);
                 if (s.getStack() == null) continue;

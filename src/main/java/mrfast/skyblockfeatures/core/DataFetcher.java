@@ -3,7 +3,6 @@ package mrfast.skyblockfeatures.core;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import mrfast.skyblockfeatures.skyblockfeatures;
@@ -25,7 +24,6 @@ public class DataFetcher {
             for (Map.Entry<String, JsonElement> solution : fetchurData.entrySet()) {
                 MiningFeatures.fetchurItems.put(solution.getKey(), solution.getValue().getAsString());
             }
-            JsonArray threeWeirdosSolutions = APIUtil.getArrayResponse(dataUrl + "solvers/threeweirdos.json");
             for (Map.Entry<String, JsonElement> sellPrice : APIUtil.getJSONResponse(dataUrl + "constants/sellprices.json").entrySet()) {
                 ItemFeatures.sellPrices.put(sellPrice.getKey(), sellPrice.getValue().getAsDouble());
             }
