@@ -43,6 +43,11 @@ public class DungeonMap {
 	// 		entity = player;
 	// 	} 
 	// }
+// 	-82 44 f1 left
+// 20 103 f1 bottom
+// 80 102 f1 bottom right
+// 80 -102 f1 top right
+// -80 -102 f1 top left
 
 	public static int getMapFloorXOffset() {
 		switch(Utils.getDungeonFloor()) {
@@ -99,7 +104,7 @@ public class DungeonMap {
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			Minecraft.getMinecraft().entityRenderer.getMapItemRenderer().renderMap(mapData, true);
 			drawPlayersOnMap();
-			// drawHeadOnMap();
+			drawHeadOnMap();
 			GlStateManager.popMatrix();
 		} catch (Error error) {
 			Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Error! Check your console!"));

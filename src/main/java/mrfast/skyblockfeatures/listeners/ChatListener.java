@@ -458,8 +458,7 @@ public class ChatListener {
         }
 
         if (skyblockfeatures.config.firstLaunch && unformatted.equals("Welcome to Hypixel SkyBlock!")) {
-            mc.thePlayer.addChatMessage(new ChatComponentText("§bThank you for downloading skyblockfeatures!"));
-            ClientCommandHandler.instance.executeCommand(mc.thePlayer, "/skyblockfeatures help");
+            mc.thePlayer.addChatMessage(new ChatComponentText("§bThank you for downloading skyblockfeatures! Do /sf to start!"));
 
             skyblockfeatures.config.firstLaunch = false;
             skyblockfeatures.config.markDirty();

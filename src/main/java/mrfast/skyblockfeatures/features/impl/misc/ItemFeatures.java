@@ -94,7 +94,7 @@ public class ItemFeatures {
                 if (valuePer != null) event.toolTip.add("§6NPC Value: §b" + NumberUtil.nf.format(valuePer * item.stackSize) + (item.stackSize > 1 ? " §7(" + NumberUtil.nf.format(valuePer) + " each§7)" : ""));
             }
             if(AuctionFeatures.items.containsKey(item)) {
-                long price = Math.round(AuctionFeatures.items.get(item)* item.stackSize);
+                long price = Math.round(AuctionFeatures.items.get(item));
                 String color = price>0?ChatFormatting.GREEN+"":ChatFormatting.RED+"";
                 event.toolTip.add("§6BIN Flip Profit: "+color+NumberUtil.nf.format(price));
             }
