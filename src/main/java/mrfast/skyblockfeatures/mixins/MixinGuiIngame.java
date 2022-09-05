@@ -19,7 +19,6 @@ public class MixinGuiIngame {
         try {
             if (MinecraftForge.EVENT_BUS.post(new SetActionBarEvent(message, isPlaying))) ci.cancel();
         } catch (Throwable e) {
-            Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("§cskyblockfeatures caught and logged an exception at SetActionBarEvent. Please report this on the Discord server."));
             e.printStackTrace();
         }
     }

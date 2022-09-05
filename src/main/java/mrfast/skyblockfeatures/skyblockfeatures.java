@@ -69,7 +69,6 @@ import mrfast.skyblockfeatures.features.impl.misc.DamageSplash;
 import mrfast.skyblockfeatures.features.impl.misc.FavoritePets;
 import mrfast.skyblockfeatures.features.impl.misc.FishingHelper;
 import mrfast.skyblockfeatures.features.impl.misc.ItemFeatures;
-import mrfast.skyblockfeatures.features.impl.misc.LockingSlots;
 import mrfast.skyblockfeatures.features.impl.misc.MiscFeatures;
 import mrfast.skyblockfeatures.features.impl.misc.SpamHider;
 import mrfast.skyblockfeatures.features.impl.misc.TreecapCooldown;
@@ -192,11 +191,6 @@ public class skyblockfeatures {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        try {
-            // DiscordRPC.INSTANCE.start();
-        } catch (NoClassDefFoundError e) {
-            e.printStackTrace();
-        }
         config.preload();
 
         // EssentialAPI.getCommandRegistry().registerCommand(new configCommand());
@@ -225,7 +219,6 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new DamageOverlays());
         MinecraftForge.EVENT_BUS.register(new Nametags());
         MinecraftForge.EVENT_BUS.register(new ConjuringCooldown());
-        MinecraftForge.EVENT_BUS.register(new LockingSlots());
         MinecraftForge.EVENT_BUS.register(new PartyGlow());
         MinecraftForge.EVENT_BUS.register(new FavoritePets());
         MinecraftForge.EVENT_BUS.register(new SpeedDisplay());

@@ -17,7 +17,6 @@ public abstract class MixinCrashReport {
     private StringBuilder blameskyblockfeatures(StringBuilder stringbuilder) {
         if (getCauseStackTraceOrString().contains("mrfast.skyblockfeatures")) {
             isskyblockfeaturesCrash = true;
-            stringbuilder.append("skyblockfeatures may have caused this crash.\nJoin the Discord for support at discord.gg/skyblockfeatures\n");
         }
         return stringbuilder;
     }

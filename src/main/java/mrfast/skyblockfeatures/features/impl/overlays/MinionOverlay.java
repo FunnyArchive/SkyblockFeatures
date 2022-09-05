@@ -72,7 +72,7 @@ public class MinionOverlay {
                         }
                         Double sellPrice = AuctionData.bazaarPrices.get(identifier);
                         if(sellPrice != null) {
-                            Double perHour = (3600/secondsPerAction)*sellPrice;
+                            Double perHour = Math.floor((3600/secondsPerAction)*sellPrice);
 
                             String[] lines = {
                                 ChatFormatting.LIGHT_PURPLE+chestName,

@@ -58,7 +58,6 @@ public class MixinPlayerControllerMP {
         try {
             if (MinecraftForge.EVENT_BUS.post(new DamageBlockEvent(pos, directionFacing))) cir.cancel();
         } catch (Throwable e) {
-            Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("§cskyblockfeatures caught and logged an exception at DamageBlockEvent. Please report this on the Discord server."));
             e.printStackTrace();
         }
     }

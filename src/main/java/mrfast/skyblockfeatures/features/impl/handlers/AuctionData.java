@@ -80,7 +80,7 @@ public class AuctionData {
         if (reloadTimer.getTime() >= 90000 || !reloadTimer.isStarted()) {
             if(reloadTimer.getTime() >= 90000) reloadTimer.reset();
             else reloadTimer.start();
-            if (skyblockfeatures.config.showLowestBINPrice || skyblockfeatures.config.dungeonChestProfit) {
+            if (skyblockfeatures.config.showLowestBINPrice || skyblockfeatures.config.dungeonChestProfit  || skyblockfeatures.config.minionOverlay || skyblockfeatures.config.auctionGuis) {
                 new Thread(() -> {
                     JsonObject data = APIUtil.getJSONResponse(dataURL);
                     for (Map.Entry<String, JsonElement> items : data.entrySet()) {
@@ -93,7 +93,7 @@ public class AuctionData {
                     }, ()->{});
                 }, "skyblockfeatures-FetchAuctionData").start();
             }
-            if (bazaarPrices.size() == 0 && (skyblockfeatures.config.showLowestBINPrice || skyblockfeatures.config.dungeonChestProfit) && skyblockfeatures.config.apiKey.length()>1) {
+            if (bazaarPrices.size() == 0 && (skyblockfeatures.config.showLowestBINPrice || skyblockfeatures.config.minionOverlay || skyblockfeatures.config.dungeonChestProfit || skyblockfeatures.config.auctionGuis) && skyblockfeatures.config.apiKey.length()>1) {
                 new Thread(() -> {
                     JsonObject data = APIUtil.getJSONResponse("https://api.hypixel.net/skyblock/bazaar?key="+skyblockfeatures.config.apiKey);
                     JsonObject products = data.get("products").getAsJsonObject();

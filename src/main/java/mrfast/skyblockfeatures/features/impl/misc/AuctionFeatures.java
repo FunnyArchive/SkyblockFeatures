@@ -91,7 +91,7 @@ public class AuctionFeatures {
                         if (identifier != null && price != 0) {
                             Double avgBinValue = AuctionData.lowestBINs.get(identifier);
                             if(avgBinValue != null) {
-                                Double profit = avgBinValue - price;
+                                Double profit = (avgBinValue*stack.stackSize) - price;
                                 if (price < (avgBinValue)) {
                                     if(profit > 100000) {
                                         Gui.drawRect(x, y, x + 16, y + 16, new Color(85, 255, 85, 255).getRGB());
@@ -117,9 +117,9 @@ public class AuctionFeatures {
                         }
                         String identifier = AuctionData.getIdentifier(stack);
                         if (identifier != null && price != 0) {
-                            Double BinValue = AuctionData.lowestBINs.get(identifier);
+                            Double BinValue = AuctionData.lowestBINs.get(identifier)*stack.stackSize;
                             if(BinValue != null) {
-                                Double profit = (BinValue - price)*stack.stackSize;
+                                Double profit = (BinValue - price);
                                 Boolean dupe = false;
                                 Auction auction = new Auction(profit, stack, identifier);
 
@@ -160,7 +160,6 @@ public class AuctionFeatures {
                         }
                         String identifier = AuctionData.getIdentifier(stack);
                         if (identifier != null && price != 0) {
-                            // selfItems.put(stack, (double) price);
                             Double profit = (double) price;
                             Boolean dupe = false;
                             Auction auction = new Auction(profit, stack, identifier);
@@ -223,7 +222,7 @@ public class AuctionFeatures {
                                 if(lowestBin == null && avgBin != null) {
                                     if(cost > avgBin+150000) {
                                         Manipulated = true;
-                                    }
+                                    }   
                                 }
                                 if(avgBin == null && lowestBin!=null) {
                                     if(cost > lowestBin+150000) {
@@ -249,6 +248,11 @@ public class AuctionFeatures {
                                     Utils.drawGraySquareWithBorder(180, 8*Utils.GetMC().fontRendererObj.FONT_HEIGHT, 170, 3*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
                                     Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+""+ChatFormatting.BOLD+"Warning! This items price", 190, 8*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
                                     Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+""+ChatFormatting.BOLD+"is higher than usual!", 190, 9*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
+                                }
+                                if(stack.getDisplayName().contains("Minion Skin")) {
+                                    Utils.drawGraySquareWithBorder(180, 8*Utils.GetMC().fontRendererObj.FONT_HEIGHT, 170, 3*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
+                                    Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+""+ChatFormatting.BOLD+"Warning! Minion skins are", 190, 8*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
+                                    Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+""+ChatFormatting.BOLD+"often manipulated!!", 190, 9*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
                                 }
                             }
                         }

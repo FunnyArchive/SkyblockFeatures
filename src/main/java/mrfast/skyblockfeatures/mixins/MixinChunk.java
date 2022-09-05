@@ -28,7 +28,6 @@ public abstract class MixinChunk {
             try {
                 MinecraftForge.EVENT_BUS.post(new BlockChangeEvent(pos, old, state));
             } catch (Throwable e) {
-                Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("§cskyblockfeatures caught and logged an exception at BlockChangeEvent. Please report this on the Discord server."));
                 e.printStackTrace();
             }
         }

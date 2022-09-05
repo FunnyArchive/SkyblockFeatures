@@ -15,17 +15,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
 import mrfast.skyblockfeatures.events.InventorySlotClickEvent;
 import mrfast.skyblockfeatures.events.InventorySlotDrawEvent;
-import mrfast.skyblockfeatures.features.impl.misc.LockingSlots;
 
 @Mixin(GuiContainer.class)
 public abstract class MixinGuiContainer extends GuiScreen {
 
     @Shadow public Container inventorySlots;
-
-    @Inject(method="drawSlot", at=@At("RETURN"))
-    public void drawSlotRet(Slot slotIn, CallbackInfo ci) {
-        LockingSlots.drawSlot(slotIn);
-    }
 
     private final GuiContainer that = (GuiContainer) (Object) this;
 
@@ -34,7 +28,6 @@ public abstract class MixinGuiContainer extends GuiScreen {
         try {
             MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.CloseWindowEvent(that, inventorySlots));
         } catch (Throwable e) {
-            Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("§cskyblockfeatures caught and logged an exception at GuiContainerEvent.CloseWindowEvent. Please report this on the Discord server."));
             e.printStackTrace();
         }
     }
@@ -44,7 +37,6 @@ public abstract class MixinGuiContainer extends GuiScreen {
         try {
             MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.BackgroundDrawnEvent(that, inventorySlots, mouseX, mouseY, partialTicks));
         } catch (Throwable e) {
-            Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("§cskyblockfeatures caught and logged an exception at GuiContainerEvent.BackgroundDrawnEvent. Please report this on the Discord server."));
             e.printStackTrace();
         }
     }
@@ -54,7 +46,6 @@ public abstract class MixinGuiContainer extends GuiScreen {
         try {
             MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.TitleDrawnEvent.Pre(that, inventorySlots, mouseX, mouseY, partialTicks));
         } catch (Throwable e) {
-            Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("§cskyblockfeatures caught and logged an exception at GuiContainerEvent.TitleDrawnEvent. Please report this on the Discord server."));
             e.printStackTrace();
         }
     }
@@ -64,7 +55,6 @@ public abstract class MixinGuiContainer extends GuiScreen {
         try {
             MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.TitleDrawnEvent.Post(that, inventorySlots, mouseX, mouseY, partialTicks));
         } catch (Throwable e) {
-            Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("§cskyblockfeatures caught and logged an exception at GuiContainerEvent.TitleDrawnEvent. Please report this on the Discord server."));
             e.printStackTrace();
         }
     }
@@ -74,7 +64,6 @@ public abstract class MixinGuiContainer extends GuiScreen {
         try {
             if (MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.DrawSlotEvent.Pre(that, inventorySlots, slot))) ci.cancel();
         } catch (Throwable e) {
-            Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("§cskyblockfeatures caught and logged an exception at GuiContainerEvent.DrawSlotEvent.Pre. Please report this on the Discord server."));
             e.printStackTrace();
         }
     }
@@ -84,7 +73,6 @@ public abstract class MixinGuiContainer extends GuiScreen {
         try {
             MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.DrawSlotEvent.Post(that, inventorySlots, slot));
         } catch (Throwable e) {
-            Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("§cskyblockfeatures caught and logged an exception at GuiContainerEvent.DrawSlotEvent.Post. Please report this on the Discord server."));
             e.printStackTrace();
         }
     }
@@ -103,7 +91,6 @@ public abstract class MixinGuiContainer extends GuiScreen {
         try {
             if (MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.SlotClickEvent(that, inventorySlots, slot, slotId, clickedButton, clickType))) ci.cancel();
         } catch (Throwable e) {
-            Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("§cskyblockfeatures caught and logged an exception at GuiContainerEvent.SlotClickEvent. Please report this on the Discord server."));
             e.printStackTrace();
         }
     }

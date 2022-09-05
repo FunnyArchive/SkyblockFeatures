@@ -1,6 +1,7 @@
 package mrfast.skyblockfeatures.features.impl.overlays;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -11,10 +12,13 @@ import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.structure.FloatPair;
 import mrfast.skyblockfeatures.core.structure.GuiElement;
 import mrfast.skyblockfeatures.utils.SBInfo;
+import mrfast.skyblockfeatures.utils.StringUtils;
+import mrfast.skyblockfeatures.utils.TabListUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -156,59 +160,74 @@ public class DungeonMap {
 		GlStateManager.translate(1.0F, 1.0F, 1.0F);
 		GlStateManager.popMatrix();
 	};
+	// static HashMap<String, NetworkPlayerInfo> dungeonTeammates = new HashMap<String, NetworkPlayerInfo>();
 	public static void drawHeadOnMap() {
-		GlStateManager.pushMatrix();
-		for (Entry<String,Vec4b> entry : mapData.mapDecorations.entrySet()) {
-			if(entry.getKey() == self) {
-				Utils.SendMessage(entry.getValue()+"");
-				double x = Math.round((Utils.GetMC().thePlayer.posX)/(mapData.scale*0.8))+140+getMapFloorXOffset();
-				double z = Math.round((Utils.GetMC().thePlayer.posZ)/(mapData.scale*0.8))+140+getMapFloorZOffset();
+		// int[] intArray = new int[]{5, 9, 13, 17, 1};
+		// List<NetworkPlayerInfo> tablist = TabListUtils.getTabEntries();
+		// for(int i=0;i<intArray.length;i++) {
+		// 	NetworkPlayerInfo player = tablist.get(intArray[i]);
+		// 	String name = StringUtils.stripControlCodes(player.getDisplayName().getUnformattedText().split(" ")[0]);
+		// 	if(name != null) {
+		// 		dungeonTeammates.put("icon-"+i,player);
+		// 		Utils.SendMessage(name+"  icon-"+i);
+		// 	}
+		// }
+		// for(Entry<String,NetworkPlayerInfo> entry : dungeonTeammates.entrySet()) {
+			// String self = entry.getKey();
+			GlStateManager.pushMatrix();
+			for (Entry<String,Vec4b> mapEntry : mapData.mapDecorations.entrySet()) {
+				// Utils.SendMessage("C "+mapEntry.getKey()+"  "+self+"  "+(self==mapEntry.getKey()));
+				if(mapEntry.getKey() == self) {
+					EntityPlayer player = Utils.GetMC().thePlayer;//Utils.GetMC().theWorld.getPlayerEntityByName(entry.getValue().getDisplayName().getUnformattedText().split(" ")[0]);
+					double x = Math.round((player.posX)/(mapData.scale*0.8))+getMapFloorXOffset();
+					double z = Math.round((player.posZ)/(mapData.scale*0.8))+getMapFloorZOffset();
 
-				AbstractClientPlayer aplayer = (AbstractClientPlayer) Utils.GetMC().thePlayer;
-				ResourceLocation skin = aplayer.getLocationSkin();
-				int k = 0;
+					AbstractClientPlayer aplayer = (AbstractClientPlayer) player;
+					ResourceLocation skin = aplayer.getLocationSkin();
+					int k = 0;
 
-				if(skin != DefaultPlayerSkin.getDefaultSkin(aplayer.getUniqueID())) { 
-					Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
+					if(skin != DefaultPlayerSkin.getDefaultSkin(aplayer.getUniqueID())) { 
+						Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
 
-					GlStateManager.pushMatrix();
+						GlStateManager.pushMatrix();
 
-					GlStateManager.disableDepth();
-					GlStateManager.enableBlend();
-					GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
+						GlStateManager.disableDepth();
+						GlStateManager.enableBlend();
+						GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-					GlStateManager.translate(x, z, -0.02F);
-					GlStateManager.scale(1.0f, 1.0f, 1);
-					GlStateManager.rotate(Utils.GetMC().thePlayer.rotationYawHead-180, 0.0F, 0.0F, 1.0F);
-					GlStateManager.translate(-0.5F, 0.5F, 0.0F);
-					
-					Gui.drawRect(-8/2-1,-8/2-1, 8/2+1, 8/2+1, 0xff111111);
-					GlStateManager.color(1, 1, 1, 1);
+						GlStateManager.translate(x, z, -0.02F);
+						GlStateManager.scale(1.0f, 1.0f, 1);
+						GlStateManager.rotate(player.rotationYawHead-180, 0.0F, 0.0F, 1.0F);
+						GlStateManager.translate(-0.5F, 0.5F, 0.0F);
+						
+						Gui.drawRect(-8/2-1,-8/2-1, 8/2+1, 8/2+1, 0xff111111);
+						GlStateManager.color(1, 1, 1, 1);
 
-					Tessellator tessellator = Tessellator.getInstance();
-					WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+						Tessellator tessellator = Tessellator.getInstance();
+						WorldRenderer worldrenderer = tessellator.getWorldRenderer();
 
-					worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-					worldrenderer.pos(-8/2f, 8/2f, 30+((float)k * -0.005F)).tex(8/64f, 8/64f).endVertex();
-					worldrenderer.pos(8/2f, 8/2f, 30+((float)k * -0.005F)).tex(16/64f, 8/64f).endVertex();
-					worldrenderer.pos(8/2f, -8/2f, 30+((float)k * -0.005F)).tex(16/64f, 16/64f).endVertex();
-					worldrenderer.pos(-8/2f, -8/2f, 30+((float)k * -0.005F)).tex(8/64f, 16/64f).endVertex();
-					tessellator.draw();
+						worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+						worldrenderer.pos(-8/2f, 8/2f, 30+((float)k * -0.005F)).tex(8/64f, 8/64f).endVertex();
+						worldrenderer.pos(8/2f, 8/2f, 30+((float)k * -0.005F)).tex(16/64f, 8/64f).endVertex();
+						worldrenderer.pos(8/2f, -8/2f, 30+((float)k * -0.005F)).tex(16/64f, 16/64f).endVertex();
+						worldrenderer.pos(-8/2f, -8/2f, 30+((float)k * -0.005F)).tex(8/64f, 16/64f).endVertex();
+						tessellator.draw();
 
-					worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-					worldrenderer.pos(-8/2f, 8/2f, 30+((float)k * -0.005F)+0.001f).tex(8/64f+0.5f, 8/64f).endVertex();
-					worldrenderer.pos(8/2f, 8/2f, 30+((float)k * -0.005F)+0.001f).tex(16/64f+0.5f, 8/64f).endVertex();
-					worldrenderer.pos(8/2f, -8/2f, 30+((float)k * -0.005F)+0.001f).tex(16/64f+0.5f, 16/64f).endVertex();
-					worldrenderer.pos(-8/2f, -8/2f, 30+((float)k * -0.005F)+0.001f).tex(8/64f+0.5f, 16/64f).endVertex();
-					tessellator.draw();
+						worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+						worldrenderer.pos(-8/2f, 8/2f, 30+((float)k * -0.005F)+0.001f).tex(8/64f+0.5f, 8/64f).endVertex();
+						worldrenderer.pos(8/2f, 8/2f, 30+((float)k * -0.005F)+0.001f).tex(16/64f+0.5f, 8/64f).endVertex();
+						worldrenderer.pos(8/2f, -8/2f, 30+((float)k * -0.005F)+0.001f).tex(16/64f+0.5f, 16/64f).endVertex();
+						worldrenderer.pos(-8/2f, -8/2f, 30+((float)k * -0.005F)+0.001f).tex(8/64f+0.5f, 16/64f).endVertex();
+						tessellator.draw();
 
-					GlStateManager.popMatrix();
+						GlStateManager.popMatrix();
+					}
 				}
 			}
-		}
-		GlStateManager.popMatrix();
-		GlStateManager.enableBlend();
-		GlStateManager.enableDepth();
+			GlStateManager.popMatrix();
+			GlStateManager.enableBlend();
+			GlStateManager.enableDepth();
+		// }
 	}
 
 	private static final Minecraft mc = Minecraft.getMinecraft();

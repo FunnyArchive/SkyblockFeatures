@@ -32,7 +32,6 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
         try {
             if (MinecraftForge.EVENT_BUS.post(new AddChatMessageEvent(message))) ci.cancel();
         } catch (Throwable e) {
-            mc.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("§cskyblockfeatures caught and logged an exception at AddChatMessageEvent. Please report this on the Discord server."));
             e.printStackTrace();
         }
     }

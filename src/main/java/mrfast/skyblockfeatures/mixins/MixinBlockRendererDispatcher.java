@@ -30,7 +30,6 @@ public class MixinBlockRendererDispatcher {
                 cir.setReturnValue(this.blockModelShapes.getModelForState(event.state));
             }
         } catch (Throwable e) {
-            Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("§cskyblockfeatures caught and logged an exception at RenderBlockInWorldEvent. Please report this on the Discord server."));
             e.printStackTrace();
         }
 

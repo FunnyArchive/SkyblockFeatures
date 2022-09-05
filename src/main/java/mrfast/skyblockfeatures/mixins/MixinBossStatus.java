@@ -19,7 +19,6 @@ public class MixinBossStatus {
         try {
             if (MinecraftForge.EVENT_BUS.post(new BossBarEvent.Set(displayData, hasColorModifierIn))) ci.cancel();
         } catch (Throwable e) {
-            Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("§cskyblockfeatures caught and logged an exception at BossBarEvent.Set. Please report this on the Discord server."));
             e.printStackTrace();
         }
     }
