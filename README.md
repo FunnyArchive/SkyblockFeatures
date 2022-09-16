@@ -43,6 +43,7 @@
 - Highlight Auction Flips
 - Compact Chat
 - Ad Blocker
+- Minion Profit Overlay (Coins Per Hour, Cooldown, ect)
 - And Many More!
 
 **Best Command List**
