@@ -39,7 +39,6 @@ public class HideGlass {
         } catch (Exception e) {
             //TODO: handle exception
         }
-        event.message = orignal;
     }
 
     // Just cuz i think it looks better idk
@@ -80,7 +79,7 @@ public class HideGlass {
             }
         }
 
-        if(isEmptyGlassPane(event.itemStack)) {
+        if(Utils.inSkyblock && isEmptyGlassPane(event.itemStack)) {
             event.toolTip.clear();
         }
     }

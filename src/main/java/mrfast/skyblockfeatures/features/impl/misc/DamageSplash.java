@@ -9,8 +9,6 @@ import mrfast.skyblockfeatures.utils.Utils;
 
 import java.text.NumberFormat;
 import java.util.WeakHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class DamageSplash {
 
@@ -19,8 +17,6 @@ public class DamageSplash {
     private static final EnumChatFormatting[] coloursHypixel = {EnumChatFormatting.WHITE, EnumChatFormatting.YELLOW, EnumChatFormatting.GOLD, EnumChatFormatting.RED, EnumChatFormatting.RED, EnumChatFormatting.WHITE};
 
     private static final char STAR = '\u2727';
-    private static final Pattern PATTERN_CRIT = Pattern.compile("\u00a7f"+STAR+"((?:\u00a7.\\d)+)\u00a7."+STAR+"(.*)");
-    private static final Pattern PATTERN_NO_CRIT = Pattern.compile("\u00a77(\\d+)(.*)");
 
     public static IChatComponent replaceName(EntityLivingBase entity) {
         if(!entity.hasCustomName() || skyblockfeatures.config.PrettyDamage == 0) return entity.getDisplayName();
@@ -33,25 +29,22 @@ public class DamageSplash {
             return component;
         }
 
-        String formatted = name.getFormattedText();
-
+        String unformatted = Utils.cleanColour(name.getUnformattedText());
+        
         boolean crit = false;
         String numbers;
         String prefix;
         String suffix;
-
-        Matcher matcherCrit = PATTERN_CRIT.matcher(formatted);
-        if(matcherCrit.matches()) {
+        if(unformatted.startsWith("✧") && unformatted.endsWith("✧")) {
             crit = true;
-            numbers = Utils.cleanColour(matcherCrit.group(1));
+            numbers = unformatted.replaceAll("[^0-9]", "");
             prefix = "\u00a7f"+STAR;
-            suffix = "\u00a7f"+STAR+matcherCrit.group(2);
+            suffix = "\u00a7f"+STAR;
         } else {
-            Matcher matcherNoCrit = PATTERN_NO_CRIT.matcher(formatted);
-            if(matcherNoCrit.matches()) {
-                numbers = matcherNoCrit.group(1);
+            if(unformatted.replaceAll(",","").replaceAll("[0-9]", "").length() == 0) {
+                numbers = (unformatted.replaceAll("[^0-9]", ""));
                 prefix = "\u00A77";
-                suffix = "\u00A7r"+matcherNoCrit.group(2);
+                suffix = "\u00A7r";
             } else {
                 replacementMap.put(entity, null);
                 return name;

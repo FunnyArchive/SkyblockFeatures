@@ -119,7 +119,7 @@ public class DungeonsFeatures {
         if (text.equals("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")) {
             count++;
             if(count != 1) {
-                ChatComponentText message = new ChatComponentText(EnumChatFormatting.LIGHT_PURPLE+"[SF] "+EnumChatFormatting.GOLD + "Dungeon finished! ");
+                ChatComponentText message = new ChatComponentText(EnumChatFormatting.LIGHT_PURPLE+"[SBF] "+EnumChatFormatting.GOLD + "Dungeon finished! ");
                 ChatComponentText warpout = new ChatComponentText(EnumChatFormatting.GREEN+""+EnumChatFormatting.BOLD + " [WARP-OUT]  ");
                 ChatComponentText frag = new ChatComponentText(EnumChatFormatting.GREEN+""+EnumChatFormatting.BOLD + "[REPARTY]");
     

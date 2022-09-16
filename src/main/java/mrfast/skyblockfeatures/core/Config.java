@@ -39,7 +39,7 @@ public class Config extends Vigilant {
     @Property(
             type = PropertyType.SWITCH,
             name = "Hide Potion Effects",
-            description = "ide the potion effects inside your inventory while on skyblock",
+            description = "Hide the potion effects inside your inventory while on skyblock",
             category = "General",
             subcategory = "Other"
     )
@@ -486,7 +486,7 @@ public class Config extends Vigilant {
         description = "Adds Commas or Truncations to Damage Numbers",
         category = "Miscellaneous",
         subcategory = "Quality of Life",
-        options = {"Normal","Truncation","Commas"}
+        options = {"Normal","Truncation","Highlight Commas"}
     )
     public int PrettyDamage = 0;
 
@@ -519,7 +519,7 @@ public class Config extends Vigilant {
 
     @Property(
         type = PropertyType.SWITCH,
-        name = "1.18 Crop Hitbox",
+        name = "1.12 Crop Hitbox",
         description = "Applys full sized hitbox for crops",
         category = "§1§rFarming",
         subcategory = "Quality of Life"

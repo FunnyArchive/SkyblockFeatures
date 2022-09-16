@@ -190,8 +190,10 @@ public class AuctionFeatures {
             for (Auction auction:selfItems) profit += auction.profit;
 
             if(chestName.contains("Auction View") && !chestName.contains("BIN")) {
+                boolean alreadyGotIt = false;
                 for(Slot slot:gui.inventorySlots.inventorySlots) {
-                    if (slot.getHasStack() && slot.getSlotIndex() == 13) {
+                    if (slot.getHasStack() && slot.getSlotIndex() == 13 && !alreadyGotIt) {
+                        alreadyGotIt = true;
                         ItemStack stack = slot.getStack();
                         String auctionIdentifier = AuctionData.getIdentifier(stack);
                         if (auctionIdentifier != null) {
@@ -261,8 +263,10 @@ public class AuctionFeatures {
             }
 
             if(chestName.contains("Create")) {
+                boolean alreadyGotIt = false;
                 for(Slot slot:gui.inventorySlots.inventorySlots) {
-                    if (slot.getHasStack() && slot.getSlotIndex() == 13) {
+                    if (slot.getHasStack() && slot.getSlotIndex() == 13 && !alreadyGotIt) {
+                        alreadyGotIt = true;
                         ItemStack stack = slot.getStack();
                         String auctionIdentifier = AuctionData.getIdentifier(stack);
                         if (auctionIdentifier != null) {

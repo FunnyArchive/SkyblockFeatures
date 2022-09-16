@@ -84,7 +84,7 @@ public class AuctionData {
                 new Thread(() -> {
                     JsonObject data = APIUtil.getJSONResponse(dataURL);
                     for (Map.Entry<String, JsonElement> items : data.entrySet()) {
-                        lowestBINs.put(items.getKey(), items.getValue().getAsDouble());
+                        lowestBINs.put(items.getKey(), Math.floor(items.getValue().getAsDouble()));
                     }
                     AuctionUtil.getMyApiGZIPAsync("https://moulberry.codes/auction_averages_lbin/3day.json.gz", (jsonObject) -> {
                         for (Map.Entry<String, JsonElement> items : jsonObject.entrySet()) {
@@ -101,7 +101,7 @@ public class AuctionData {
                         if (entry.getValue().isJsonObject()) {
                             JsonObject product = entry.getValue().getAsJsonObject();
                             JsonObject quickStatus = product.get("quick_status").getAsJsonObject();
-                            Double sellPrice = quickStatus.get("sellPrice").getAsDouble();
+                            Double sellPrice = Math.floor(quickStatus.get("sellPrice").getAsDouble());
                             String id = quickStatus.get("productId").toString().split(":")[0];
                             bazaarPrices.put(id.replace("\"", ""), sellPrice);
                         }

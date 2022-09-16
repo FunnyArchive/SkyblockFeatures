@@ -38,7 +38,6 @@ public class ActionBarListener {
 		if (event.type == 2) {
 			String actionBar = event.message.getFormattedText();
 			String[] actionBarSplit = actionBar.split(" ");
-			actionBar = actionBar.replaceAll(",", "");
 			for (String piece : actionBarSplit) {
 				String trimmed = piece.trim();
 				String coloursStripped = trimmed.replaceAll("\247.", "").replaceAll(",", "");;
@@ -47,11 +46,11 @@ public class ActionBarListener {
 					continue;
 
 				if(trimmed.endsWith("❤")) {
-					parseAndSetHealth(coloursStripped.substring(0, coloursStripped.length() - 1));
+					parseAndSetHealth(coloursStripped.substring(0, coloursStripped.length() - 1).replaceAll(",", ""));
 				} else if(trimmed.endsWith("❈")) {
-					parseAndSetDefence(coloursStripped.substring(0, coloursStripped.length() - 1));
+					parseAndSetDefence(coloursStripped.substring(0, coloursStripped.length() - 1).replaceAll(",", ""));
 				} else if(trimmed.endsWith("✎")) {
-					parseAndSetMana(coloursStripped.substring(0, coloursStripped.length() - 1));
+					parseAndSetMana(coloursStripped.substring(0, coloursStripped.length() - 1).replaceAll(",", ""));
 				}
 				
 				actionBar = actionBar.trim();
@@ -62,7 +61,13 @@ public class ActionBarListener {
 			parseSecrets(actionBar);
 
 			if(skyblockfeatures.config.hidethings) {
-				event.message = new ChatComponentText(actionBar.replaceAll("\247.\\d+.*Defense", "").trim().replaceAll("\247.\\d+/\\d+✎ Mana", "").trim().replace(secrets+"/"+maxSecrets+" Secrets", "").trim().replaceAll("\247.\\d+/\\d+❤", "").trim());
+				String[] arr = actionBar.split(" ");
+				for(int i=0;i<arr.length;i++) {
+					if(arr[i].contains("❤")) {
+						actionBar = actionBar.replace(arr[i],"");
+					}
+				}
+				event.message = new ChatComponentText(actionBar.replaceAll("\247.\\d+.*Defense", "").trim().replaceAll("\247.\\d+/\\d+✎ Mana", "").trim().replace(secrets+"/"+maxSecrets+" Secrets", "").trim());
 				return;
 			}
 		}

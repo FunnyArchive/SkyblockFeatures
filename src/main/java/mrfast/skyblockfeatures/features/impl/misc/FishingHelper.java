@@ -13,6 +13,7 @@ import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
+import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.EntityFishHook;
@@ -21,13 +22,15 @@ import net.minecraft.network.play.server.S2APacketParticles;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class FishingHelper {
     boolean reelingIn = false;
     List<Vec3> particles = new ArrayList<Vec3>();
-    Entity fishingHook = null;
+    List<Vec3> fishingParticles = new ArrayList<Vec3>();
+    public static Entity fishingHook = null;
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
         if(geyser != null && skyblockfeatures.config.geyserBoundingBox) {
@@ -49,39 +52,61 @@ public class FishingHelper {
             RenderUtil.drawFilledBoundingBox(new AxisAlignedBB(x-1, y-0.1, z-1, x+1, y-0.09, z+1),color,0.5f);
             GlStateManager.disableCull();
         }
-        // Diana helper
-        if(skyblockfeatures.config.MythologicalHelper) return;
+
         Vec3 prev = null;
-        try {
-            double xDif = 0;
-            double zDif = 0;
-            double yDif = 0;
-            double index = 0;
-            for(Vec3 particle : particles) {
-                index++;
-                if(prev == null) {
-                    prev = particle;
-                    continue;
-                }
-                GlStateManager.disableCull();
-                RenderUtil.draw3DLine(prev, particle, 5, new Color(255, 85, 85), event.partialTicks);
-                GlStateManager.enableCull();
-                xDif = prev.xCoord-particle.xCoord;
-                zDif = prev.zCoord-particle.zCoord;
-                yDif = prev.yCoord-particle.yCoord;
-                if(index == particles.size()) {
-                    for(int i=0;i<300;i++) {
-                        GlStateManager.disableCull();
-                        RenderUtil.draw3DLine(prev, new Vec3(particle.xCoord+xDif*-(i),particle.yCoord-yDif*i,particle.zCoord+zDif*-(i)), 5, new Color(255, 255, 255), event.partialTicks);
-                        GlStateManager.enableCull();
-                        prev = new Vec3(particle.xCoord+xDif*-(i),particle.yCoord-yDif*i,particle.zCoord+zDif*-(i));
+        // if(skyblockfeatures.config.MythologicalHelper) {
+            // try {
+            //     for(Vec3 particle : fishingParticles) {
+            //         if(prev == null) {
+            //             prev = particle;
+            //             continue;
+            //         }
+            //         if(prev.distanceTo(particle) < 1) {
+            //             GlStateManager.disableCull();
+            //             RenderUtil.draw3DLine(prev, particle, 1, new Color(255, 0, 0), event.partialTicks);
+            //             GlStateManager.enableCull();
+            //         }
+            //         prev = particle;
+            //     }
+            // } catch (Exception e) {
+            //     //TODO: handle exception
+            // }
+        // };
+
+        // Diana helper
+        if(skyblockfeatures.config.MythologicalHelper) {
+            prev = null;
+            try {
+                double xDif = 0;
+                double zDif = 0;
+                double yDif = 0;
+                double index = 0;
+                for(Vec3 particle : particles) {
+                    index++;
+                    if(prev == null) {
+                        prev = particle;
+                        continue;
                     }
+                    GlStateManager.disableCull();
+                    RenderUtil.draw3DLine(prev, particle, 5, new Color(255, 85, 85), event.partialTicks);
+                    GlStateManager.enableCull();
+                    xDif = prev.xCoord-particle.xCoord;
+                    zDif = prev.zCoord-particle.zCoord;
+                    yDif = prev.yCoord-particle.yCoord;
+                    if(index == particles.size()) {
+                        for(int i=0;i<300;i++) {
+                            GlStateManager.disableCull();
+                            RenderUtil.draw3DLine(prev, new Vec3(particle.xCoord+xDif*-(i),particle.yCoord-yDif*i,particle.zCoord+zDif*-(i)), 5, new Color(255, 255, 255), event.partialTicks);
+                            GlStateManager.enableCull();
+                            prev = new Vec3(particle.xCoord+xDif*-(i),particle.yCoord-yDif*i,particle.zCoord+zDif*-(i));
+                        }
+                    }
+                    prev = particle;
                 }
-                prev = particle;
+            } catch (Exception e) {
+                //TODO: handle exception
             }
-        } catch (Exception e) {
-            //TODO: handle exception
-        }
+        };
     }
     Vec3 oldParticle = null;
     S2APacketParticles geyser = null;
@@ -143,6 +168,10 @@ public class FishingHelper {
                     }
                 }
                 if(hook != null) {
+                    Vec3 pos = new Vec3(packet.getXCoordinate(), packet.getYCoordinate(), packet.getZCoordinate());
+                    if(hook.getDistance(packet.getXCoordinate(), packet.getYCoordinate(), packet.getZCoordinate())<6 && !fishingParticles.contains(pos)) {
+                        fishingParticles.add(pos);
+                    }
                     if(hook.getDistance(packet.getXCoordinate(), packet.getYCoordinate(), packet.getZCoordinate())<0.15 && Utils.GetMC().thePlayer.canEntityBeSeen(hook)) {
                         if(Utils.GetMC().thePlayer.getHeldItem().getItem() instanceof ItemFishingRod) {
                             reelingIn = true;
@@ -153,6 +182,8 @@ public class FishingHelper {
                             reelingIn = false;
                         }, 500);
                     }
+                } else {
+                    fishingParticles.clear();
                 }
             }
         }

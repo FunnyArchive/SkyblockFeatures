@@ -27,8 +27,7 @@ public class GiftCompassWaypoints {
     @SubscribeEvent
     public void onAttack(AttackEntityEvent event) {
        if (event.target != null && event.target instanceof EntityArmorStand && ((EntityArmorStand)event.target).getCurrentArmor(3) != null && ((EntityArmorStand)event.target).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTBmNTM5ODUxMGIxYTA1YWZjNWIyMDFlYWQ4YmZjNTgzZTU3ZDcyMDJmNTE5M2IwYjc2MWZjYmQwYWUyIn19fQ=") && !sessionSouls.contains(event.target)) {
-          sessionSouls.add(event.target);
-          System.out.println("added target");
+         sessionSouls.add(event.target);
        }
     }
 
@@ -44,10 +43,10 @@ public class GiftCompassWaypoints {
          while(var3.hasNext()) {
                Entity entity = (Entity)var3.next();
                if (entity instanceof EntityArmorStand && ((EntityArmorStand)entity).getCurrentArmor(3) != null && ((EntityArmorStand)entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTBmNTM5ODUxMGIxYTA1YWZjNWIyMDFlYWQ4YmZjNTgzZTU3ZDcyMDJmNTE5M2IwYjc2MWZjYmQwYWUyIn19fQ=")) {
-               if (!sessionSouls.contains(entity)) {
-                  drawParticleESP(Color.YELLOW, entity.posX - Minecraft.getMinecraft().getRenderManager().viewerPosX - 0.5D, 1.5D + entity.posY - Minecraft.getMinecraft().getRenderManager().viewerPosY, entity.posZ - Minecraft.getMinecraft().getRenderManager().viewerPosZ - 0.5D, 1.0D);
+                  if (!sessionSouls.contains(entity)) {
+                     drawParticleESP(Color.YELLOW, entity.posX - Minecraft.getMinecraft().getRenderManager().viewerPosX - 0.5D, 1.5D + entity.posY - Minecraft.getMinecraft().getRenderManager().viewerPosY, entity.posZ - Minecraft.getMinecraft().getRenderManager().viewerPosZ - 0.5D, 1.0D);
                   } else {
-                  drawParticleESP(Color.GREEN, entity.posX - Minecraft.getMinecraft().getRenderManager().viewerPosX - 0.5D, 1.5D + entity.posY - Minecraft.getMinecraft().getRenderManager().viewerPosY, entity.posZ - Minecraft.getMinecraft().getRenderManager().viewerPosZ - 0.5D, 1.0D);
+                     drawParticleESP(Color.GREEN, entity.posX - Minecraft.getMinecraft().getRenderManager().viewerPosX - 0.5D, 1.5D + entity.posY - Minecraft.getMinecraft().getRenderManager().viewerPosY, entity.posZ - Minecraft.getMinecraft().getRenderManager().viewerPosZ - 0.5D, 1.0D);
                   }
                }
             }

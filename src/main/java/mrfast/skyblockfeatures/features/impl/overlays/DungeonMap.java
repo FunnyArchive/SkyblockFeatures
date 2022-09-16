@@ -119,6 +119,8 @@ public class DungeonMap {
 	@SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
 		mapData = null;
+		playerSkins.clear();
+		dungeonTeammates.clear();
     }
 
 	public static void drawPlayersOnMap() {
@@ -160,74 +162,182 @@ public class DungeonMap {
 		GlStateManager.translate(1.0F, 1.0F, 1.0F);
 		GlStateManager.popMatrix();
 	};
-	// static HashMap<String, NetworkPlayerInfo> dungeonTeammates = new HashMap<String, NetworkPlayerInfo>();
+
+	static HashMap<String, NetworkPlayerInfo> dungeonTeammates = new HashMap<String, NetworkPlayerInfo>();
+	static HashMap<Integer, ResourceLocation> playerSkins = new HashMap<Integer, ResourceLocation>();
 	public static void drawHeadOnMap() {
-		// int[] intArray = new int[]{5, 9, 13, 17, 1};
-		// List<NetworkPlayerInfo> tablist = TabListUtils.getTabEntries();
-		// for(int i=0;i<intArray.length;i++) {
-		// 	NetworkPlayerInfo player = tablist.get(intArray[i]);
-		// 	String name = StringUtils.stripControlCodes(player.getDisplayName().getUnformattedText().split(" ")[0]);
-		// 	if(name != null) {
-		// 		dungeonTeammates.put("icon-"+i,player);
-		// 		Utils.SendMessage(name+"  icon-"+i);
-		// 	}
-		// }
-		// for(Entry<String,NetworkPlayerInfo> entry : dungeonTeammates.entrySet()) {
-			// String self = entry.getKey();
+		int[] intArray = new int[]{5, 9, 13, 17, 1};
+		List<NetworkPlayerInfo> tablist = TabListUtils.getTabEntries();
+		for(int i=0;i<intArray.length;i++) {
+			NetworkPlayerInfo player = tablist.get(intArray[i]);
+			String name = StringUtils.stripControlCodes(player.getDisplayName().getUnformattedText().split(" ")[0]);
+			if(name != null && !dungeonTeammates.containsKey("icon-"+i)) {
+				dungeonTeammates.put("icon-"+i,player);
+			}
+		}
+		try {
+		for(Entry<String,NetworkPlayerInfo> entry : dungeonTeammates.entrySet()) {
+			String entrySelf = entry.getKey().replaceAll("[^0-9]", "");
 			GlStateManager.pushMatrix();
 			for (Entry<String,Vec4b> mapEntry : mapData.mapDecorations.entrySet()) {
-				// Utils.SendMessage("C "+mapEntry.getKey()+"  "+self+"  "+(self==mapEntry.getKey()));
-				if(mapEntry.getKey() == self) {
-					EntityPlayer player = Utils.GetMC().thePlayer;//Utils.GetMC().theWorld.getPlayerEntityByName(entry.getValue().getDisplayName().getUnformattedText().split(" ")[0]);
-					double x = Math.round((player.posX)/(mapData.scale*0.8))+getMapFloorXOffset();
-					double z = Math.round((player.posZ)/(mapData.scale*0.8))+getMapFloorZOffset();
-
-					AbstractClientPlayer aplayer = (AbstractClientPlayer) player;
-					ResourceLocation skin = aplayer.getLocationSkin();
-					int k = 0;
-
-					if(skin != DefaultPlayerSkin.getDefaultSkin(aplayer.getUniqueID())) { 
-						Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
-
-						GlStateManager.pushMatrix();
-
-						GlStateManager.disableDepth();
-						GlStateManager.enableBlend();
-						GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-						GlStateManager.translate(x, z, -0.02F);
-						GlStateManager.scale(1.0f, 1.0f, 1);
-						GlStateManager.rotate(player.rotationYawHead-180, 0.0F, 0.0F, 1.0F);
-						GlStateManager.translate(-0.5F, 0.5F, 0.0F);
+				Integer playerId = Integer.parseInt(mapEntry.getKey().replaceAll("[^0-9]", ""));
+				// Utils.SendMessage("C "+mapEntry.getKey()+"  "+self+"  "+(self==mapEntry.getKey()));\
+				if(playerId == Integer.parseInt(self.replaceAll("[^0-9]", ""))) {
+					EntityPlayer player = Utils.GetMC().thePlayer;
+					if(player != null) {
+						// f1 around 140ish not exact yet needs more improvment
+						int xOffset = 0;
+						int zOffset = 0;
+						switch (Utils.getDungeonFloor()) {
+							case 1:
+								xOffset = 150;
+								zOffset = 140;
+								break;
+							case 2:
+								xOffset = 140;
+								zOffset = 140;
+								break;
+							case 3:
+								xOffset = 140;
+								zOffset = 140;
+								break;
+							case 4:
+								xOffset = 130;
+								zOffset = 140;
+								break;
+							case 5:
+								xOffset = 130;
+								zOffset = 130;
+								break;
+						}
+						double x = Math.round((player.posX)/(mapData.scale*0.8))+xOffset;
+						double z = Math.round((player.posZ)/(mapData.scale*0.8))+zOffset;
+						// f1  150 140)   f2 140 140 f3 140 140
+						AbstractClientPlayer aplayer = (AbstractClientPlayer) player;
+						ResourceLocation skin = aplayer.getLocationSkin();
+						playerSkins.put(playerId, skin);
 						
-						Gui.drawRect(-8/2-1,-8/2-1, 8/2+1, 8/2+1, 0xff111111);
-						GlStateManager.color(1, 1, 1, 1);
+						int k = 0;
+						
+						if(skin != DefaultPlayerSkin.getDefaultSkin(aplayer.getUniqueID())) {
+							GlStateManager.pushMatrix();
+							Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
 
-						Tessellator tessellator = Tessellator.getInstance();
-						WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+							GlStateManager.disableDepth();
+							GlStateManager.enableBlend();
+							GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-						worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-						worldrenderer.pos(-8/2f, 8/2f, 30+((float)k * -0.005F)).tex(8/64f, 8/64f).endVertex();
-						worldrenderer.pos(8/2f, 8/2f, 30+((float)k * -0.005F)).tex(16/64f, 8/64f).endVertex();
-						worldrenderer.pos(8/2f, -8/2f, 30+((float)k * -0.005F)).tex(16/64f, 16/64f).endVertex();
-						worldrenderer.pos(-8/2f, -8/2f, 30+((float)k * -0.005F)).tex(8/64f, 16/64f).endVertex();
-						tessellator.draw();
+							GlStateManager.translate(x, z, -0.02F);
+							// GlStateManager.scale(1.0f, 1.0f, 1);
+							GlStateManager.rotate(player.rotationYawHead-180, 0.0F, 0.0F, 1.0F);
+							// GlStateManager.translate(-0.5F, 0.5F, 0.0F);
+							
+							Gui.drawRect(-8/2-1,-8/2-1, 8/2+1, 8/2+1, 0xff111111);
+							GlStateManager.color(1, 1, 1, 1);
 
-						worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-						worldrenderer.pos(-8/2f, 8/2f, 30+((float)k * -0.005F)+0.001f).tex(8/64f+0.5f, 8/64f).endVertex();
-						worldrenderer.pos(8/2f, 8/2f, 30+((float)k * -0.005F)+0.001f).tex(16/64f+0.5f, 8/64f).endVertex();
-						worldrenderer.pos(8/2f, -8/2f, 30+((float)k * -0.005F)+0.001f).tex(16/64f+0.5f, 16/64f).endVertex();
-						worldrenderer.pos(-8/2f, -8/2f, 30+((float)k * -0.005F)+0.001f).tex(8/64f+0.5f, 16/64f).endVertex();
-						tessellator.draw();
+							Tessellator tessellator = Tessellator.getInstance();
+							WorldRenderer worldrenderer = tessellator.getWorldRenderer();
 
-						GlStateManager.popMatrix();
+							worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+							worldrenderer.pos(-8/2f, 8/2f, 30+((float)k * -0.005F)).tex(8/64f, 8/64f).endVertex();
+							worldrenderer.pos(8/2f, 8/2f, 30+((float)k * -0.005F)).tex(16/64f, 8/64f).endVertex();
+							worldrenderer.pos(8/2f, -8/2f, 30+((float)k * -0.005F)).tex(16/64f, 16/64f).endVertex();
+							worldrenderer.pos(-8/2f, -8/2f, 30+((float)k * -0.005F)).tex(8/64f, 16/64f).endVertex();
+							tessellator.draw();
+
+							worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+							worldrenderer.pos(-8/2f, 8/2f, 30+((float)k * -0.005F)+0.001f).tex(8/64f+0.5f, 8/64f).endVertex();
+							worldrenderer.pos(8/2f, 8/2f, 30+((float)k * -0.005F)+0.001f).tex(16/64f+0.5f, 8/64f).endVertex();
+							worldrenderer.pos(8/2f, -8/2f, 30+((float)k * -0.005F)+0.001f).tex(16/64f+0.5f, 16/64f).endVertex();
+							worldrenderer.pos(-8/2f, -8/2f, 30+((float)k * -0.005F)+0.001f).tex(8/64f+0.5f, 16/64f).endVertex();
+							tessellator.draw();
+
+							GlStateManager.popMatrix();
+						}
+					}
+				}
+				else if(playerId == Integer.parseInt(entrySelf)) {
+					EntityPlayer player = Utils.GetMC().theWorld.getPlayerEntityByName(entry.getValue().getDisplayName().getUnformattedText().split(" ")[0]);
+					if(player != null) {
+						// f1 around 140ish not exact yet needs more improvment - party HollowCypress43
+						int xOffset = 0;
+						int zOffset = 0;
+						switch (Utils.getDungeonFloor()) {
+							case 1:
+								xOffset = 150;
+								zOffset = 140;
+								break;
+							case 2:
+								xOffset = 140;
+								zOffset = 140;
+								break;
+							case 3:
+								xOffset = 140;
+								zOffset = 140;
+								break;
+							case 4:
+								xOffset = 130;
+								zOffset = 140;
+								break;
+							case 5:
+								xOffset = 130;
+								zOffset = 130;
+								break;
+						}
+						double x = Math.round((player.posX)/(mapData.scale*0.8))+xOffset;
+						double z = Math.round((player.posZ)/(mapData.scale*0.8))+zOffset;
+						// f1  150 140)   f2 140 140 f3 140 140
+						AbstractClientPlayer aplayer = (AbstractClientPlayer) player;
+						ResourceLocation skin = aplayer.getLocationSkin();
+						playerSkins.put(playerId, skin);
+						
+						int k = 0;
+						
+						if(skin != DefaultPlayerSkin.getDefaultSkin(aplayer.getUniqueID())) {
+							GlStateManager.pushMatrix();
+							Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
+
+							GlStateManager.disableDepth();
+							GlStateManager.enableBlend();
+							GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+							GlStateManager.translate(x, z, -0.02F);
+							// GlStateManager.scale(1.0f, 1.0f, 1);
+							GlStateManager.rotate(player.rotationYawHead-180, 0.0F, 0.0F, 1.0F);
+							// GlStateManager.translate(-0.5F, 0.5F, 0.0F);
+							
+							Gui.drawRect(-8/2-1,-8/2-1, 8/2+1, 8/2+1, 0xff111111);
+							GlStateManager.color(1, 1, 1, 1);
+
+							Tessellator tessellator = Tessellator.getInstance();
+							WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+
+							worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+							worldrenderer.pos(-8/2f, 8/2f, 30+((float)k * -0.005F)).tex(8/64f, 8/64f).endVertex();
+							worldrenderer.pos(8/2f, 8/2f, 30+((float)k * -0.005F)).tex(16/64f, 8/64f).endVertex();
+							worldrenderer.pos(8/2f, -8/2f, 30+((float)k * -0.005F)).tex(16/64f, 16/64f).endVertex();
+							worldrenderer.pos(-8/2f, -8/2f, 30+((float)k * -0.005F)).tex(8/64f, 16/64f).endVertex();
+							tessellator.draw();
+
+							worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+							worldrenderer.pos(-8/2f, 8/2f, 30+((float)k * -0.005F)+0.001f).tex(8/64f+0.5f, 8/64f).endVertex();
+							worldrenderer.pos(8/2f, 8/2f, 30+((float)k * -0.005F)+0.001f).tex(16/64f+0.5f, 8/64f).endVertex();
+							worldrenderer.pos(8/2f, -8/2f, 30+((float)k * -0.005F)+0.001f).tex(16/64f+0.5f, 16/64f).endVertex();
+							worldrenderer.pos(-8/2f, -8/2f, 30+((float)k * -0.005F)+0.001f).tex(8/64f+0.5f, 16/64f).endVertex();
+							tessellator.draw();
+
+							GlStateManager.popMatrix();
+						}
 					}
 				}
 			}
 			GlStateManager.popMatrix();
 			GlStateManager.enableBlend();
 			GlStateManager.enableDepth();
-		// }
+		}
+	} catch (Exception e) {
+		// TODO: handle exception
+	}
 	}
 
 	private static final Minecraft mc = Minecraft.getMinecraft();
