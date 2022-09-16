@@ -1,14 +1,14 @@
 # Skyblock Features
 *A simple Hypixel Skyblock mod that adds features that are not commonly found in other mods but are very useful*
 
-Quick Start Guide
+**Quick Start Guide**
 - Download mod from releases tab
 - Put mod into mods folder and start up game
 - type /api new into chat to set a new api key
 - type '/sf' for help
 
 
-Best Feature List
+**Best Feature List**
 - Dungeon Blocks
 - Crypt Display
 - Blessings Viewer
