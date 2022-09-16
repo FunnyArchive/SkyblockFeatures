@@ -46,12 +46,12 @@
 - And Many More!
 
 **Best Command List**
-- /acc \<name\>       *Allows you see another players accessory bag*
-- /vm       *Change the item view model*
-- /terminal       *Allows you to practice a f7 dungeon terminal*
-- /sky \<name\>       *gives the link for someone's skyleamo*
-- /inventory \<name\>       *Displays another players inventory and armor*
-- /skill \<name\>       *Displays another players skills*
-- /bank \<name\>       *Displays another players current purse/bank balance*
-- /dungeons \<name\>       *Shows another players dungeon stats*
-- /shrug \<msg\>       *Sends a message followed by a "¯\\_(ツ)_/¯"*
+- /acc \<name\>$~~~~~~~~~~~$*Allows you see another players accessory bag*
+- /vm*Change the item view model*
+- /terminal*Allows you to practice a f7 dungeon terminal*
+- /sky \<name\>*gives the link for someone's skyleamo*
+- /inventory \<name\>*Displays another players inventory and armor*
+- /skill \<name\>*Displays another players skills*
+- /bank \<name\>*Displays another players current purse/bank balance*
+- /dungeons \<name\>*Shows another players dungeon stats*
+- /shrug \<msg\>*Sends a message followed by a "¯\\_(ツ)_/¯"*
