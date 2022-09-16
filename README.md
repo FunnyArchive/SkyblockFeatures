@@ -54,4 +54,4 @@
 - /skill \<name\> *Displays another players skills*
 - /bank \<name\> *Displays another players current purse/bank balance*
 - /dungeons \<name\> *Shows another players dungeon stats*
-- /shrug \<msg\> *Sends a message followed by a "¯\_(ツ)_/¯"*
+- /shrug \<msg\> *Sends a message followed by a "¯\\_(ツ)_/¯"*
