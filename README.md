@@ -1,6 +1,6 @@
 # Skyblock Features
 *A simple Hypixel Skyblock mod that adds features that are not commonly found in other mods but are very useful*
-For Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
+\nFor Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
 
 **Quick Start Guide**
 - Download mod from releases tab
