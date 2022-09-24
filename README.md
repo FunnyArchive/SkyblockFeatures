@@ -36,6 +36,7 @@
 - Fancy Damage Numbers
 - Chat Timestamps
 - Glowing Zealots
+- Zealots Spawn Locations
 - 1.12 Crop Hitbox
 - Highlight Geyser Box
 - Lowest BIN Price
