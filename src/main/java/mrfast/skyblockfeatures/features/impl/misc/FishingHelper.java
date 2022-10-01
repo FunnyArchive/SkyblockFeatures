@@ -54,24 +54,6 @@ public class FishingHelper {
         }
 
         Vec3 prev = null;
-        // if(skyblockfeatures.config.MythologicalHelper) {
-            // try {
-            //     for(Vec3 particle : fishingParticles) {
-            //         if(prev == null) {
-            //             prev = particle;
-            //             continue;
-            //         }
-            //         if(prev.distanceTo(particle) < 1) {
-            //             GlStateManager.disableCull();
-            //             RenderUtil.draw3DLine(prev, particle, 1, new Color(255, 0, 0), event.partialTicks);
-            //             GlStateManager.enableCull();
-            //         }
-            //         prev = particle;
-            //     }
-            // } catch (Exception e) {
-            //     //TODO: handle exception
-            // }
-        // };
 
         // Diana helper
         if(skyblockfeatures.config.MythologicalHelper) {

@@ -34,7 +34,7 @@ public class AuctionFeatures {
     public void onSeconds(SecondPassedEvent event) {
         selfItems.clear();
     }
-
+    
     @SubscribeEvent
     public void onTick(ClientTickEvent event) {
         if (!Utils.inSkyblock || !skyblockfeatures.usingNEU || Utils.GetMC().thePlayer == null || Utils.GetMC().thePlayer.openContainer == null) return;
@@ -129,7 +129,7 @@ public class AuctionFeatures {
                                     }
                                 }
 
-                                if(!dupe && (selfItems.size()<itemCount || selfItems.size() == 0)) {
+                                if(!dupe || (skyblockfeatures.usingNEU && (selfItems.size()<itemCount || selfItems.size() == 0))) {
                                     selfItems.add(auction);
                                 }
                             }
@@ -354,12 +354,13 @@ public class AuctionFeatures {
                 List<String> winningAuctions = new ArrayList<String>();
                 for (Auction auction : selfItems) {
                     ItemStack stack = auction.stack;
+                    boolean hadName = false;
                     for(String line : ItemUtil.getItemLore(stack)) {
                         line = Utils.cleanColour(line);
                         if(line.contains("Ended")) {
                             ended++;
                         }
-                        if(line.contains("Bidder") && line.contains(Utils.GetMC().thePlayer.getName()) && !winningAuctions.contains(auction.identifer)) {
+                        if(line.contains(Utils.GetMC().thePlayer.getName()) && !winningAuctions.contains(auction.identifer)) {
                             winning++;
                             winningAuctions.add(auction.identifer);
                             try {
@@ -368,9 +369,9 @@ public class AuctionFeatures {
                                 //TODO: handle exception
                             }
                         }
-                        if(line.contains("Bidder") && !line.contains(Utils.GetMC().thePlayer.getName())) {
+                        else if(line.contains("Bidder")) {
                             losing++;
-                            endedAuctions.add(stack);
+                            // endedAuctions.add(stack);
                             profit -= auction.profit;
                         }
                     }
@@ -384,7 +385,7 @@ public class AuctionFeatures {
                     ChatFormatting.RED+""+losing+ChatFormatting.WHITE+" Losing Auctions",
                     "",
                     ChatFormatting.WHITE+"Ended Auctions: "+ChatFormatting.GOLD+NumberUtil.nf.format(ended),
-                    ChatFormatting.WHITE+"Resell Profit: "+ChatFormatting.GOLD+NumberUtil.nf.format(profit)
+                    ChatFormatting.WHITE+"Resell Value: "+ChatFormatting.GOLD+NumberUtil.nf.format(profit)
                 };
                 int lineCount = 0;
                 for(String line:lines) {

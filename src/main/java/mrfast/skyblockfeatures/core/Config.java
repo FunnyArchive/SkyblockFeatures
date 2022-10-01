@@ -217,6 +217,15 @@ public class Config extends Vigilant {
     )
     public boolean betterpartys = false;
 
+//     @Property(
+//             type = PropertyType.SWITCH,
+//             name = "Hide Incorrect Livids",
+//             description = "Hides the incorrect livid",
+//             category = "§1§rDungeons",
+//             subcategory = "Miscellaneous"
+//     )
+//     public boolean hideFakeLivids = false;
+
     @Property(
             type = PropertyType.SWITCH,
             name = "Fairy Soul Helper",

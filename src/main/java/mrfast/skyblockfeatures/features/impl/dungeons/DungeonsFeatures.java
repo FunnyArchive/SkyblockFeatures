@@ -16,13 +16,17 @@ import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.structure.FloatPair;
 import mrfast.skyblockfeatures.core.structure.GuiElement;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
+import mrfast.skyblockfeatures.events.GuiRenderItemEvent.RenderOverlayEvent;
 import mrfast.skyblockfeatures.utils.ItemRarity;
 import mrfast.skyblockfeatures.utils.ItemUtil;
+import mrfast.skyblockfeatures.utils.RenderUtil;
+import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.ScoreboardUtil;
 import mrfast.skyblockfeatures.utils.StringUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
@@ -30,6 +34,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.ClickEvent;
@@ -41,10 +46,15 @@ import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -56,26 +66,48 @@ public class DungeonsFeatures {
     private static final Pattern playerPattern = Pattern.compile("(?:\\[.+?] )?(\\w+)");
     public static String dungeonFloor = null;
     public static boolean hasBossSpawned = false;
+    public static boolean foundLivid = false;
+    public static Entity livid = null;
+
+    @SubscribeEvent
+    public void onWorldChange(WorldEvent.Load event) {
+        foundLivid = false;
+        livid = null;
+    }
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.START || mc.thePlayer == null || mc.theWorld == null) return;
-        if (Utils.inDungeons) {
-            if (dungeonFloor == null) {
-                for (String s : ScoreboardUtil.getSidebarLines()) {
-                    String line = ScoreboardUtil.cleanSB(s);
-                    if (line.contains("The Catacombs (")) {
-                        dungeonFloor = line.substring(line.indexOf("(") + 1, line.indexOf(")"));
-                        break;
-                    }
-                }
-            }
-        }
+        if (event.phase != TickEvent.Phase.START) return;
+
+        World world = Minecraft.getMinecraft().theWorld;
+        // if (Utils.inDungeons && !foundLivid && world != null && skyblockfeatures.config.hideFakeLivids) {
+        //     if (Utils.getDungeonFloor() == 5) {
+        //         List<Entity> loadedLivids = new ArrayList<>();
+        //         List<Entity> entities = world.getLoadedEntityList();
+        //         for (Entity entity : entities) {
+        //             String name = entity.getName();
+        //             if (name.contains("Livid") && entity instanceof EntityArmorStand) {
+        //                 loadedLivids.add(entity);
+        //             }
+        //         }
+        //         if (loadedLivids.size() > 8) {
+        //             Entity lividTag = loadedLivids.get(0);
+        //             AxisAlignedBB aabb = new AxisAlignedBB(lividTag.posX-0.5, lividTag.posY-2, lividTag.posZ-0.5, lividTag.posX + 0.5,lividTag.posY,lividTag.posZ + 0.5);
+        //             // for (EntityPlayer entity : world.playerEntities) {
+        //             //     if(aabb.intersectsWith(entity.getCollisionBoundingBox())) {
+        //                     livid = lividTag;
+        //                     foundLivid = true;
+        //                 // }
+        //             // }
+        //         }
+        //     }
+        // }
     }
-
+    @SubscribeEvent
+    public void renderWorldLastEvent(RenderWorldLastEvent event) {
+        if(livid != null) RenderUtil.drawBoundingBox(Color.RED, livid.getEntityBoundingBox());
+    }
     
-    // Show hidden fels
-
     @SubscribeEvent
     public void onWorldChanges(WorldEvent.Load event) {
         count = 0;
@@ -83,6 +115,8 @@ public class DungeonsFeatures {
         hasBossSpawned = false;
         bloodguy = null;
         blessings.clear();
+        livid = null;
+        foundLivid = false;
     }
 
     String delimiter = EnumChatFormatting.AQUA.toString() + EnumChatFormatting.STRIKETHROUGH.toString() + "" + EnumChatFormatting.BOLD + "--------------------------------------";

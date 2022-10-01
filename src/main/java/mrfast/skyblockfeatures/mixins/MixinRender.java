@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
@@ -19,6 +20,7 @@ import net.minecraftforge.common.MinecraftForge;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.events.CheckRenderEntityEvent;
 import mrfast.skyblockfeatures.features.impl.dungeons.DungeonBlocks;
+import mrfast.skyblockfeatures.features.impl.dungeons.DungeonsFeatures;
 import mrfast.skyblockfeatures.features.impl.dungeons.Nametags;
 import mrfast.skyblockfeatures.utils.SpecialColour;
 import mrfast.skyblockfeatures.utils.Utils;
@@ -31,6 +33,12 @@ public abstract class MixinRender<T extends Entity> {
         if(!Utils.isNPC(livingEntity) && livingEntity.getDistanceToEntity(Utils.GetMC().thePlayer) > 49 && Utils.inSkyblock && skyblockfeatures.config.HideFarEntity && !Utils.inDungeons) {
             cir.setReturnValue(false);
         }
+        if(livingEntity != null && livingEntity instanceof EntityOtherPlayerMP && DungeonsFeatures.livid != null && livingEntity.getName().contains(" Livid")) {
+            if(livingEntity != DungeonsFeatures.livid) {
+                cir.setReturnValue(false);
+            }
+        }
+        
         try {
             if (MinecraftForge.EVENT_BUS.post(new CheckRenderEntityEvent<T>(livingEntity, camera, camX, camY, camZ))) cir.setReturnValue(false);
         } catch (Throwable e) {

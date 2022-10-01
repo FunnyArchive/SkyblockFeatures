@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import club.sk1er.mods.core.transformers.RendererLivingEntityTransformer;
+import net.minecraft.block.BlockBed.EnumPartType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -35,8 +36,10 @@ import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Team.EnumVisible;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import mrfast.skyblockfeatures.skyblockfeatures;
+import mrfast.skyblockfeatures.features.impl.dungeons.DungeonsFeatures;
 import mrfast.skyblockfeatures.features.impl.dungeons.Nametags;
 import mrfast.skyblockfeatures.features.impl.glowingstuff.PartyGlow;
 import mrfast.skyblockfeatures.utils.ColorCode;
@@ -133,6 +136,9 @@ public abstract class MixinRenderGlobal {
             GlStateManager.depthFunc(GL11.GL_ALWAYS);
             try {
                 for (Entity entity : entities) {
+                    if(entity != DungeonsFeatures.livid && entity.getName().contains(" Livid")/*  && skyblockfeatures.config.hideFakeLivids*/) {
+                        continue;
+                    }
                     boolean flag = (mc.getRenderViewEntity() instanceof EntityLivingBase && ((EntityLivingBase)mc.getRenderViewEntity()).isPlayerSleeping());
                     boolean flag1 = (entity.isInRangeToRender3d(x, y, z) && (entity.ignoreFrustumCheck || camera.isBoundingBoxInFrustum(entity.getEntityBoundingBox())) && entity instanceof EntityPlayer && !Utils.isNPC(entity));
                     // Dungeon Player Glowing
