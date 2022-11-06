@@ -43,7 +43,7 @@
 - Helpful Auction Guis (for flipping, selling, and buying)
 - Highlight Auction Flips
 - Compact Chat
-- Ad Blocker
+- Ad Blocker (Hides people advertising in chat)
 - Highlight Glowing Mushrooms
 - Minion Profit Overlay (Coins Per Hour, Cooldown, ect)
 - And Many More!
