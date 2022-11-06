@@ -1,5 +1,6 @@
 # Skyblock Features
 *A simple Hypixel Skyblock mod that adds features that are not commonly found in other mods but are very useful*
+<br><br>For Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
 
 **Quick Start Guide**
 - Download mod from releases tab
@@ -35,6 +36,7 @@
 - Fancy Damage Numbers
 - Chat Timestamps
 - Glowing Zealots
+- Highlight Zealots Spawn Locations
 - 1.12 Crop Hitbox
 - Highlight Geyser Box
 - Lowest BIN Price
