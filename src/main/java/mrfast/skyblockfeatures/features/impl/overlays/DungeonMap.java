@@ -41,22 +41,16 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class DungeonMap {
 	static String self = "";
-	// public static class Player {
-	// 	public Double distance;
-	// 	public String id;
-	// 	public EntityPlayer entity;
+	public static Integer offsetX = 0;
+	public static Integer selfFancyX = 0;
+	public static Integer selfNotFancyX = 0;
 
-	// 	public Player(Double dist,String Identity,EntityPlayer player) {
-	// 		distance = dist;
-	// 		id = Identity;
-	// 		entity = player;
-	// 	} 
-	// }
 // 	-82 44 f1 left
 // 20 103 f1 bottom
 // 80 102 f1 bottom right
 // 80 -102 f1 top right
 // -80 -102 f1 top left
+	
 
 	public static int getMapFloorXOffset() {
 		switch(Utils.getDungeonFloor()) {
@@ -250,16 +244,19 @@ public class DungeonMap {
 	public static void drawHeadOnMap() {
 		int[] intArray = new int[]{5, 9, 13, 17, 1};
 		List<NetworkPlayerInfo> tablist = TabListUtils.getTabEntries();
+		System.out.println("----------------START-------------");
 		for(int i=0;i<intArray.length;i++) {
 			NetworkPlayerInfo player = tablist.get(intArray[i]);
 			if(player.getDisplayName().getUnformattedText().split(" ").length > 1) {
 				String name = StringUtils.stripControlCodes(player.getDisplayName().getUnformattedText().split(" ")[1]);
 				if(name != null && !dungeonTeammates.containsKey("icon-"+i)) {
 					dungeonTeammates.put("icon-"+i,player);
-					Utils.SendMessage("icon-"+i+" "+name);
 				}
+				System.out.println("icon-"+i+" "+name);
 			}
 		}
+		System.out.println("-----------------FINISH--------------");
+
 		try {
 		for(Entry<String,NetworkPlayerInfo> entry : dungeonTeammates.entrySet()) {
 			// Icon-#
@@ -280,6 +277,7 @@ public class DungeonMap {
 						ResourceLocation skin = aplayer.getLocationSkin();
 						if(anotherOffset == null) {
 							anotherOffset = Math.abs(x-Math.round((mapEntry.getValue().func_176112_b()/2)+64));
+							System.out.println(anotherOffset+" "+ (x-Math.round((mapEntry.getValue().func_176112_b()/2)+64)));
 						} else {
 							x+=anotherOffset;
 						}
@@ -290,6 +288,7 @@ public class DungeonMap {
 						}
 					}
 				}
+
 				// if # is same as the icon-#
 				else if(playerId == Integer.parseInt(entrySelf)) {
 					EntityPlayer player = Utils.GetMC().theWorld.getPlayerEntityByName(entry.getValue().getDisplayName().getUnformattedText().split(" ")[1]);

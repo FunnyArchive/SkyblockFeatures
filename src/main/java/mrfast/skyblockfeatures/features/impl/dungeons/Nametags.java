@@ -46,19 +46,24 @@ public class Nametags {
                 // renderNameTag(player, ChatFormatting.GREEN+player.getName(), x , y, z, event.partialTicks);
                 for (String line : ScoreboardHandler.getSidebarLines()) {
                     String cleanedLine = ScoreboardHandler.cleanSB(line);
-                    if(cleanedLine.contains("[M] "+player.getName().substring(0, 3))) {// MAGE CLASS "[M] Skyblock_Lobby"
+                    String cutShort = player.getName();
+                    if(cutShort.length()>12) {
+                        cutShort = cutShort.substring(0, 12);
+                    }
+                    
+                    if(cleanedLine.contains("[M] "+cutShort)) {// MAGE CLASS "[M] Skyblock_Lobby"
                         renderNameTag(player, ChatFormatting.YELLOW+"[M] "+ChatFormatting.GREEN+player.getName(), x , y, z, event.partialTicks, "§b");
                     }
-                    if(cleanedLine.contains("[T] "+player.getName().substring(0, 3))) {// TANK CLASS "[T] Skyblock_Lobby"
+                    if(cleanedLine.contains("[T] "+cutShort)) {// TANK CLASS "[T] Skyblock_Lobby"
                         renderNameTag(player, ChatFormatting.YELLOW+"[T] "+ChatFormatting.GREEN+player.getName(), x , y, z, event.partialTicks, "§7");
                     }
-                    if(cleanedLine.contains("[A] "+player.getName().substring(0, 3))) {// ARCHER CLASS "[A] Skyblock_Lobby"
+                    if(cleanedLine.contains("[A] "+cutShort)) {// ARCHER CLASS "[A] Skyblock_Lobby"
                         renderNameTag(player, ChatFormatting.YELLOW+"[A] "+ChatFormatting.GREEN+player.getName(), x , y, z, event.partialTicks, "§a");
                     }
-                    if(cleanedLine.contains("[B] "+player.getName().substring(0, 3))) {// BESERKER CLASS "[B] Skyblock_Lobby"
+                    if(cleanedLine.contains("[B] "+cutShort)) {// BESERKER CLASS "[B] Skyblock_Lobby"
                         renderNameTag(player, ChatFormatting.YELLOW+"[B] "+ChatFormatting.GREEN+player.getName(), x , y, z, event.partialTicks, "§c");
                     }
-                    if(cleanedLine.contains("[H] "+player.getName().substring(0, 3))) {// HEALER CLASS "[H] Skyblock_Lobby"
+                    if(cleanedLine.contains("[H] "+cutShort)) {// HEALER CLASS "[H] Skyblock_Lobby"
                         renderNameTag(player, ChatFormatting.YELLOW+"[H] "+ChatFormatting.GREEN+player.getName(), x , y, z, event.partialTicks, "§d");
                     }
                 }

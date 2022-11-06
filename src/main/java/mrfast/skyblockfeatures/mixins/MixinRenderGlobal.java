@@ -41,7 +41,6 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.features.impl.dungeons.DungeonsFeatures;
 import mrfast.skyblockfeatures.features.impl.dungeons.Nametags;
-import mrfast.skyblockfeatures.features.impl.glowingstuff.PartyGlow;
 import mrfast.skyblockfeatures.utils.ColorCode;
 import mrfast.skyblockfeatures.utils.DrawUtils;
 import mrfast.skyblockfeatures.utils.ItemRarity;
@@ -161,13 +160,6 @@ public abstract class MixinRenderGlobal {
                     } 
                     if(entity instanceof EntityEnderman && mc.thePlayer.canEntityBeSeen(entity) && SBInfo.getInstance().location.contains("Dragons Nest") && skyblockfeatures.config.glowingZealots) {
                         renderManager.renderEntitySimple(entity, partialTicks);
-                    }
-                    // Make party members glow blue
-                    for (String name : PartyGlow.party) {
-                        if (entity.getName().contains(name) && !Utils.inDungeons && skyblockfeatures.config.glowingParty && mc.thePlayer.canEntityBeSeen(entity)) {
-                            outlineColor(entity, "§1");
-                            this.renderManager.renderEntitySimple(entity, partialTicks);
-                        }
                     }
                 }
             } catch (NullPointerException e) {

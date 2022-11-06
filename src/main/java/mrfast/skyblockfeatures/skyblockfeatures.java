@@ -56,7 +56,6 @@ import mrfast.skyblockfeatures.features.impl.dungeons.DungeonsFeatures;
 import mrfast.skyblockfeatures.features.impl.dungeons.Nametags;
 import mrfast.skyblockfeatures.features.impl.events.JerryTimer;
 import mrfast.skyblockfeatures.features.impl.events.MayorJerry;
-import mrfast.skyblockfeatures.features.impl.glowingstuff.PartyGlow;
 import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
 import mrfast.skyblockfeatures.features.impl.handlers.KeyShortcuts;
 import mrfast.skyblockfeatures.features.impl.hidestuff.HideStuff;
@@ -122,7 +121,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 public class skyblockfeatures {
     public static final String MODID = "skyblockfeatures";
     public static final String MOD_NAME = "skyblockfeatures";
-    public static final String VERSION = "1.0";
+    public static final String VERSION = "1.1.7";
     public static final Minecraft mc = Minecraft.getMinecraft();
 
     public static Config config = new Config();
@@ -219,7 +218,6 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new DamageOverlays());
         MinecraftForge.EVENT_BUS.register(new Nametags());
         MinecraftForge.EVENT_BUS.register(new ConjuringCooldown());
-        MinecraftForge.EVENT_BUS.register(new PartyGlow());
         MinecraftForge.EVENT_BUS.register(new FavoritePets());
         MinecraftForge.EVENT_BUS.register(new SpeedDisplay());
         MinecraftForge.EVENT_BUS.register(new EffectiveHealthDisplay());

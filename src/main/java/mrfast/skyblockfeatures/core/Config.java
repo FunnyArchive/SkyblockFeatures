@@ -511,7 +511,7 @@ public class Config extends Vigilant {
     @Property(
             type = PropertyType.SWITCH,
             name = "Show Zealot Spawn Areas & Spawn Timer",
-            description = "Draws a square around the areas that zealots spawn in the end & shows a timer on screen of when the zealots will spawn",
+            description = "Draws a square around the areas that zealots spawn in the end & shows a timer on screen of when the zealots will spawn. (this includes bruisers)",
             category = "§1§rFarming",
             subcategory = "Quality of Life"
     )
@@ -525,6 +525,15 @@ public class Config extends Vigilant {
         subcategory = "Quality of Life"
     )
     public boolean glowingZealots = false;
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Highlight Glowing Mushrooms",
+        description = "Highlights glowing mushrooms in the Glowing Mushroom Cave",
+        category = "§1§rFarming",
+        subcategory = "Quality of Life"
+    )
+    public boolean highlightMushrooms = false;
 
     @Property(
         type = PropertyType.SWITCH,

@@ -55,7 +55,7 @@ public abstract class MixinGuiContainer extends GuiScreen {
         try {
             MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.TitleDrawnEvent.Post(that, inventorySlots, mouseX, mouseY, partialTicks));
         } catch (Throwable e) {
-            e.printStackTrace();
+            
         }
     }
 

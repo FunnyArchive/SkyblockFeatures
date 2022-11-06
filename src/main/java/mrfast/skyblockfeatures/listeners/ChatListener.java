@@ -17,7 +17,6 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.commands.RepartyCommand;
-import mrfast.skyblockfeatures.features.impl.glowingstuff.PartyGlow;
 import mrfast.skyblockfeatures.utils.APIUtil;
 import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.StringUtils;
@@ -269,41 +268,7 @@ public class ChatListener {
                 }).start();
             }
         }
-
-        if (PartyGlow.gettingParty) {
-            if(unformatted.isEmpty()||unformatted.contains("You are not currently in a party.")) {
-                event.setCanceled(true);
-            }
-            else if (unformatted.contains("-----")) {
-                event.setCanceled(true);
-                switch(PartyGlow.Delimiter) {
-                    case 0:
-                        System.out.println("Get Party Delimiter Cancelled");
-                        PartyGlow.Delimiter++;
-                        return;
-                    case 1:
-                        System.out.println("Done querying party");
-                        PartyGlow.gettingParty = false;
-                        PartyGlow.Delimiter = 0;
-                        return;
-                }
-            } else if (unformatted.startsWith("Party M") || unformatted.startsWith("Party Leader")){
-                EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
-
-                Matcher members = members_pattern.matcher(unformatted);
-
-                while (members.find()) {
-                    String partyMember = members.group(1);
-                    if (!partyMember.equals(player.getName())) {
-                        PartyGlow.party.add(partyMember);
-                        System.out.println(partyMember);
-                    }
-                }
-
-                event.setCanceled(true);
-                return;
-            }
-        }
+        
 
         if (skyblockfeatures.config.autoReparty) {
             if (unformatted.contains("has disbanded the party!") && !(unformatted.contains(mc.thePlayer.getName()))) {
