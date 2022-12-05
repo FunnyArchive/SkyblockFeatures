@@ -26,7 +26,6 @@
 - Dungeon Teammate Glowing
 - Dungeon Map with player heads
 - Glowing Players!
-- Party Glow
 - Glowing Items based on rarity
 - Automaton Loot/Profit Tracker
 - Gemstone Profit Tracker
@@ -44,7 +43,8 @@
 - Helpful Auction Guis (for flipping, selling, and buying)
 - Highlight Auction Flips
 - Compact Chat
-- Ad Blocker
+- Ad Blocker (Hides people advertising in chat)
+- Highlight Glowing Mushrooms
 - Minion Profit Overlay (Coins Per Hour, Cooldown, ect)
 - And Many More!
 
