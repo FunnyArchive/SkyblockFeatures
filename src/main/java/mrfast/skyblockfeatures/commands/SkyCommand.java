@@ -39,13 +39,13 @@ public class SkyCommand extends CommandBase {
         String delimiter = EnumChatFormatting.AQUA.toString() + EnumChatFormatting.STRIKETHROUGH.toString() + "" + EnumChatFormatting.BOLD + "--------------------------------------";
         
         ClickEvent versionCheckChatClickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, 
-        "https://sky.lea.moe/stats/"+username);
+        "https://sky.shiiyu.moe/stats/"+username);
 
         ChatStyle clickableChatStyle = new ChatStyle().setChatClickEvent(versionCheckChatClickEvent);
 
         ChatComponentText versionWarningChatComponent = 
 
-        new ChatComponentText(ChatFormatting.LIGHT_PURPLE+"Click Here for "+username+"'s Skyleamoe stats");
+        new ChatComponentText(ChatFormatting.LIGHT_PURPLE+"Click Here for "+username+"'s Skycrypt stats");
         versionWarningChatComponent.setChatStyle(clickableChatStyle);
 
         // mc.thePlayer.addChatMessage(versionWarningChatComponent);

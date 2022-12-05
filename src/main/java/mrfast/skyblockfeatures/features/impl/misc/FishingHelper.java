@@ -34,25 +34,17 @@ public class FishingHelper {
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
         if(geyser != null && skyblockfeatures.config.geyserBoundingBox) {
-            Entity viewer = Minecraft.getMinecraft().getRenderViewEntity();
-            double viewerX = viewer.lastTickPosX + (viewer.posX - viewer.lastTickPosX) * event.partialTicks;
-            double viewerY = viewer.lastTickPosY + (viewer.posY - viewer.lastTickPosY) * event.partialTicks;
-            double viewerZ = viewer.lastTickPosZ + (viewer.posZ - viewer.lastTickPosZ) * event.partialTicks;
-            double x = geyser.getXCoordinate() - viewerX;
-            double y = 118 - viewerY;
-            double z = geyser.getZCoordinate() - viewerZ;
-            GlStateManager.enableCull();
+            double x = geyser.getXCoordinate();
+            double y = 118;
+            double z = geyser.getZCoordinate();
             Color color = 
                 fishingHook!=null?
                     fishingHook.getDistance(geyser.getXCoordinate(), fishingHook.posY, geyser.getZCoordinate())<=1?
                         new Color(85,255,85): // Green
                     new Color(255,85,255): // Magenta
                 new Color(255,85,255); // Magenta
-
-            RenderUtil.drawFilledBoundingBox(new AxisAlignedBB(x-1, y-0.1, z-1, x+1, y-0.09, z+1),color,0.5f);
-            GlStateManager.disableCull();
+            RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(x-1, y-0.1, z-1, x+1, y-0.09, z+1),color,event.partialTicks);
         }
-
         Vec3 prev = null;
 
         // Diana helper
@@ -77,9 +69,7 @@ public class FishingHelper {
                     yDif = prev.yCoord-particle.yCoord;
                     if(index == particles.size()) {
                         for(int i=0;i<300;i++) {
-                            GlStateManager.disableCull();
                             RenderUtil.draw3DLine(prev, new Vec3(particle.xCoord+xDif*-(i),particle.yCoord-yDif*i,particle.zCoord+zDif*-(i)), 5, new Color(255, 255, 255), event.partialTicks);
-                            GlStateManager.enableCull();
                             prev = new Vec3(particle.xCoord+xDif*-(i),particle.yCoord-yDif*i,particle.zCoord+zDif*-(i));
                         }
                     }
@@ -112,13 +102,7 @@ public class FishingHelper {
                 }
                 if(hook != null && skyblockfeatures.config.hideGeyserParticles) {
                     if(type == EnumParticleTypes.SMOKE_NORMAL) {
-                        if(packet.getYCoordinate() > hook.posY-0.2 && packet.getYCoordinate() < hook.posY+0.2) {
-                            // Dont know if i want this in here yet
-                            // if(hook.getDistance(packet.getXCoordinate(), packet.getYCoordinate(), packet.getZCoordinate())<0.15 && Utils.GetMC().thePlayer.canEntityBeSeen(hook)) {
-                            //     Utils.SendMessage(ChatFormatting.GREEN+"Reel it in!");
-                            //     Utils.GetMC().thePlayer.playSound("note.pling", 1, 2);
-                            // }
-                        } else {
+                        if(!(packet.getYCoordinate() > hook.posY-0.2 && packet.getYCoordinate() < hook.posY+0.2)) {
                             event.setCanceled(true);
                         }
                     } else {

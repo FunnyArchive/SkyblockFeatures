@@ -27,6 +27,7 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.DataFetcher;
+import mrfast.skyblockfeatures.utils.RenderUtil;
 
 public class FairySoulWaypoints {
 
@@ -91,9 +92,9 @@ public class FairySoulWaypoints {
             Entity entity = (Entity)var3.next();
             if (entity instanceof EntityArmorStand && ((EntityArmorStand)entity).getCurrentArmor(3) != null && ((EntityArmorStand)entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjk2OTIzYWQyNDczMTAwMDdmNmFlNWQzMjZkODQ3YWQ1Mzg2NGNmMTZjMzU2NWExODFkYzhlNmIyMGJlMjM4NyJ9fX0=")) {
                if (!soullocations.contains(entity.getPosition().toString())) {
-                  drawParticleESP(new Color(255,85,255), entity.posX - Minecraft.getMinecraft().getRenderManager().viewerPosX - 0.5D, 1.5D + entity.posY - Minecraft.getMinecraft().getRenderManager().viewerPosY, entity.posZ - Minecraft.getMinecraft().getRenderManager().viewerPosZ - 0.5D, 1.0D);
+                  highlightBlock(new Color(255,85,255), entity.posX - Minecraft.getMinecraft().getRenderManager().viewerPosX - 0.5D, 1.5D + entity.posY - Minecraft.getMinecraft().getRenderManager().viewerPosY, entity.posZ - Minecraft.getMinecraft().getRenderManager().viewerPosZ - 0.5D, 1.0D,event.partialTicks);
                } else {
-                  drawParticleESP(Color.GREEN, entity.posX - Minecraft.getMinecraft().getRenderManager().viewerPosX - 0.5D, 1.5D + entity.posY - Minecraft.getMinecraft().getRenderManager().viewerPosY, entity.posZ - Minecraft.getMinecraft().getRenderManager().viewerPosZ - 0.5D, 1.0D);
+                  highlightBlock(Color.GREEN, entity.posX - Minecraft.getMinecraft().getRenderManager().viewerPosX - 0.5D, 1.5D + entity.posY - Minecraft.getMinecraft().getRenderManager().viewerPosY, entity.posZ - Minecraft.getMinecraft().getRenderManager().viewerPosZ - 0.5D, 1.0D,event.partialTicks);
                }
             }
          }
@@ -101,18 +102,8 @@ public class FairySoulWaypoints {
    }
 
 
-   public static void drawParticleESP(Color c, double d, double d1, double d2, double size) {
-      GlStateManager.enableBlend();
-      GlStateManager.disableLighting();
-      GlStateManager.disableDepth();
-      GlStateManager.disableCull();
-      GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-      GlStateManager.disableTexture2D();
-      drawBoundingBox(c, new AxisAlignedBB(d + 1.0D, d1 + size, d2 + 1.0D, d, d1, d2));
-      GlStateManager.enableTexture2D();
-      GlStateManager.enableDepth();
-      GlStateManager.disableBlend();
-      GlStateManager.enableCull();
+   public static void highlightBlock(Color c, double d, double d1, double d2, double size,float ticks) {
+      RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(d-size, d1+0.1, d2-size, d+size, d1-3, d2+size),c,ticks);
    }
 
    public static void drawBoundingBox(Color c, AxisAlignedBB aa) {

@@ -156,13 +156,22 @@ public class Utils {
         Minecraft.getMinecraft().fontRendererObj.drawString(text, 0, 0, color, false);
     }
 
-    public static void drawTextWithStyle2(String text, float x, float y, int color) {
+    public static void drawTextWithStyle2(String text, float x, float y) {
         String shadowText = Utils.cleanColour(text);
         Minecraft.getMinecraft().fontRendererObj.drawString(shadowText,1, 0, 0x000000, false);
         Minecraft.getMinecraft().fontRendererObj.drawString(shadowText, -1, 0, 0x000000, false);
         Minecraft.getMinecraft().fontRendererObj.drawString(shadowText, 0, 1, 0x000000, false);
         Minecraft.getMinecraft().fontRendererObj.drawString(shadowText, 0, -1, 0x000000, false);
         Minecraft.getMinecraft().fontRendererObj.drawString(text, 0, 0, 0xFFFFFF, false);
+    }
+
+    public static void drawTextWithStyle3(String text, float x, float y) {
+        String shadowText = Utils.cleanColour(text);
+        Minecraft.getMinecraft().fontRendererObj.drawString(shadowText,x+1, y, 0x000000, false);
+        Minecraft.getMinecraft().fontRendererObj.drawString(shadowText, x-1, y, 0x000000, false);
+        Minecraft.getMinecraft().fontRendererObj.drawString(shadowText, x, y+1, 0x000000, false);
+        Minecraft.getMinecraft().fontRendererObj.drawString(shadowText, x, y-1, 0x000000, false);
+        Minecraft.getMinecraft().fontRendererObj.drawString(text, x, y, 0xFFFFFF, false);
     }
 
     public static String secondsToTime(int seconds) {

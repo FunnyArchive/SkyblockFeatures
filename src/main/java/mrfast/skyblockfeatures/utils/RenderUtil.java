@@ -7,23 +7,125 @@ import org.lwjgl.opengl.GL14;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 
 public class RenderUtil {
+    public static void drawOutlinedFilledBoundingBox(AxisAlignedBB aabb, Color color, float partialTicks) {
+        GlStateManager.enableBlend();
+        GlStateManager.disableLighting();
+        GlStateManager.enableCull();
+        GlStateManager.disableTexture2D();
+        RenderUtil.drawBoundingBox(aabb, color, partialTicks);
+        RenderUtil.drawOutlinedBoundingBox(aabb, color, 3, partialTicks);
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.disableCull();
+    }
 
-    public static void drawBoundingBox(Color c, AxisAlignedBB aa) {
+    public static void draw3DString(Vec3 pos, String text, int colour, float partialTicks) {
+        Minecraft mc = Minecraft.getMinecraft();
+        EntityPlayer player = mc.thePlayer;
+        double x = (pos.xCoord - player.lastTickPosX) + ((pos.xCoord - player.posX) - (pos.xCoord - player.lastTickPosX)) * partialTicks;
+        double y = (pos.yCoord - player.lastTickPosY) + ((pos.yCoord - player.posY) - (pos.yCoord - player.lastTickPosY)) * partialTicks;
+        double z = (pos.zCoord - player.lastTickPosZ) + ((pos.zCoord - player.posZ) - (pos.zCoord - player.lastTickPosZ)) * partialTicks;
+        RenderManager renderManager = mc.getRenderManager();
+
+        float f = 1.6F;
+        float f1 = 0.016666668F * f;
+        int width = mc.fontRendererObj.getStringWidth(text) / 2;
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, z);
+        GL11.glNormal3f(0f, 1f, 0f);
+        GlStateManager.rotate(-renderManager.playerViewY, 0f, 1f, 0f);
+        GlStateManager.rotate(renderManager.playerViewX, 1f, 0f, 0f);
+        GlStateManager.scale(-f1, -f1, -f1);
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        mc.fontRendererObj.drawString(text, -width, 0, colour);
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
+    }
+
+    public static void draw3DString(BlockPos pos, String text, int colour, float partialTicks) {
+        Minecraft mc = Minecraft.getMinecraft();
+        EntityPlayer player = mc.thePlayer;
+        double x = (pos.getX() - player.lastTickPosX) + ((pos.getX() - player.posX) - (pos.getX() - player.lastTickPosX)) * partialTicks;
+        double y = (pos.getY() - player.lastTickPosY) + ((pos.getY() - player.posY) - (pos.getY() - player.lastTickPosY)) * partialTicks;
+        double z = (pos.getZ() - player.lastTickPosZ) + ((pos.getZ() - player.posZ) - (pos.getZ() - player.lastTickPosZ)) * partialTicks;
+        RenderManager renderManager = mc.getRenderManager();
+
+        float f = 1.6F;
+        float f1 = 0.016666668F * f;
+        int width = mc.fontRendererObj.getStringWidth(text) / 2;
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, z);
+        GL11.glNormal3f(0f, 1f, 0f);
+        GlStateManager.rotate(-renderManager.playerViewY, 0f, 1f, 0f);
+        GlStateManager.rotate(renderManager.playerViewX, 1f, 0f, 0f);
+        GlStateManager.scale(-f1, -f1, -f1);
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        mc.fontRendererObj.drawString(text, -width, 0, colour);
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
+    }
+    
+    public static void drawOutlinedBoundingBox(AxisAlignedBB aabb, Color color, float width, float partialTicks) {
+        Entity render = Minecraft.getMinecraft().getRenderViewEntity();
+
+        double realX = render.lastTickPosX + (render.posX - render.lastTickPosX) * partialTicks;
+        double realY = render.lastTickPosY + (render.posY - render.lastTickPosY) * partialTicks;
+        double realZ = render.lastTickPosZ + (render.posZ - render.lastTickPosZ) * partialTicks;
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(-realX, -realY, -realZ);
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.disableLighting();
+        GlStateManager.disableAlpha();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        GL11.glLineWidth(width);
+
+        RenderGlobal.drawOutlinedBoundingBox(aabb, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+
+        GlStateManager.translate(realX, realY, realZ);
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableTexture2D();
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.popMatrix();
+    }
+    
+    public static void drawBoundingBox(AxisAlignedBB aa,Color c, float partialTicks) {
+        Entity render = Minecraft.getMinecraft().getRenderViewEntity();
+
+        double realX = render.lastTickPosX + (render.posX - render.lastTickPosX) * partialTicks;
+        double realY = render.lastTickPosY + (render.posY - render.lastTickPosY) * partialTicks;
+        double realZ = render.lastTickPosZ + (render.posZ - render.lastTickPosZ) * partialTicks;
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(-realX, -realY, -realZ);
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.disableLighting();
+        GlStateManager.disableAlpha();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldRenderer = tessellator.getWorldRenderer();
         int color = c.getRGB();
         float a = (float)(color >> 24 & 255) / 255.0F;
-        a = (float)((double)a * 0.2D);
+        a = (float)((double)a * 0.15D);
         float r = (float)(color >> 16 & 255) / 255.0F;
         float g = (float)(color >> 8 & 255) / 255.0F;
         float b = (float)(color & 255) / 255.0F;
@@ -87,7 +189,14 @@ public class RenderUtil {
         worldRenderer.pos(aa.maxX, aa.minY, aa.maxZ).color(r, g, b, a).endVertex();
         worldRenderer.pos(aa.maxX, aa.maxY, aa.maxZ).color(r, g, b, a).endVertex();
         tessellator.draw();
-     }
+
+        GlStateManager.translate(realX, realY, realZ);
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableTexture2D();
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.popMatrix();
+    }
 
     /**
      * Taken from NotEnoughUpdates under Creative Commons Attribution-NonCommercial 3.0
@@ -103,7 +212,7 @@ public class RenderUtil {
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
 
-        GlStateManager.color(c.getRed()/255f, c.getGreen()/255f, c.getBlue()/255f, c.getAlpha()/255f*alphaMultiplier);
+        GlStateManager.color(c.getRed()/255f, c.getGreen()/255f, c.getBlue()/255f, c.getAlpha()/255f*c.getAlpha());
 
         //vertical
         worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);

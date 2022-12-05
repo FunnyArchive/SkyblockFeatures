@@ -105,6 +105,7 @@ public class MinionOverlay {
                             Utils.GetMC().fontRendererObj.drawString(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
                             lineCount++;
                         }
+                        
                     }
                 }
             }

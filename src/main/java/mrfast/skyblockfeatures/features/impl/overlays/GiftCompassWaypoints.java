@@ -17,6 +17,7 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import mrfast.skyblockfeatures.skyblockfeatures;
+import mrfast.skyblockfeatures.utils.RenderUtil;
 
 public class GiftCompassWaypoints {
 
@@ -44,9 +45,9 @@ public class GiftCompassWaypoints {
                Entity entity = (Entity)var3.next();
                if (entity instanceof EntityArmorStand && ((EntityArmorStand)entity).getCurrentArmor(3) != null && ((EntityArmorStand)entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTBmNTM5ODUxMGIxYTA1YWZjNWIyMDFlYWQ4YmZjNTgzZTU3ZDcyMDJmNTE5M2IwYjc2MWZjYmQwYWUyIn19fQ=")) {
                   if (!sessionSouls.contains(entity)) {
-                     drawParticleESP(Color.YELLOW, entity.posX - Minecraft.getMinecraft().getRenderManager().viewerPosX - 0.5D, 1.5D + entity.posY - Minecraft.getMinecraft().getRenderManager().viewerPosY, entity.posZ - Minecraft.getMinecraft().getRenderManager().viewerPosZ - 0.5D, 1.0D);
+                     highlightBlock(Color.YELLOW, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
                   } else {
-                     drawParticleESP(Color.GREEN, entity.posX - Minecraft.getMinecraft().getRenderManager().viewerPosX - 0.5D, 1.5D + entity.posY - Minecraft.getMinecraft().getRenderManager().viewerPosY, entity.posZ - Minecraft.getMinecraft().getRenderManager().viewerPosZ - 0.5D, 1.0D);
+                     highlightBlock(Color.GREEN, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
                   }
                }
             }
@@ -54,19 +55,11 @@ public class GiftCompassWaypoints {
       }
 
 
-      public static void drawParticleESP(Color c, double d, double d1, double d2, double size) {
-        GlStateManager.enableBlend();
-        GlStateManager.disableLighting();
-        GlStateManager.disableDepth();
-        GlStateManager.disableCull();
-        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        GlStateManager.disableTexture2D();
-        drawBoundingBox(c, new AxisAlignedBB(d + 1.0D, d1 + size, d2 + 1.0D, d, d1, d2));
-        GlStateManager.enableTexture2D();
-        GlStateManager.enableDepth();
-        GlStateManager.disableBlend();
-        GlStateManager.enableCull();
-     }
+      public static void highlightBlock(Color c, double d, double d1, double d2, double size,float ticks) {
+         GlStateManager.disableDepth();
+         RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(d, d1, d2, d+size, d1+size, d2+size),c,ticks);
+         GlStateManager.enableDepth();
+      }
 
      public static void drawBoundingBox(Color c, AxisAlignedBB aa) {
         Tessellator tessellator = Tessellator.getInstance();

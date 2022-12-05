@@ -17,7 +17,9 @@ import gg.essential.api.EssentialAPI;
 import mrfast.skyblockfeatures.commands.AccessoriesCommand;
 import mrfast.skyblockfeatures.commands.ArmorCommand;
 import mrfast.skyblockfeatures.commands.BankCommand;
+import mrfast.skyblockfeatures.commands.DebugCommand;
 import mrfast.skyblockfeatures.commands.DungeonsCommand;
+import mrfast.skyblockfeatures.commands.FakePlayerCommand;
 import mrfast.skyblockfeatures.commands.GetkeyCommand;
 import mrfast.skyblockfeatures.commands.GoodbyeCommand;
 import mrfast.skyblockfeatures.commands.HelloCommand;
@@ -43,17 +45,19 @@ import mrfast.skyblockfeatures.features.impl.bar.ActionBarListener;
 import mrfast.skyblockfeatures.features.impl.bar.CryptDisplay;
 import mrfast.skyblockfeatures.features.impl.bar.DefenceDisplay;
 import mrfast.skyblockfeatures.features.impl.bar.EffectiveHealthDisplay;
-import mrfast.skyblockfeatures.features.impl.bar.HealthBarFeature;
 import mrfast.skyblockfeatures.features.impl.bar.HealthDisplay;
 import mrfast.skyblockfeatures.features.impl.bar.ManaDisplay;
 import mrfast.skyblockfeatures.features.impl.bar.SecretDisplay;
 import mrfast.skyblockfeatures.features.impl.bar.SpeedDisplay;
-// import mrfast.skyblockfeatures.features.impl.bar.SkillDisplay;
 import mrfast.skyblockfeatures.features.impl.dungeons.BetterParties;
 import mrfast.skyblockfeatures.features.impl.dungeons.ChestProfit;
 import mrfast.skyblockfeatures.features.impl.dungeons.DungeonBlocks;
+import mrfast.skyblockfeatures.features.impl.dungeons.DungeonMap;
 import mrfast.skyblockfeatures.features.impl.dungeons.DungeonsFeatures;
 import mrfast.skyblockfeatures.features.impl.dungeons.Nametags;
+import mrfast.skyblockfeatures.features.impl.dungeons.solvers.BlazeSolver;
+import mrfast.skyblockfeatures.features.impl.dungeons.solvers.LividFinder;
+import mrfast.skyblockfeatures.features.impl.dungeons.solvers.ThreeWeirdosSolver;
 import mrfast.skyblockfeatures.features.impl.events.JerryTimer;
 import mrfast.skyblockfeatures.features.impl.events.MayorJerry;
 import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
@@ -74,7 +78,6 @@ import mrfast.skyblockfeatures.features.impl.misc.TreecapCooldown;
 import mrfast.skyblockfeatures.features.impl.overlays.CompactChat;
 import mrfast.skyblockfeatures.features.impl.overlays.CrystalHollowsMap;
 import mrfast.skyblockfeatures.features.impl.overlays.DamageOverlays;
-import mrfast.skyblockfeatures.features.impl.overlays.DungeonMap;
 import mrfast.skyblockfeatures.features.impl.overlays.FairySoulWaypoints;
 import mrfast.skyblockfeatures.features.impl.overlays.GemstoneMiningOverlay;
 import mrfast.skyblockfeatures.features.impl.overlays.GiftCompassWaypoints;
@@ -84,8 +87,6 @@ import mrfast.skyblockfeatures.features.impl.trackers.AutomatonTracker;
 import mrfast.skyblockfeatures.listeners.ChatListener;
 import mrfast.skyblockfeatures.mixins.AccessorCommandHandler;
 import mrfast.skyblockfeatures.utils.CapeUtils;
-// import mrfast.skyblockfeatures.utils.Friend;
-// import mrfast.skyblockfeatures.utils.FriendManager;
 import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.Minecraft;
@@ -191,8 +192,6 @@ public class skyblockfeatures {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         config.preload();
-
-        // EssentialAPI.getCommandRegistry().registerCommand(new configCommand());
         EssentialAPI.getCommandRegistry().registerCommand(new ViewModelCommand());
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -227,7 +226,6 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new CryptDisplay());
         MinecraftForge.EVENT_BUS.register(new DefenceDisplay());
         MinecraftForge.EVENT_BUS.register(new HideStuff());
-        MinecraftForge.EVENT_BUS.register(new HealthBarFeature());
         MinecraftForge.EVENT_BUS.register(new ActionBarListener());
         MinecraftForge.EVENT_BUS.register(new CompactChat());
         MinecraftForge.EVENT_BUS.register(new BetterParties());
@@ -244,6 +242,10 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new AutomatonTracker());
         MinecraftForge.EVENT_BUS.register(new GemstoneMiningOverlay());
         MinecraftForge.EVENT_BUS.register(new TreecapCooldown());
+        MinecraftForge.EVENT_BUS.register(new LividFinder());
+        // Solvers
+        MinecraftForge.EVENT_BUS.register(new BlazeSolver());
+        MinecraftForge.EVENT_BUS.register(new ThreeWeirdosSolver());
     }
 
     @Mod.EventHandler
@@ -279,12 +281,15 @@ public class skyblockfeatures {
 
         if (!cch.getCommands().containsKey("key")) cch.registerCommand(new GetkeyCommand());
 
+        if (!cch.getCommands().containsKey("debug")) cch.registerCommand(new DebugCommand());
+
         if (!cch.getCommands().containsKey("dungeons")) cch.registerCommand(new DungeonsCommand());
 
         if (!cch.getCommands().containsKey("skills")) cch.registerCommand(new SkillsCommand());
 
         if (!cch.getCommands().containsKey("sidebar")) cch.registerCommand(new sidebarCommand());
-    
+
+        if (!cch.getCommands().containsKey("fakePlayer")) cch.registerCommand(new FakePlayerCommand());
 
         if (!cch.getCommands().containsKey("rp")) {
             ((AccessorCommandHandler) cch).getCommandSet().add(new RepartyCommand());
@@ -303,11 +308,29 @@ public class skyblockfeatures {
         }
     }
 
+
     public static boolean auctionPricesLoaded = false;
+    public static boolean smallItems = false;
+    public boolean start = true;
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.START) return;
-
+        if(start) {
+            smallItems = skyblockfeatures.config.smallItems;
+            start = false;
+        } else {
+            if(smallItems && !skyblockfeatures.config.smallItems) {
+                skyblockfeatures.config.armX = 0;
+                skyblockfeatures.config.armY = 0;
+                skyblockfeatures.config.armZ = 0;
+            }
+            if(!smallItems && skyblockfeatures.config.smallItems) {
+                skyblockfeatures.config.armX = 30;
+                skyblockfeatures.config.armY = -5;
+                skyblockfeatures.config.armZ = -60;
+            }
+            smallItems = skyblockfeatures.config.smallItems;
+            }
         if (mc.thePlayer != null && sendMessageQueue.size() > 0 && System.currentTimeMillis() - lastChatMessage > 200) {
             String msg = sendMessageQueue.pollFirst();
             if (msg != null) {
@@ -317,18 +340,8 @@ public class skyblockfeatures {
 
         if (ticks % 20 == 0) {
             if (mc.thePlayer != null) {
-                // try {
-                    Utils.checkForSkyblock();
-                    Utils.checkForDungeons();
-                //     if(!auctionPricesLoaded)
-                //     if(AuctionData.lowestBINs.get("GOBLIN_HELMET") != 0) {
-                //         auctionPricesLoaded = true;
-                //         Utils.GetMC().thePlayer.addChatMessage(new ChatComponentText(ChatFormatting.GREEN+"Auction Prices Loaded!"));
-                //         Utils.GetMC().thePlayer.playSound("note.pling", 1, 2);
-                //     }
-                // } catch (Exception e) {
-                //     //TODO: handle exception
-                // }
+                Utils.checkForSkyblock();
+                Utils.checkForDungeons();
             }
             MinecraftForge.EVENT_BUS.post(new SecondPassedEvent());
             ticks = 0;
@@ -420,27 +433,9 @@ public class skyblockfeatures {
         }
     }
 
-
-    // @SubscribeEvent
-    // public void onGuiAction(GuiScreenEvent.ActionPerformedEvent.Post event) {
-    //     if (skyblockfeatures.config.configButtonOnPause && event.gui instanceof GuiIngameMenu && event.button.id == 6969420) {
-    //         ModCore.getInstance().getGuiHandler().open(new OptionsGui());
-    //     }
-    // }
-
-    // @SubscribeEvent
-    // public void onGuiChange(GuiOpenEvent event) {
-    //     GuiScreen old = mc.currentScreen;
-    //     if (event.gui == null && skyblockfeatures.config.reopenOptionsMenu) {
-    //         boolean isSettingsGui = old instanceof CommandAliasesGui || old instanceof LocationEditGui || old instanceof KeyShortcutsGui || (old instanceof SettingsGui);
-    //         if (isSettingsGui) event.gui = new OptionsGui();
-    //     }
-    // }
-
     private KeyBinding toggleSprint;
     private static boolean toggled = true;
 
-    public final static KeyBinding slotLockKeybind = new KeyBinding("Lock Slot", Keyboard.KEY_L, "skyblockfeatures 2.0");
     public final static KeyBinding favoritePetKeybind = new KeyBinding("Toggle Favorite Pet", Keyboard.KEY_F, "skyblockfeatures 2.0");
     public final static KeyBinding reloadAH = new KeyBinding("Reload AH", Keyboard.KEY_R, "skyblockfeatures 2.0");
 
@@ -448,7 +443,6 @@ public class skyblockfeatures {
     @EventHandler
     public void inist(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
-        ClientRegistry.registerKeyBinding(slotLockKeybind);
         ClientRegistry.registerKeyBinding(favoritePetKeybind);
         ClientRegistry.registerKeyBinding(reloadAH);
 

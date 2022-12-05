@@ -10,32 +10,34 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nullable;
+
+import com.google.common.base.Predicate;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.structure.FloatPair;
 import mrfast.skyblockfeatures.core.structure.GuiElement;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
-import mrfast.skyblockfeatures.events.GuiRenderItemEvent.RenderOverlayEvent;
 import mrfast.skyblockfeatures.utils.ItemRarity;
 import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.RenderUtil;
-import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.ScoreboardUtil;
 import mrfast.skyblockfeatures.utils.StringUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
@@ -49,7 +51,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -76,36 +77,12 @@ public class DungeonsFeatures {
     }
 
     @SubscribeEvent
-    public void onTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.START) return;
-
-        World world = Minecraft.getMinecraft().theWorld;
-        // if (Utils.inDungeons && !foundLivid && world != null && skyblockfeatures.config.hideFakeLivids) {
-        //     if (Utils.getDungeonFloor() == 5) {
-        //         List<Entity> loadedLivids = new ArrayList<>();
-        //         List<Entity> entities = world.getLoadedEntityList();
-        //         for (Entity entity : entities) {
-        //             String name = entity.getName();
-        //             if (name.contains("Livid") && entity instanceof EntityArmorStand) {
-        //                 loadedLivids.add(entity);
-        //             }
-        //         }
-        //         if (loadedLivids.size() > 8) {
-        //             Entity lividTag = loadedLivids.get(0);
-        //             AxisAlignedBB aabb = new AxisAlignedBB(lividTag.posX-0.5, lividTag.posY-2, lividTag.posZ-0.5, lividTag.posX + 0.5,lividTag.posY,lividTag.posZ + 0.5);
-        //             // for (EntityPlayer entity : world.playerEntities) {
-        //             //     if(aabb.intersectsWith(entity.getCollisionBoundingBox())) {
-        //                     livid = lividTag;
-        //                     foundLivid = true;
-        //                 // }
-        //             // }
-        //         }
-        //     }
-        // }
-    }
-    @SubscribeEvent
-    public void renderWorldLastEvent(RenderWorldLastEvent event) {
-        if(livid != null) RenderUtil.drawBoundingBox(Color.RED, livid.getEntityBoundingBox());
+    public void onRender3D(RenderWorldLastEvent event) {
+        for(Entity entity:mc.theWorld.loadedEntityList) {
+            if(entity instanceof EntityBat && skyblockfeatures.config.highlightBats && Utils.inDungeons && !entity.isInvisible()) {
+                RenderUtil.drawOutlinedFilledBoundingBox(entity.getEntityBoundingBox(),Color.cyan,event.partialTicks);
+            }
+        }
     }
     
     @SubscribeEvent

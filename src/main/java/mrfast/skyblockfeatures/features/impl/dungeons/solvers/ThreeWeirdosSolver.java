@@ -1,22 +1,18 @@
 package mrfast.skyblockfeatures.features.impl.dungeons.solvers;
 
+import java.awt.Color;
+
+import mrfast.skyblockfeatures.utils.RenderUtil;
+import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.*;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.awt.Color;
-import java.util.List;
-
-import com.mojang.realmsclient.gui.ChatFormatting;
-
-import mrfast.skyblockfeatures.utils.RenderUtil;
-import mrfast.skyblockfeatures.utils.Utils;
 
 /**
  * Original code was taken from Danker's Skyblock Mod under GPL 3.0 license and modified by the Skytils team
@@ -29,6 +25,7 @@ public class ThreeWeirdosSolver {
             "My chest doesn't have the reward. We are all telling the truth", "My chest has the reward and I'm telling the truth",
             "The reward isn't in any of our chests", "Both of them are telling the truth."};
     static BlockPos riddleChest = null;
+    static Minecraft mc = Minecraft.getMinecraft();
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
@@ -44,12 +41,9 @@ public class ThreeWeirdosSolver {
         if (message.contains("[NPC]")) {
             for (String solution : riddleSolutions) {
                 if (message.contains(solution)) {
-                    Minecraft mc = Minecraft.getMinecraft();
                     String npcName = message.substring(message.indexOf("]") + 2, message.indexOf(":"));
-                    mc.thePlayer.addChatMessage(new ChatComponentText(ChatFormatting.AQUA+""+EnumChatFormatting.BOLD+StringUtils.stripControlCodes(npcName) + ChatFormatting.GREEN + " has the blessing."));
                     if (riddleChest == null) {
-                        List<Entity> entities = mc.theWorld.getLoadedEntityList();
-                        for (Entity entity : entities) {
+                        for (Entity entity : mc.theWorld.loadedEntityList) {
                             if (entity == null || !entity.hasCustomName()) continue;
                             if (entity.getCustomNameTag().contains(npcName)) {
                                 BlockPos npcLocation = new BlockPos(entity.posX, 69, entity.posZ);
@@ -61,8 +55,6 @@ public class ThreeWeirdosSolver {
                                     riddleChest = npcLocation.south();
                                 } else if (mc.theWorld.getBlockState(npcLocation.west()).getBlock() == Blocks.chest) {
                                     riddleChest = npcLocation.west();
-                                } else {
-                                    System.out.print("Could not find correct riddle chest.");
                                 }
                                 break;
                             }
@@ -77,9 +69,7 @@ public class ThreeWeirdosSolver {
     @SubscribeEvent
     public void onWorldRender(RenderWorldLastEvent event) {
         if(riddleChest != null) {
-            GlStateManager.enableCull();
-            RenderUtil.drawFilledBoundingBox(new AxisAlignedBB(riddleChest.getX()-0.05,riddleChest.getY(),riddleChest.getZ()-0.05,riddleChest.getX()+1.05,riddleChest.getY()+1,riddleChest.getZ()+1.05), new Color(85,255,85),0.5f);
-            GlStateManager.disableCull();
+            RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(riddleChest.getX()-0.05,riddleChest.getY(),riddleChest.getZ()-0.05,riddleChest.getX()+1.05,riddleChest.getY()+1,riddleChest.getZ()+1.05), Color.cyan,event.partialTicks);
         }
     }
 

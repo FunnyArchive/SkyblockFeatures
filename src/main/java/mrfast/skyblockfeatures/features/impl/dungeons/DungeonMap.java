@@ -1,6 +1,5 @@
-package mrfast.skyblockfeatures.features.impl.overlays;
+package mrfast.skyblockfeatures.features.impl.dungeons;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -8,12 +7,10 @@ import java.util.Map.Entry;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
-import gg.essential.elementa.font.FontRenderer;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.structure.FloatPair;
 import mrfast.skyblockfeatures.core.structure.GuiElement;
 import mrfast.skyblockfeatures.utils.FontUtils;
-import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.StringUtils;
 import mrfast.skyblockfeatures.utils.TabListUtils;
 import mrfast.skyblockfeatures.utils.Utils;
@@ -52,26 +49,29 @@ public class DungeonMap {
 // -80 -102 f1 top left
 	
 
-	public static int getMapFloorXOffset() {
-		switch(Utils.getDungeonFloor()) {
-			case 1: return 8;
-			case 2: return 0;
-			case 3: return -2;
-			case 4: return -16;
-			case 5: return 0;
-		}
-		return 0;
-	}
-	public static int getMapFloorZOffset() {
-		switch(Utils.getDungeonFloor()) {
-			case 1: return 4;
-			case 2: return 0;
-			case 3: return 0;
-			case 4: return 0;
-			case 5: return 0;
-		}
-		return 0;
-	}
+	// public static int getMapFloorXOffset() {
+	// 	switch(Utils.getDungeonFloor()) {
+	// 		case 1: return 8;
+	// 		case 2: return 0;
+	// 		case 3: return -2;
+	// 		case 4: return -16;
+	// 		case 5: return 0;
+	// 		case 6: return 0;
+	// 	}
+	// 	return 0;
+	// }
+	// public static int getMapFloorZOffset() {
+	// 	switch(Utils.getDungeonFloor()) {
+	// 		case 1: return 4;
+	// 		case 2: return 0;
+	// 		case 3: return 0;
+	// 		case 4: return 0;
+	// 		case 5: return 0;
+	// 		case 6: return 0;
+	// 		case 7: return 0;
+	// 	}
+	// 	return 0;
+	// }
 
 	public static void renderOverlay() {
 		if(!Utils.inDungeons) return;
@@ -118,6 +118,7 @@ public class DungeonMap {
 	@SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
 		mapData = null;
+		anotherOffset = null;
 		playerSkins.clear();
 		playerNames.clear();
 		dungeonTeammates.clear();
@@ -163,6 +164,7 @@ public class DungeonMap {
 	};
 
 	static HashMap<String, NetworkPlayerInfo> dungeonTeammates = new HashMap<String, NetworkPlayerInfo>();
+	static HashMap<String, NetworkPlayerInfo> dungeonTeammatesCopy = new HashMap<String, NetworkPlayerInfo>();
 	static HashMap<Integer, ResourceLocation> playerSkins = new HashMap<Integer, ResourceLocation>();
 	static HashMap<Integer, String> playerNames = new HashMap<Integer, String>();
 	static Double anotherOffset = null;
@@ -210,52 +212,51 @@ public class DungeonMap {
 		GlStateManager.popMatrix();
 	}
 	public static int getXoffset() {
-		switch (Utils.getDungeonFloor()) {
-			case 1:
-				return 150;
-			case 2:
-			    return 140;
-			case 3:
-			    return 140;
-			case 4:
-			    return 130;
-			case 5:
-			    return 130;
-			default:
-				return 0;
-		}
+		return 0;
 	}
 	public static int getZoffset() {
-		switch (Utils.getDungeonFloor()) {
-			case 1:
-				return 140;
-			case 2:
-			    return 140;
-			case 3:
-			    return 140;
-			case 4:
-			    return 140;
-			case 5:
-			    return 130;
-			default:
-				return 0;
-		}
+		return 130;
 	}
+	static Integer count = 0;
 	public static void drawHeadOnMap() {
 		int[] intArray = new int[]{5, 9, 13, 17, 1};
 		List<NetworkPlayerInfo> tablist = TabListUtils.getTabEntries();
-		System.out.println("----------------START-------------");
+		count++;
+
+		if(count == 200) {
+			// System.out.println("----------------START-------------");
+			// for(int i=0;i<intArray.length;i++) {
+			// 	NetworkPlayerInfo player = tablist.get(intArray[i]);
+			// 	if(player.getDisplayName().getUnformattedText().split(" ").length > 1) {
+			// 		String name = StringUtils.stripControlCodes(player.getDisplayName().getUnformattedText().split(" ")[1]);
+			// 		System.out.println("icon-"+i+" "+name);
+			// 	}
+			// }
+			// System.out.println("----------------FINISH-------------");
+			count = 0;
+			for(int i=0;i<intArray.length;i++) {
+				NetworkPlayerInfo player = tablist.get(intArray[i]);
+				// Find out whos dead
+				if(player.getDisplayName().getUnformattedText().split(" ").length > 1 && player.getDisplayName().getUnformattedText().contains("(DEAD)")) {
+					String name = StringUtils.stripControlCodes(player.getDisplayName().getUnformattedText().split(" ")[1]);
+					if(name != null && dungeonTeammates.containsKey("icon-"+i)) {	
+						dungeonTeammates.clear();
+						System.out.println("SOMEONE DIED RESETTING STUFF");
+					}
+				}
+			}
+		}
 		for(int i=0;i<intArray.length;i++) {
 			NetworkPlayerInfo player = tablist.get(intArray[i]);
 			if(player.getDisplayName().getUnformattedText().split(" ").length > 1) {
 				String name = StringUtils.stripControlCodes(player.getDisplayName().getUnformattedText().split(" ")[1]);
-				if(name != null && !dungeonTeammates.containsKey("icon-"+i)) {
+				if(name != null && !dungeonTeammates.containsKey("icon-"+i) && !player.getDisplayName().getUnformattedText().contains("(DEAD)")) {	
 					dungeonTeammates.put("icon-"+i,player);
+					System.out.println(name+" is icon-"+i);
 				}
-				System.out.println("icon-"+i+" "+name);
 			}
 		}
-		System.out.println("-----------------FINISH--------------");
+
 
 		try {
 		for(Entry<String,NetworkPlayerInfo> entry : dungeonTeammates.entrySet()) {

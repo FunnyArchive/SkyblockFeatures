@@ -9,7 +9,6 @@ import java.util.List;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.structure.FloatPair;
 import mrfast.skyblockfeatures.core.structure.GuiElement;
-import mrfast.skyblockfeatures.features.impl.misc.MiscFeatures;
 import mrfast.skyblockfeatures.utils.RenderUtil;
 import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.Utils;
@@ -17,11 +16,7 @@ import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
 import mrfast.skyblockfeatures.utils.graphics.SmartFontRenderer;
 import mrfast.skyblockfeatures.utils.graphics.colors.CommonColors;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.util.AxisAlignedBB;
@@ -82,7 +77,7 @@ public class ZealotSpawnLocations {
             for(BlockPos pos:zealotSpawns) {
                 if(pos != null) {
                     Color color = canSpawnZealots? new Color(0x55FF55):new Color(0xFF5555);
-                    drawParticleESP(color, pos.getX() - Minecraft.getMinecraft().getRenderManager().viewerPosX,pos.getY() - Minecraft.getMinecraft().getRenderManager().viewerPosY, pos.getZ() - Minecraft.getMinecraft().getRenderManager().viewerPosZ, 5.0D);
+                    highlightBlock(color, pos.getX(),pos.getY(), pos.getZ(), 5.0D,event.partialTicks);
                 }
             }
         }
@@ -90,7 +85,7 @@ public class ZealotSpawnLocations {
             for(BlockPos pos:bruiserSpawns) {
                 if(pos != null) {
                     Color color = canSpawnBruisers? new Color(0x55FF55):new Color(0xFF5555);
-                    drawParticleESP(color, pos.getX() - Minecraft.getMinecraft().getRenderManager().viewerPosX,pos.getY() - Minecraft.getMinecraft().getRenderManager().viewerPosY+1, pos.getZ() - Minecraft.getMinecraft().getRenderManager().viewerPosZ, 5.0D);
+                    highlightBlock(color, pos.getX(),pos.getY()+1, pos.getZ(), 5.0D,event.partialTicks);
                 }
             }
         }
@@ -117,7 +112,8 @@ public class ZealotSpawnLocations {
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if(skyblockfeatures.config.showZealotSpawns) {
+        if(Utils.GetMC().theWorld == null || Utils.GetMC().thePlayer == null) return;
+        if(skyblockfeatures.config.showZealotSpawns && Utils.inSkyblock) {
             for(Entity entity:Utils.GetMC().theWorld.loadedEntityList) {
                 if(entity instanceof EntityArmorStand && !zealots.contains(entity) && SBInfo.getInstance().location.contains("Dragons Nest")) {
                     if(entity.getCustomNameTag().contains("Zealot")) {
@@ -135,86 +131,8 @@ public class ZealotSpawnLocations {
         }
     }
 
-    public static void drawParticleESP(Color c, double d, double d1, double d2, double size) {
-        GlStateManager.enableBlend();
-        GlStateManager.disableLighting();
-        GlStateManager.enableCull();
-        GlStateManager.disableTexture2D();
-        drawBoundingBox(c, new AxisAlignedBB(d-size, d1+0.1, d2-size, d+size, d1-3, d2+size));
-        GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
-        GlStateManager.disableCull();
-    }
-
-    public static void drawBoundingBox(Color c, AxisAlignedBB aa) {
-        Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldRenderer = tessellator.getWorldRenderer();
-        int color = c.getRGB();
-        float a = (float)(color >> 24 & 255) / 255.0F;
-        a = (float)((double)a * 0.15D);
-        float r = (float)(color >> 16 & 255) / 255.0F;
-        float g = (float)(color >> 8 & 255) / 255.0F;
-        float b = (float)(color & 255) / 255.0F;
-        worldRenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldRenderer.pos(aa.minX, aa.maxY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.minX, aa.minY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.maxY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.minY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.maxY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.minY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.minX, aa.maxY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.minX, aa.minY, aa.maxZ).color(r, g, b, a).endVertex();
-        tessellator.draw();
-        worldRenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldRenderer.pos(aa.maxX, aa.minY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.maxY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.minX, aa.minY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.minX, aa.maxY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.minX, aa.minY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.minX, aa.maxY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.minY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.maxY, aa.maxZ).color(r, g, b, a).endVertex();
-        tessellator.draw();
-        worldRenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldRenderer.pos(aa.minX, aa.minY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.minY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.minY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.minX, aa.minY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.minX, aa.minY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.minX, aa.minY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.minY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.minY, aa.minZ).color(r, g, b, a).endVertex();
-        tessellator.draw();
-        worldRenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldRenderer.pos(aa.minX, aa.maxY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.maxY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.maxY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.minX, aa.maxY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.minX, aa.maxY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.minX, aa.maxY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.maxY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.maxY, aa.minZ).color(r, g, b, a).endVertex();
-        tessellator.draw();
-        worldRenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldRenderer.pos(aa.minX, aa.maxY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.minX, aa.minY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.minX, aa.maxY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.minX, aa.minY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.maxY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.minY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.maxY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.minY, aa.minZ).color(r, g, b, a).endVertex();
-        tessellator.draw();
-        worldRenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldRenderer.pos(aa.minX, aa.minY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.minX, aa.maxY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.minX, aa.minY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.minX, aa.maxY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.minY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.maxY, aa.minZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.minY, aa.maxZ).color(r, g, b, a).endVertex();
-        worldRenderer.pos(aa.maxX, aa.maxY, aa.maxZ).color(r, g, b, a).endVertex();
-        tessellator.draw();
+    public static void highlightBlock(Color c, double d, double d1, double d2, double size,float ticks) {
+        RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(d-size, d1+0.1, d2-size, d+size, d1-3, d2+size),c,ticks);
     }
 
     public static int zealotTicks = 0;
@@ -276,7 +194,7 @@ public class ZealotSpawnLocations {
             super("Zealot Timer", new FloatPair(0, 5));
             skyblockfeatures.GUIMANAGER.registerElement(this);
         }
-
+        
         @Override
         public void render() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;

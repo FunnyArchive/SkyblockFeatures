@@ -9,6 +9,7 @@ import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.commands.TerminalCommand;
 import mrfast.skyblockfeatures.events.ChestSlotClickedEvent;
 import mrfast.skyblockfeatures.utils.Utils;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -17,7 +18,9 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -27,7 +30,6 @@ public class HideGlass {
 
     @SubscribeEvent
     public void onChatMessage(ClientChatReceivedEvent event) {
-        IChatComponent orignal = event.message;
         try {
             if(!skyblockfeatures.config.timestamps || event.type == 2) return;
             final String timestamp = new SimpleDateFormat("hh:mm").format(new Date());

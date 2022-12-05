@@ -6,6 +6,7 @@ import java.util.List;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.skyblockfeatures.skyblockfeatures;
+import mrfast.skyblockfeatures.features.impl.ItemFeatures.HideGlass;
 import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
 import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.NumberUtil;
@@ -28,13 +29,11 @@ public class ItemFeatures {
 
     public static final HashMap<String, Double> sellPrices = new HashMap<>();
     public static final HashMap<String, Integer> bitCosts = new HashMap<>();
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onTooltip(ItemTooltipEvent event) {
         if (!Utils.inSkyblock) return;
 
         ItemStack item = event.itemStack;
-
         NBTTagCompound extraAttr = ItemUtil.getExtraAttributes(item);
         String itemId = ItemUtil.getSkyBlockItemID(extraAttr);
 

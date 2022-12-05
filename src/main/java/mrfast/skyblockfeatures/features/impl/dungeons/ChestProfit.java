@@ -26,8 +26,7 @@ public class ChestProfit {
 
     @SubscribeEvent
     public void onGUIDrawnEvent(GuiContainerEvent.TitleDrawnEvent.Post event) {
-        if (!Utils.inDungeons) return;
-        if (!skyblockfeatures.config.dungeonChestProfit) return;
+        if (!skyblockfeatures.config.dungeonChestProfit || !Utils.inSkyblock) return;
         if (event.gui instanceof GuiChest) {
             HashMap<ItemStack,Double> items = new HashMap<ItemStack,Double>();    
             ContainerChest chest = (ContainerChest) ((GuiChest) event.gui).inventorySlots;

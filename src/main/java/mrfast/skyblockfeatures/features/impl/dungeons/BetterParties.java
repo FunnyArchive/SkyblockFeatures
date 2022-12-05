@@ -1,6 +1,10 @@
 package mrfast.skyblockfeatures.features.impl.dungeons;
 
+import java.util.List;
+
 import org.lwjgl.input.Keyboard;
+
+import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -11,11 +15,17 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemSkull;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import mrfast.skyblockfeatures.skyblockfeatures;
+import mrfast.skyblockfeatures.events.GuiContainerEvent;
+import mrfast.skyblockfeatures.features.impl.ItemFeatures.HideGlass;
+import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.StringUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 
@@ -43,11 +53,54 @@ public class BetterParties {
             }, 100);
         }
     }
+    ItemStack hoverItemStack = null;
+
+    @SubscribeEvent
+    public void onTooltip(ItemTooltipEvent event) {
+        if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest)) return;
+
+        GuiChest chest = (GuiChest) Minecraft.getMinecraft().currentScreen;
+        ContainerChest cont = (ContainerChest) chest.inventorySlots;
+        String name = cont.getLowerChestInventory().getName();
+
+        if(!HideGlass.isEmptyGlassPane(event.itemStack) && event.itemStack.getItem() instanceof ItemSkull && event.itemStack.getDisplayName().contains("'s Party")) {
+            hoverItemStack = event.itemStack;
+        }
+        if("Party Finder".equals(name)) event.toolTip.clear();;
+    }
+
+    @SubscribeEvent
+    public void onDrawContainerTitle(GuiContainerEvent.TitleDrawnEvent.Post event) {
+        if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest)) return;
+
+        GuiChest chest = (GuiChest) Minecraft.getMinecraft().currentScreen;
+        ContainerChest cont = (ContainerChest) chest.inventorySlots;
+        String name = cont.getLowerChestInventory().getName();
+        if(!skyblockfeatures.config.betterpartys) return;
+        if (!"Party Finder".equals(name) || hoverItemStack == null || HideGlass.isEmptyGlassPane(hoverItemStack)) return;
+        List<String> loreList = ItemUtil.getItemLore(hoverItemStack);
+        int maxLineLength = 0;
+        for(String line : loreList) {
+            line = Utils.cleanColour(line);
+            if(line.length()>maxLineLength) maxLineLength = line.length();
+        }
+        int lineCount = loreList.size()+3;
+        Utils.drawGraySquareWithBorder(180, 0, maxLineLength*6, (lineCount+1)*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
+        
+        int temp=0;
+        Utils.drawTextWithStyle3(hoverItemStack.getDisplayName(), 190, temp*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10);
+        temp++;
+        for(String line : loreList) {
+            if(line.contains("Click to join!")) continue;
+            Utils.drawTextWithStyle3(line, 190, temp*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10);
+            temp++;
+        }
+    }
 
     @SubscribeEvent
     public void onGuiPostRender(GuiScreenEvent.DrawScreenEvent.Post rendered) {
-        
         if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest)) return;
+
         GuiChest chest = (GuiChest) Minecraft.getMinecraft().currentScreen;
         ContainerChest cont = (ContainerChest) chest.inventorySlots;
         String name = cont.getLowerChestInventory().getName();

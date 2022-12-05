@@ -8,23 +8,15 @@ import java.util.Objects;
 import org.lwjgl.opengl.GL11;
 
 import mrfast.skyblockfeatures.skyblockfeatures;
-import mrfast.skyblockfeatures.events.BlockChangeEvent;
 import mrfast.skyblockfeatures.events.CheckRenderEntityEvent;
 import mrfast.skyblockfeatures.events.PacketEvent;
-import mrfast.skyblockfeatures.features.impl.overlays.ZealotSpawnLocations;
 import mrfast.skyblockfeatures.utils.RenderUtil;
 import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockAir;
-import net.minecraft.block.BlockMushroom;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityItem;
@@ -92,7 +84,6 @@ public class MiscFeatures {
                 }
             }
             
-            
             if(!dupe && type == EnumParticleTypes.SPELL_MOB && SBInfo.getInstance().location.contains("Glowing")) {
                 particles.add(pos);
             }
@@ -105,11 +96,7 @@ public class MiscFeatures {
             try {
                 for(Vec3 packet:particles) {
                     Color color = new Color(0x55FF55);
-                    drawParticleESP(
-                        color, 
-                        Math.floor(packet.xCoord) - Minecraft.getMinecraft().getRenderManager().viewerPosX,
-                        Math.floor(packet.yCoord)- Minecraft.getMinecraft().getRenderManager().viewerPosY, 
-                        Math.floor(packet.zCoord) - Minecraft.getMinecraft().getRenderManager().viewerPosZ, event.partialTicks);
+                    highlightBlock(color, Math.floor(packet.xCoord),Math.floor(packet.yCoord), Math.floor(packet.zCoord), event.partialTicks);
 
                     Block block = Minecraft.getMinecraft().theWorld.getBlockState(new BlockPos(packet)).getBlock();
                     if(block != null && block == Blocks.air) {
@@ -122,8 +109,8 @@ public class MiscFeatures {
         }
     }
 
-    public static void drawParticleESP(Color c, double d, double d1, double d2, double partialTicks) {
-        RenderUtil.drawFilledBoundingBox(new AxisAlignedBB(d + 1.0D, d1 + 1, d2 + 1.0D, d, d1, d2),c,(float) 0.7);
+    public static void highlightBlock(Color c, double d, double d1, double d2, float ticks) {
+        RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(d + 1.0D, d1 + 1, d2 + 1.0D, d, d1, d2),c,ticks);
     }
 
     public static void drawBoundingBox(AxisAlignedBB aabb, Color color, double partialTicks) {

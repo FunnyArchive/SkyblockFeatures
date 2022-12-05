@@ -84,6 +84,24 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Blaze Solver",
+            description = "Highlights the correct blazes to shoot.",
+            category = "§1§rDungeons",
+            subcategory = "Solvers"
+    )
+    public boolean blazeSolver = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "3 Weirdos Solver",
+            description = "Highlights the correct chest to open.",
+            category = "§1§rDungeons",
+            subcategory = "Solvers"
+    )
+    public boolean ThreeWeirdosSolver = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Crypt Display",
             description = "Big count of how many crypts have been killed",
             category = "§1§rDungeons",
@@ -99,6 +117,15 @@ public class Config extends Vigilant {
             subcategory = "Miscellaneous"
     )
     public boolean blessingViewer = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Highlight Bats",
+            description = "Draws a box around bats to make bats easier to find",
+            category = "§1§rDungeons",
+            subcategory = "Miscellaneous"
+    )
+    public boolean highlightBats = false;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -217,14 +244,14 @@ public class Config extends Vigilant {
     )
     public boolean betterpartys = false;
 
-//     @Property(
-//             type = PropertyType.SWITCH,
-//             name = "Hide Incorrect Livids",
-//             description = "Hides the incorrect livid",
-//             category = "§1§rDungeons",
-//             subcategory = "Miscellaneous"
-//     )
-//     public boolean hideFakeLivids = false;
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Highlight Correct Livid",
+            description = "Highlights the incorrect livid",
+            category = "§1§rDungeons",
+            subcategory = "Miscellaneous"
+    )
+    public boolean highlightCorrectLivid = false;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -428,6 +455,15 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Treasure Chest Solver",
+            description = "Highlights the particles to look at when opening a treasure chest.",
+            category = "Mining",
+            subcategory = "Solvers"
+    )
+    public boolean treasureChestSolver = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Automaton Loot Tracker",
             description = "Tracks the loot from Automatons. Starts after a Automaton is killed",
             category = "Mining",
@@ -507,6 +543,15 @@ public class Config extends Vigilant {
             subcategory = "Quality of Life"
     )
     public boolean timestamps = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Hide White Square",
+            description = "Hide the hover highlight Square in inventories",
+            category = "Miscellaneous",
+            subcategory = "Quality of Life"
+    )
+    public boolean hideWhiteSquare = false;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -714,6 +759,15 @@ public class Config extends Vigilant {
             subcategory = "Miscellaneous"
     )
     public boolean hideAdvertisments = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Small Items",
+            description = "Makes the items you hold smaller",
+            category = "General",
+            subcategory = "Item Postion"
+    )
+    public boolean smallItems = false;
 
     @Property(
             type = PropertyType.SLIDER,

@@ -91,7 +91,7 @@ public class CrystalHollowsMap {
                                 Utils.drawTexturedRect((float)(locationX-3.5),(float) (locationZ-4), 7, 8, 0, 1, 0, 1, GL11.GL_NEAREST);
                                 int textWidth = ScreenRenderer.fontRenderer.getStringWidth(name);
                                 GlStateManager.translate(locationX-textWidth/2, locationZ-10, 0);
-                                Utils.drawTextWithStyle2(name,0, 0, 0xFFFFFF);
+                                Utils.drawTextWithStyle2(name,0, 0);
                                 GlStateManager.translate(-locationX+textWidth/2, -locationZ+10, 0);
                             GlStateManager.popMatrix();
                         }

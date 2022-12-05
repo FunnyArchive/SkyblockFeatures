@@ -66,6 +66,12 @@ public class ActionBarListener {
 					if(arr[i].contains("❤")) {
 						actionBar = actionBar.replace(arr[i],"");
 					}
+					if(arr[i].contains("❈") || arr[i].contains("Defense")) {
+						actionBar = actionBar.replace(arr[i],"");
+					}
+					if(arr[i].contains("✎") || arr[i].contains("Mana")) {
+						actionBar = actionBar.replace(arr[i],"");
+					}
 				}
 				event.message = new ChatComponentText(actionBar.replaceAll("\247.\\d+.*Defense", "").trim().replaceAll("\247.\\d+/\\d+✎ Mana", "").trim().replace(secrets+"/"+maxSecrets+" Secrets", "").trim());
 				return;

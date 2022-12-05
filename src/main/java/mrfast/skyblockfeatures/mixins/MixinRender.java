@@ -33,11 +33,6 @@ public abstract class MixinRender<T extends Entity> {
         if(!Utils.isNPC(livingEntity) && livingEntity.getDistanceToEntity(Utils.GetMC().thePlayer) > 49 && Utils.inSkyblock && skyblockfeatures.config.HideFarEntity && !Utils.inDungeons) {
             cir.setReturnValue(false);
         }
-        if(livingEntity != null && livingEntity instanceof EntityOtherPlayerMP && DungeonsFeatures.livid != null && livingEntity.getName().contains(" Livid")) {
-            if(livingEntity != DungeonsFeatures.livid) {
-                cir.setReturnValue(false);
-            }
-        }
         
         try {
             if (MinecraftForge.EVENT_BUS.post(new CheckRenderEntityEvent<T>(livingEntity, camera, camX, camY, camZ))) cir.setReturnValue(false);

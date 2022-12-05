@@ -192,9 +192,9 @@ public class AuctionFeatures {
             if(chestName.contains("Auction View") && !chestName.contains("BIN")) {
                 boolean alreadyGotIt = false;
                 for(Slot slot:gui.inventorySlots.inventorySlots) {
-                    if (slot.getHasStack() && slot.getSlotIndex() == 13 && !alreadyGotIt) {
-                        alreadyGotIt = true;
+                    if (slot.getHasStack() && !alreadyGotIt  && slot.getSlotIndex() == 13) {
                         ItemStack stack = slot.getStack();
+                        alreadyGotIt = true;
                         String auctionIdentifier = AuctionData.getIdentifier(stack);
                         if (auctionIdentifier != null) {
                             Double lowestBin = AuctionData.lowestBINs.get(auctionIdentifier)*stack.stackSize;
@@ -348,13 +348,9 @@ public class AuctionFeatures {
                 int ended = 0;
                 int winning = 0;
                 int losing = 0;
-                int coins = 0;
-                int coinsSpent = 0;
-                List<ItemStack> endedAuctions = new ArrayList<ItemStack>();
                 List<String> winningAuctions = new ArrayList<String>();
                 for (Auction auction : selfItems) {
                     ItemStack stack = auction.stack;
-                    boolean hadName = false;
                     for(String line : ItemUtil.getItemLore(stack)) {
                         line = Utils.cleanColour(line);
                         if(line.contains("Ended")) {
@@ -363,11 +359,6 @@ public class AuctionFeatures {
                         if(line.contains(Utils.GetMC().thePlayer.getName()) && !winningAuctions.contains(auction.identifer)) {
                             winning++;
                             winningAuctions.add(auction.identifer);
-                            try {
-                                coinsSpent+=Integer.parseInt(Utils.cleanColour(line).replaceAll("[^0-9]", ""));
-                            } catch (Exception e) {
-                                //TODO: handle exception
-                            }
                         }
                         else if(line.contains("Bidder")) {
                             losing++;
@@ -385,7 +376,7 @@ public class AuctionFeatures {
                     ChatFormatting.RED+""+losing+ChatFormatting.WHITE+" Losing Auctions",
                     "",
                     ChatFormatting.WHITE+"Ended Auctions: "+ChatFormatting.GOLD+NumberUtil.nf.format(ended),
-                    ChatFormatting.WHITE+"Resell Value: "+ChatFormatting.GOLD+NumberUtil.nf.format(profit)
+                    ChatFormatting.WHITE+"Totasl Profit: "+ChatFormatting.GOLD+NumberUtil.nf.format(profit)
                 };
                 int lineCount = 0;
                 for(String line:lines) {

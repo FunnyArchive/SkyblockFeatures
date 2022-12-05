@@ -135,9 +135,8 @@ public abstract class MixinRenderGlobal {
             GlStateManager.depthFunc(GL11.GL_ALWAYS);
             try {
                 for (Entity entity : entities) {
-                    if(entity != DungeonsFeatures.livid && entity.getName().contains(" Livid")/*  && skyblockfeatures.config.hideFakeLivids*/) {
-                        continue;
-                    }
+                    if(entity != DungeonsFeatures.livid && entity.getName().contains(" Livid")) continue;
+                    
                     boolean flag = (mc.getRenderViewEntity() instanceof EntityLivingBase && ((EntityLivingBase)mc.getRenderViewEntity()).isPlayerSleeping());
                     boolean flag1 = (entity.isInRangeToRender3d(x, y, z) && (entity.ignoreFrustumCheck || camera.isBoundingBoxInFrustum(entity.getEntityBoundingBox())) && entity instanceof EntityPlayer && !Utils.isNPC(entity));
                     // Dungeon Player Glowing

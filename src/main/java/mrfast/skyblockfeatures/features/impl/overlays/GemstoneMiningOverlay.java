@@ -70,6 +70,7 @@ public class GemstoneMiningOverlay {
             start = true;
             message = message.toUpperCase();
             String itemName = message.split(" ")[4]+"_"+message.split(" ")[5]+"_GEM";
+            Utils.SendMessage(itemName);
             gemstones.add(new Gemstone((new Date()).getTime(), itemName,Integer.parseInt(message.replaceAll("[^0-9]", ""))));
         }
     }

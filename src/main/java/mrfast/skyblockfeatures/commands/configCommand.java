@@ -68,7 +68,7 @@ public class configCommand extends CommandBase {
                     " §3/bank §l➡ §bDisplays in chat the specified players bank and purse balance." + "\n"+
                     " §3/armor §l➡ §bDisplays in chat the specified players armor." + "\n"+
                     " §3/skills §l➡ §bDisplays in chat the specified players skills." + "\n"+
-                    " §3/sky §l➡ §bGives the link to the specified players sky.lea.mo profile."));
+                    " §3/sky §l➡ §bGives the link to the specified players Skycrypt profile."));
             return;
         }
         String subcommand = args[0].toLowerCase(Locale.ENGLISH);
