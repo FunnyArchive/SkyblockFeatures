@@ -7,37 +7,36 @@
 - Put mod into mods folder and start up game
 - type /api new into chat to set a new api key
 - type '/sf' for help
-
+Added highlight dungeon bats, livid solver, crystal hollows treasure chest solver, small items, redid block/entity box highlights, blaze solver, 3 weirdos solver, cleaned up code
 
 **Best Feature List**
 - Dungeon Blocks
 - Crypt Display
-- Blessings Viewer
+- Highlight Dungeon Bats
+- Highlight Correct Livid
+- Crystal Hollows Treasure Chest Solver
+- Small Items
+- 3 Weirdo Solver
+- Blaze Solver
 - Show Gift Compass Waypoints
 - Dungeon Chest Profit
 - Fairy Soul Helper
 - Fishing Helper
-- Display Tree Capitator Cooldown
 - Diana Mythological Helper
-- Crop Counter
 - 1.7 Animations
-- Damage Tint
 - Dungeon Nametags
 - Dungeon Teammate Glowing
-- Dungeon Map with player heads
+- Dungeon Map with Player Heads And Names
 - Glowing Players!
 - Glowing Items based on rarity
 - Automaton Loot/Profit Tracker
 - Gemstone Profit Tracker
 - Commissions Tracker
 - Crystal Hollows Map
-- Show Prehistoric Egg Distance Counter
 - Fancy Damage Numbers
-- Chat Timestamps
 - Glowing Zealots
 - Highlight Zealots Spawn Locations
 - 1.12 Crop Hitbox
-- Highlight Geyser Box
 - Lowest BIN Price
 - Average BIN Price
 - Helpful Auction Guis (for flipping, selling, and buying)
@@ -46,7 +45,7 @@
 - Ad Blocker (Hides people advertising in chat)
 - Highlight Glowing Mushrooms
 - Minion Profit Overlay (Coins Per Hour, Cooldown, ect)
-- And Many More!
+- And Much More!
 
 **Best Command List**
 - /acc \<name\> (*Allows you see another players accessory bag*)
