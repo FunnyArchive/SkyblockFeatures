@@ -92,9 +92,9 @@ public class FairySoulWaypoints {
             Entity entity = (Entity)var3.next();
             if (entity instanceof EntityArmorStand && ((EntityArmorStand)entity).getCurrentArmor(3) != null && ((EntityArmorStand)entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjk2OTIzYWQyNDczMTAwMDdmNmFlNWQzMjZkODQ3YWQ1Mzg2NGNmMTZjMzU2NWExODFkYzhlNmIyMGJlMjM4NyJ9fX0=")) {
                if (!soullocations.contains(entity.getPosition().toString())) {
-                  highlightBlock(new Color(255,85,255), entity.posX - Minecraft.getMinecraft().getRenderManager().viewerPosX - 0.5D, 1.5D + entity.posY - Minecraft.getMinecraft().getRenderManager().viewerPosY, entity.posZ - Minecraft.getMinecraft().getRenderManager().viewerPosZ - 0.5D, 1.0D,event.partialTicks);
+                  highlightBlock(new Color(255,85,255), entity.posX-0.5D, 1.5D+entity.posY, entity.posZ-0.5D, 1.0D,event.partialTicks);
                } else {
-                  highlightBlock(Color.GREEN, entity.posX - Minecraft.getMinecraft().getRenderManager().viewerPosX - 0.5D, 1.5D + entity.posY - Minecraft.getMinecraft().getRenderManager().viewerPosY, entity.posZ - Minecraft.getMinecraft().getRenderManager().viewerPosZ - 0.5D, 1.0D,event.partialTicks);
+                  highlightBlock(Color.GREEN, entity.posX-0.5D, 1.5D + entity.posY, entity.posZ-0.5D, 1.0D,event.partialTicks);
                }
             }
          }
@@ -103,7 +103,9 @@ public class FairySoulWaypoints {
 
 
    public static void highlightBlock(Color c, double d, double d1, double d2, double size,float ticks) {
-      RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(d-size, d1+0.1, d2-size, d+size, d1-3, d2+size),c,ticks);
+      GlStateManager.disableDepth();
+      RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(d, d1, d2, d+size, d1+size, d2+size),c,ticks);
+      GlStateManager.enableDepth();
    }
 
    public static void drawBoundingBox(Color c, AxisAlignedBB aa) {

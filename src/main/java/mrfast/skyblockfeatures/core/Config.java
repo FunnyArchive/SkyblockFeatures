@@ -56,6 +56,15 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Auto Reparty",
+            description = "Automatically reparties at the end of a dungeon",
+            category = "General",
+            subcategory = "Reparty"
+    )
+    public boolean autoDoReparty = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Auto-Accept Reparty",
             description = "Automatically accepts reparty invites",
             category = "General",
@@ -129,12 +138,21 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "Show Gift Compass Waypoints",
-            description = "Shows waypoints for where to go when Gift Compass is held in hand.",
+            name = "Highlight Gifts",
+            description = "Highlights with a yellow box of where gifts are at the Jerry's workshop.",
             category = "General",
 	    subcategory = "Rendering"
     )
     public boolean presentWaypoints = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Glacial Cave Treasure Detector",
+            description = "Highlights treasures in the wall when inside the Glacial Cave",
+            category = "General",
+	    subcategory = "Rendering"
+    )
+    public boolean icecaveHighlight = false;
 
     @Property(
             type = PropertyType.SWITCH,

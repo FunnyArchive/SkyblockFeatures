@@ -28,7 +28,7 @@ public class LividFinder {
         if(livid != null && skyblockfeatures.config.highlightCorrectLivid && Utils.inDungeons) {
             AxisAlignedBB lividPos = new AxisAlignedBB(livid.posX-0.5, livid.posY, livid.posZ-0.5, 
             livid.posX+0.5, livid.posY+2, livid.posZ+0.5);
-            RenderUtil.drawOutlinedFilledBoundingBox(lividPos,Color.cyan,event.partialTicks);
+            RenderUtil.drawOutlinedFilledBoundingBox(lividPos,Color.CYAN,event.partialTicks);
         }
     }
     

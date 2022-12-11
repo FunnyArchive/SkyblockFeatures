@@ -16,6 +16,7 @@ import com.google.common.base.Predicate;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.skyblockfeatures.skyblockfeatures;
+import mrfast.skyblockfeatures.commands.RepartyCommand;
 import mrfast.skyblockfeatures.core.structure.FloatPair;
 import mrfast.skyblockfeatures.core.structure.GuiElement;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
@@ -80,7 +81,7 @@ public class DungeonsFeatures {
     public void onRender3D(RenderWorldLastEvent event) {
         for(Entity entity:mc.theWorld.loadedEntityList) {
             if(entity instanceof EntityBat && skyblockfeatures.config.highlightBats && Utils.inDungeons && !entity.isInvisible()) {
-                RenderUtil.drawOutlinedFilledBoundingBox(entity.getEntityBoundingBox(),Color.cyan,event.partialTicks);
+                RenderUtil.drawOutlinedFilledBoundingBox(entity.getEntityBoundingBox(),Color.GREEN,event.partialTicks);
             }
         }
     }
@@ -127,9 +128,11 @@ public class DungeonsFeatures {
 
         if(!skyblockfeatures.config.quickStart) return;
         
+        if (text.contains("§6> §e§lEXTRA STATS §6<")) {
+            count=1;
+        }
         if (text.equals("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")) {
-            count++;
-            if(count != 1) {
+            if(count == 1) {
                 ChatComponentText message = new ChatComponentText(EnumChatFormatting.LIGHT_PURPLE+"[SBF] "+EnumChatFormatting.GOLD + "Dungeon finished! ");
                 ChatComponentText warpout = new ChatComponentText(EnumChatFormatting.GREEN+""+EnumChatFormatting.BOLD + " [WARP-OUT]  ");
                 ChatComponentText frag = new ChatComponentText(EnumChatFormatting.GREEN+""+EnumChatFormatting.BOLD + "[REPARTY]");
@@ -142,9 +145,9 @@ public class DungeonsFeatures {
                 warpout.setChatStyle(warpout.getChatStyle()
                 .setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/warp dungeon_hub"))
                 .setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(EnumChatFormatting.GREEN+"Warp out of the dungeon"))));
-
+    
                 Utils.GetMC().thePlayer.addChatMessage(new ChatComponentText(ChatFormatting.GREEN+"▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"));
-
+    
                 Utils.GetMC().thePlayer.addChatMessage(
                     new ChatComponentText(delimiter)
                     .appendText("\n")
@@ -154,6 +157,9 @@ public class DungeonsFeatures {
                     .appendText("\n")
                     .appendSibling(new ChatComponentText(delimiter))
                 );
+                if(skyblockfeatures.config.autoDoReparty) {
+                    Utils.GetMC().thePlayer.sendChatMessage("/rp");
+                }
     
                 count = 0;
                 event.setCanceled(true);

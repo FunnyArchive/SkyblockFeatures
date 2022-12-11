@@ -376,7 +376,7 @@ public class AuctionFeatures {
                     ChatFormatting.RED+""+losing+ChatFormatting.WHITE+" Losing Auctions",
                     "",
                     ChatFormatting.WHITE+"Ended Auctions: "+ChatFormatting.GOLD+NumberUtil.nf.format(ended),
-                    ChatFormatting.WHITE+"Totasl Profit: "+ChatFormatting.GOLD+NumberUtil.nf.format(profit)
+                    ChatFormatting.WHITE+"Total Profit: "+ChatFormatting.GOLD+NumberUtil.nf.format(profit)
                 };
                 int lineCount = 0;
                 for(String line:lines) {

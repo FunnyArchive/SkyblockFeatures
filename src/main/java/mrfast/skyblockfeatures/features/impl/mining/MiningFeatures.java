@@ -51,7 +51,7 @@ public class MiningFeatures {
         if (!Utils.inSkyblock || event.type == 2) return;
 
         String unformatted = StringUtils.stripControlCodes(event.message.getUnformattedText());
-        if(skyblockfeatures.config.treasureChestSolver && unformatted == "You uncovered a treasure chest!") {
+        if(skyblockfeatures.config.treasureChestSolver && unformatted.contains("uncovered a treasure chest!")) {
             treasureChest = null;
             particles.clear();
             progress = 0;
@@ -64,13 +64,9 @@ public class MiningFeatures {
             if (unformatted.contains("Wrong") || unformatted.contains("Come") || (!unformatted.contains("▶") && !unformatted.contains("▲") && !unformatted.contains("◀") && !unformatted.contains("▼"))) return;
             if (ScoreboardUtil.getSidebarLines().stream().anyMatch(line -> ScoreboardUtil.cleanSB(line).contains("Dwarven Mines"))) {
                 puzzlerSolution = new BlockPos(181, 195, 135);
-                String msg = unformatted.substring(15).trim();
                 Matcher matcher = Pattern.compile("([▶▲◀▼]+)").matcher(unformatted);
                 if (matcher.find()) {
                     String sequence = matcher.group(1).trim();
-                    if (sequence.length() != msg.length()) {
-                        System.out.println(String.format("%s - %s | %s - %s", sequence, msg, sequence.length(), unformatted.length()));
-                    }
                     for (char c : sequence.toCharArray()) {
                         switch (String.valueOf(c)) {
                             case "▲":
@@ -89,7 +85,6 @@ public class MiningFeatures {
                                 System.out.println("Invalid Puzzler character: " + c);
                         }
                     }
-                    System.out.println("Puzzler Solution: " + puzzlerSolution);
                     mc.thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Mine the block highlighted in " + EnumChatFormatting.RED + EnumChatFormatting.BOLD + "RED" + EnumChatFormatting.GREEN + "!"));
                 }
             }
@@ -139,7 +134,7 @@ public class MiningFeatures {
                 RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(treasureChest, treasureChest.add(1, 1, 1)), Color.green, event.partialTicks);
             }
             for(Vec3 packet:particles) {
-                RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(packet.xCoord, packet.yCoord, packet.zCoord, packet.xCoord+0.1, packet.yCoord+0.1, packet.zCoord+0.1), Color.red, event.partialTicks);
+                RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(packet.xCoord-0.05, packet.yCoord-0.05, packet.zCoord-0.05, packet.xCoord+0.1, packet.yCoord+0.1, packet.zCoord+0.1), Color.red, event.partialTicks);
                 if(block != null && block == Blocks.air) {
                     particles.remove(packet);
                 }
@@ -172,9 +167,17 @@ public class MiningFeatures {
             Vec3 pos = new Vec3(packet.getXCoordinate(),packet.getYCoordinate(),packet.getZCoordinate());
             boolean dupe = false;
             for(Vec3 part:particles) {
-                if(part.distanceTo(pos) > 0.1) {
+                if(pos.distanceTo(part)<0.1) {
+                    dupe = true;
+                }
+                if(part.distanceTo(pos) > 0.0) {
                     particles.clear();
                     break;
+                }
+            }
+            for(Vec3 particle:particles) {
+                if(pos.distanceTo(particle)<0.1) {
+                    
                 }
             }
             

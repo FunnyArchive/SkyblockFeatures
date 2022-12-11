@@ -18,11 +18,6 @@ import java.util.List;
 import mrfast.skyblockfeatures.utils.RenderUtil;
 import mrfast.skyblockfeatures.utils.Utils;
 
-/**
- * Original code was taken from Danker's Skyblock Mod under GPL 3.0 license and modified by the Skytils team
- * https://github.com/bowser0000/SkyblockMod/blob/master/LICENSE
- * @author bowser0000
- */
 public class BlazeSolver {
 
     static Entity highestBlaze = null;

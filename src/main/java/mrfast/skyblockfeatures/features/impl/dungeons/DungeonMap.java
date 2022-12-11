@@ -38,41 +38,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class DungeonMap {
 	static String self = "";
-	public static Integer offsetX = 0;
-	public static Integer selfFancyX = 0;
-	public static Integer selfNotFancyX = 0;
-
-// 	-82 44 f1 left
-// 20 103 f1 bottom
-// 80 102 f1 bottom right
-// 80 -102 f1 top right
-// -80 -102 f1 top left
-	
-
-	// public static int getMapFloorXOffset() {
-	// 	switch(Utils.getDungeonFloor()) {
-	// 		case 1: return 8;
-	// 		case 2: return 0;
-	// 		case 3: return -2;
-	// 		case 4: return -16;
-	// 		case 5: return 0;
-	// 		case 6: return 0;
-	// 	}
-	// 	return 0;
-	// }
-	// public static int getMapFloorZOffset() {
-	// 	switch(Utils.getDungeonFloor()) {
-	// 		case 1: return 4;
-	// 		case 2: return 0;
-	// 		case 3: return 0;
-	// 		case 4: return 0;
-	// 		case 5: return 0;
-	// 		case 6: return 0;
-	// 		case 7: return 0;
-	// 	}
-	// 	return 0;
-	// }
-
 	public static void renderOverlay() {
 		if(!Utils.inDungeons) return;
         if(!skyblockfeatures.config.dungeonMap) return;
@@ -118,7 +83,8 @@ public class DungeonMap {
 	@SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
 		mapData = null;
-		anotherOffset = null;
+		playerHeadOffsetX = null;
+		playerHeadOffsetY = null;
 		playerSkins.clear();
 		playerNames.clear();
 		dungeonTeammates.clear();
@@ -167,7 +133,8 @@ public class DungeonMap {
 	static HashMap<String, NetworkPlayerInfo> dungeonTeammatesCopy = new HashMap<String, NetworkPlayerInfo>();
 	static HashMap<Integer, ResourceLocation> playerSkins = new HashMap<Integer, ResourceLocation>();
 	static HashMap<Integer, String> playerNames = new HashMap<Integer, String>();
-	static Double anotherOffset = null;
+	static Double playerHeadOffsetX = null;
+	static Double playerHeadOffsetY = null;
 
 	// Draw head on map
 	public static void DrawHead(Double x,Double z,ResourceLocation skin, Float rotation,String name) {
@@ -185,9 +152,7 @@ public class DungeonMap {
 		GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		GlStateManager.translate(x, z, -0.02F);
-		// GlStateManager.scale(1.0f, 1.0f, 1);
 		GlStateManager.rotate(rotation, 0.0F, 0.0F, 1.0F);
-		// GlStateManager.translate(-0.5F, 0.5F, 0.0F);
 		
 		Gui.drawRect(-8/2-1,-8/2-1, 8/2+1, 8/2+1, 0xff111111);
 		GlStateManager.color(1, 1, 1, 1);
@@ -211,12 +176,7 @@ public class DungeonMap {
 
 		GlStateManager.popMatrix();
 	}
-	public static int getXoffset() {
-		return 0;
-	}
-	public static int getZoffset() {
-		return 130;
-	}
+	
 	static Integer count = 0;
 	public static void drawHeadOnMap() {
 		int[] intArray = new int[]{5, 9, 13, 17, 1};
@@ -224,15 +184,15 @@ public class DungeonMap {
 		count++;
 
 		if(count == 200) {
-			// System.out.println("----------------START-------------");
-			// for(int i=0;i<intArray.length;i++) {
-			// 	NetworkPlayerInfo player = tablist.get(intArray[i]);
-			// 	if(player.getDisplayName().getUnformattedText().split(" ").length > 1) {
-			// 		String name = StringUtils.stripControlCodes(player.getDisplayName().getUnformattedText().split(" ")[1]);
-			// 		System.out.println("icon-"+i+" "+name);
-			// 	}
-			// }
-			// System.out.println("----------------FINISH-------------");
+			System.out.println("----------------START-------------");
+			for(int i=0;i<intArray.length;i++) {
+				NetworkPlayerInfo player = tablist.get(intArray[i]);
+				if(player.getDisplayName().getUnformattedText().split(" ").length > 1) {
+					String name = StringUtils.stripControlCodes(player.getDisplayName().getUnformattedText().split(" ")[1]);
+					System.out.println("icon-"+i+" "+name);
+				}
+			}
+			System.out.println("----------------FINISH-------------");
 			count = 0;
 			for(int i=0;i<intArray.length;i++) {
 				NetworkPlayerInfo player = tablist.get(intArray[i]);
@@ -270,18 +230,16 @@ public class DungeonMap {
 				if(self != "" && playerId == Integer.parseInt(self.replaceAll("[^0-9]", ""))) {
 					EntityPlayer player = Utils.GetMC().thePlayer;
 					if(player != null) {
-						int xOffset = getXoffset();
-						int zOffset = getZoffset();
-						double x = Math.round((player.posX)/(mapData.scale*0.8))+xOffset;
-						double z = Math.round((player.posZ)/(mapData.scale*0.8))+zOffset;
+						double x = Math.round((player.posX)/(mapData.scale*0.8));
+						double z = Math.round((player.posZ)/(mapData.scale*0.8));
 						AbstractClientPlayer aplayer = (AbstractClientPlayer) player;
 						ResourceLocation skin = aplayer.getLocationSkin();
-						if(anotherOffset == null) {
-							anotherOffset = Math.abs(x-Math.round((mapEntry.getValue().func_176112_b()/2)+64));
-							System.out.println(anotherOffset+" "+ (x-Math.round((mapEntry.getValue().func_176112_b()/2)+64)));
-						} else {
-							x+=anotherOffset;
-						}
+						if(playerHeadOffsetX == null) playerHeadOffsetX = Math.abs(x-Math.round((mapEntry.getValue().func_176112_b()/2)+64));
+						else x+=playerHeadOffsetX;
+						
+						if(playerHeadOffsetY == null) playerHeadOffsetY = Math.abs(z-Math.round((mapEntry.getValue().func_176113_c()/2)+64));
+						else z+=playerHeadOffsetY;
+						
 						
 						if(skin != DefaultPlayerSkin.getDefaultSkin(aplayer.getUniqueID())) {
 							String shortName = aplayer.getName().length()>5?aplayer.getName().substring(0, 5):aplayer.getName();
@@ -294,14 +252,12 @@ public class DungeonMap {
 				else if(playerId == Integer.parseInt(entrySelf)) {
 					EntityPlayer player = Utils.GetMC().theWorld.getPlayerEntityByName(entry.getValue().getDisplayName().getUnformattedText().split(" ")[1]);
 					if(player != null) {
-						int xOffset = getXoffset();
-						int zOffset = getZoffset();
-						double x = Math.round((player.posX)/(mapData.scale*0.8))+xOffset;
-						double z = Math.round((player.posZ)/(mapData.scale*0.8))+zOffset;
+						double x = Math.round((player.posX)/(mapData.scale*0.8));
+						double z = Math.round((player.posZ)/(mapData.scale*0.8));
 						AbstractClientPlayer aplayer = (AbstractClientPlayer) player;
 						ResourceLocation skin = aplayer.getLocationSkin();
-						if(anotherOffset != null) x+=anotherOffset;
-						
+						if(playerHeadOffsetX != null) x+=playerHeadOffsetX;
+						if(playerHeadOffsetY != null) z+=playerHeadOffsetY;
 						// Fancy Heads people close smooth
 						if(skin != DefaultPlayerSkin.getDefaultSkin(aplayer.getUniqueID())) {
 							playerSkins.put(playerId, skin);
