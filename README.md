@@ -10,6 +10,7 @@
 Added highlight dungeon bats, livid solver, crystal hollows treasure chest solver, small items, redid block/entity box highlights, blaze solver, 3 weirdos solver, cleaned up code
 
 **Best Feature List**
+- Glacial Cave Treasure Finder
 - Dungeon Blocks
 - Crypt Display
 - Highlight Dungeon Bats
