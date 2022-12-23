@@ -41,49 +41,21 @@ import mrfast.skyblockfeatures.events.GuiChestBackgroundDrawnEvent;
 import mrfast.skyblockfeatures.events.PacketEvent;
 import mrfast.skyblockfeatures.events.SecondPassedEvent;
 import mrfast.skyblockfeatures.features.impl.ItemFeatures.HideGlass;
-import mrfast.skyblockfeatures.features.impl.bar.ActionBarListener;
-import mrfast.skyblockfeatures.features.impl.bar.CryptDisplay;
-import mrfast.skyblockfeatures.features.impl.bar.DefenceDisplay;
-import mrfast.skyblockfeatures.features.impl.bar.EffectiveHealthDisplay;
-import mrfast.skyblockfeatures.features.impl.bar.HealthDisplay;
-import mrfast.skyblockfeatures.features.impl.bar.ManaDisplay;
-import mrfast.skyblockfeatures.features.impl.bar.SecretDisplay;
-import mrfast.skyblockfeatures.features.impl.bar.SpeedDisplay;
-import mrfast.skyblockfeatures.features.impl.dungeons.BetterParties;
-import mrfast.skyblockfeatures.features.impl.dungeons.ChestProfit;
-import mrfast.skyblockfeatures.features.impl.dungeons.DungeonBlocks;
-import mrfast.skyblockfeatures.features.impl.dungeons.DungeonMap;
-import mrfast.skyblockfeatures.features.impl.dungeons.DungeonsFeatures;
-import mrfast.skyblockfeatures.features.impl.dungeons.Nametags;
+import mrfast.skyblockfeatures.features.impl.bar.*;
+import mrfast.skyblockfeatures.features.impl.dungeons.*;
 import mrfast.skyblockfeatures.features.impl.dungeons.solvers.BlazeSolver;
 import mrfast.skyblockfeatures.features.impl.dungeons.solvers.LividFinder;
 import mrfast.skyblockfeatures.features.impl.dungeons.solvers.ThreeWeirdosSolver;
-import mrfast.skyblockfeatures.features.impl.events.JerryTimer;
-import mrfast.skyblockfeatures.features.impl.events.MayorJerry;
+import mrfast.skyblockfeatures.features.impl.events.*;
 import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
 import mrfast.skyblockfeatures.features.impl.handlers.KeyShortcuts;
 import mrfast.skyblockfeatures.features.impl.hidestuff.HideStuff;
 import mrfast.skyblockfeatures.features.impl.mining.CommisionsTracker;
 import mrfast.skyblockfeatures.features.impl.mining.MiningFeatures;
-import mrfast.skyblockfeatures.features.impl.misc.AuctionFeatures;
-import mrfast.skyblockfeatures.features.impl.misc.ConjuringCooldown;
-import mrfast.skyblockfeatures.features.impl.misc.CropCounter;
-import mrfast.skyblockfeatures.features.impl.misc.DamageSplash;
-import mrfast.skyblockfeatures.features.impl.misc.FavoritePets;
-import mrfast.skyblockfeatures.features.impl.misc.FishingHelper;
-import mrfast.skyblockfeatures.features.impl.misc.ItemFeatures;
-import mrfast.skyblockfeatures.features.impl.misc.MiscFeatures;
-import mrfast.skyblockfeatures.features.impl.misc.SpamHider;
+import mrfast.skyblockfeatures.features.impl.misc.*;
 import mrfast.skyblockfeatures.features.impl.misc.TreecapCooldown;
-import mrfast.skyblockfeatures.features.impl.overlays.CompactChat;
-import mrfast.skyblockfeatures.features.impl.overlays.CrystalHollowsMap;
-import mrfast.skyblockfeatures.features.impl.overlays.DamageOverlays;
-import mrfast.skyblockfeatures.features.impl.overlays.FairySoulWaypoints;
-import mrfast.skyblockfeatures.features.impl.overlays.GemstoneMiningOverlay;
-import mrfast.skyblockfeatures.features.impl.overlays.GiftCompassWaypoints;
-import mrfast.skyblockfeatures.features.impl.overlays.MinionOverlay;
-import mrfast.skyblockfeatures.features.impl.overlays.ZealotSpawnLocations;
-import mrfast.skyblockfeatures.features.impl.trackers.AutomatonTracker;
+import mrfast.skyblockfeatures.features.impl.overlays.*;
+import mrfast.skyblockfeatures.features.impl.trackers.*;
 import mrfast.skyblockfeatures.listeners.ChatListener;
 import mrfast.skyblockfeatures.mixins.AccessorCommandHandler;
 import mrfast.skyblockfeatures.utils.CapeUtils;
@@ -199,7 +171,7 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new DataFetcher());
         MinecraftForge.EVENT_BUS.register(GUIMANAGER);
         MinecraftForge.EVENT_BUS.register(SBInfo.getInstance());
-
+        
         MinecraftForge.EVENT_BUS.register(new SpamHider());
         MinecraftForge.EVENT_BUS.register(new AuctionData());
         MinecraftForge.EVENT_BUS.register(new ZealotSpawnLocations());
@@ -243,9 +215,11 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new GemstoneMiningOverlay());
         MinecraftForge.EVENT_BUS.register(new TreecapCooldown());
         MinecraftForge.EVENT_BUS.register(new LividFinder());
+        MinecraftForge.EVENT_BUS.register(new IceTreasureTracker());
         // Solvers
         MinecraftForge.EVENT_BUS.register(new BlazeSolver());
         MinecraftForge.EVENT_BUS.register(new ThreeWeirdosSolver());
+        // MinecraftForge.EVENT_BUS.register(new ScoreCalculation());
     }
 
     @Mod.EventHandler

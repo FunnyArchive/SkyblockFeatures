@@ -26,8 +26,9 @@ public class RenderUtil {
         GlStateManager.disableLighting();
         GlStateManager.enableCull();
         GlStateManager.disableTexture2D();
+        double width = Math.max(1-(Utils.GetMC().thePlayer.getDistance(aabb.minX, aabb.minY, aabb.minZ)/10-2),1);
         RenderUtil.drawBoundingBox(aabb, color, partialTicks);
-        RenderUtil.drawOutlinedBoundingBox(aabb, color, 3, partialTicks);
+        RenderUtil.drawOutlinedBoundingBox(aabb, color, (float)width, partialTicks);
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
         GlStateManager.disableCull();

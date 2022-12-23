@@ -157,9 +157,6 @@ public class DungeonsFeatures {
                     .appendText("\n")
                     .appendSibling(new ChatComponentText(delimiter))
                 );
-                if(skyblockfeatures.config.autoDoReparty) {
-                    Utils.GetMC().thePlayer.sendChatMessage("/rp");
-                }
     
                 count = 0;
                 event.setCanceled(true);

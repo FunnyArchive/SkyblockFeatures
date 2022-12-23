@@ -34,13 +34,15 @@ public class MixinItemRenderer {
         )
     )
     public void transformFirstPersonItem(CallbackInfo ci) {
-        if(Utils.GetMC().thePlayer.getHeldItem() != null)
+        if(Utils.GetMC().thePlayer.getHeldItem() != null && skyblockfeatures.config.oldAnimations)
             GlStateManager.translate(skyblockfeatures.config.armX*0.01, skyblockfeatures.config.armY*0.01, skyblockfeatures.config.armZ*0.01);
     }
 
     @Inject(method = "renderItemInFirstPerson", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getItemUseAction()Lnet/minecraft/item/EnumAction;", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void modifySwingProgress(float partialTicks, CallbackInfo ci, float f, AbstractClientPlayer player, float f1, float f2, float f3) {
-        this.swingProgress = f1;
+        if (skyblockfeatures.config.oldAnimations) {
+            this.swingProgress = f1;
+        }
     }
 
     @Inject(method = "renderItemInFirstPerson", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemRenderer;doBlockTransformations()V", shift = At.Shift.AFTER))

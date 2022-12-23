@@ -26,6 +26,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.network.play.server.S29PacketSoundEffect;
 import net.minecraft.network.play.server.S2APacketParticles;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
@@ -185,7 +186,7 @@ public class MiningFeatures {
                 if(treasureChest == null) {
                     particles.add(pos);
                     for(TileEntity entity: mc.theWorld.loadedTileEntityList) {
-                        if(entity.getPos().distanceSq(pos.xCoord, pos.yCoord, pos.zCoord) < 2) {
+                        if(entity.getPos().distanceSq(pos.xCoord, pos.yCoord, pos.zCoord) < 2 && entity instanceof TileEntityChest) {
                             treasureChest = entity.getPos();
                         }
                     }

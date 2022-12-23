@@ -200,6 +200,8 @@ public class DungeonMap {
 				if(player.getDisplayName().getUnformattedText().split(" ").length > 1 && player.getDisplayName().getUnformattedText().contains("(DEAD)")) {
 					String name = StringUtils.stripControlCodes(player.getDisplayName().getUnformattedText().split(" ")[1]);
 					if(name != null && dungeonTeammates.containsKey("icon-"+i)) {	
+						playerSkins.clear();
+						playerNames.clear();
 						dungeonTeammates.clear();
 						System.out.println("SOMEONE DIED RESETTING STUFF");
 					}

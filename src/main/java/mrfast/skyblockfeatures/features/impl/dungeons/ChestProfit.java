@@ -17,11 +17,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-/**
- * Based off of chest profit from code by Quantizr
- * Licensed under GNU GPL v3, with permission given from author
- * @author Quantizr
- */
 public class ChestProfit {
 
     @SubscribeEvent

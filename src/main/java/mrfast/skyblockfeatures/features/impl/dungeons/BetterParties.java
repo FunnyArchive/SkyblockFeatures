@@ -72,7 +72,7 @@ public class BetterParties {
     @SubscribeEvent
     public void onDrawContainerTitle(GuiContainerEvent.TitleDrawnEvent.Post event) {
         if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest)) return;
-
+        if(!skyblockfeatures.config.betterpartys) return;
         GuiChest chest = (GuiChest) Minecraft.getMinecraft().currentScreen;
         ContainerChest cont = (ContainerChest) chest.inventorySlots;
         String name = cont.getLowerChestInventory().getName();
