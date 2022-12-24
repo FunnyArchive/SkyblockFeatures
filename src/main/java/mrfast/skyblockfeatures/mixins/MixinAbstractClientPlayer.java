@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.utils.CapeUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.entity.AbstractClientPlayer;

@@ -103,7 +103,6 @@ public class IceTreasureTracker {
 
             coinsPerHour = Math.floor(Math.max(3600/totalSeconds,1)*totalMoney);
         } catch (Exception e) {
-            System.out.println(e);
             //TODO: handle exception
         }
     }
@@ -143,6 +142,7 @@ public class IceTreasureTracker {
         public void demoRender() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
             String[] lines = {
+                ChatFormatting.GREEN+"Time Elapsed: §r"+Utils.secondsToTime(203),
                 ChatFormatting.AQUA+"Treasures Mined: §r17",
                 ChatFormatting.RED+"Red Gift: §r4",
                 ChatFormatting.GREEN+"Green Gift: §r1",

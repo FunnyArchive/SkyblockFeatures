@@ -14,25 +14,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import gg.essential.api.EssentialAPI;
-import mrfast.skyblockfeatures.commands.AccessoriesCommand;
-import mrfast.skyblockfeatures.commands.ArmorCommand;
-import mrfast.skyblockfeatures.commands.BankCommand;
-import mrfast.skyblockfeatures.commands.DebugCommand;
-import mrfast.skyblockfeatures.commands.DungeonsCommand;
-import mrfast.skyblockfeatures.commands.FakePlayerCommand;
-import mrfast.skyblockfeatures.commands.GetkeyCommand;
-import mrfast.skyblockfeatures.commands.GoodbyeCommand;
-import mrfast.skyblockfeatures.commands.HelloCommand;
-import mrfast.skyblockfeatures.commands.InventoryCommand;
-import mrfast.skyblockfeatures.commands.RepartyCommand;
-import mrfast.skyblockfeatures.commands.ShrugCommand;
-import mrfast.skyblockfeatures.commands.SkillsCommand;
-import mrfast.skyblockfeatures.commands.SkyCommand;
-import mrfast.skyblockfeatures.commands.TerminalCommand;
-import mrfast.skyblockfeatures.commands.ViewModelCommand;
-import mrfast.skyblockfeatures.commands.configCommand;
-import mrfast.skyblockfeatures.commands.getNbtCommand;
-import mrfast.skyblockfeatures.commands.sidebarCommand;
+import mrfast.skyblockfeatures.commands.*;
 import mrfast.skyblockfeatures.core.Config;
 import mrfast.skyblockfeatures.core.DataFetcher;
 import mrfast.skyblockfeatures.core.GuiManager;
@@ -51,6 +33,7 @@ import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
 import mrfast.skyblockfeatures.features.impl.handlers.KeyShortcuts;
 import mrfast.skyblockfeatures.features.impl.hidestuff.HideStuff;
 import mrfast.skyblockfeatures.features.impl.mining.CommisionsTracker;
+import mrfast.skyblockfeatures.features.impl.mining.HighlightCobblestone;
 import mrfast.skyblockfeatures.features.impl.mining.MiningFeatures;
 import mrfast.skyblockfeatures.features.impl.misc.*;
 import mrfast.skyblockfeatures.features.impl.misc.TreecapCooldown;
@@ -216,6 +199,10 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new TreecapCooldown());
         MinecraftForge.EVENT_BUS.register(new LividFinder());
         MinecraftForge.EVENT_BUS.register(new IceTreasureTracker());
+        MinecraftForge.EVENT_BUS.register(new EnderNodeTracker());
+        MinecraftForge.EVENT_BUS.register(new HighlightCobblestone());
+
+
         // Solvers
         MinecraftForge.EVENT_BUS.register(new BlazeSolver());
         MinecraftForge.EVENT_BUS.register(new ThreeWeirdosSolver());
@@ -230,6 +217,8 @@ public class skyblockfeatures {
         ClientCommandHandler cch = ClientCommandHandler.instance;
 
         if (!cch.getCommands().containsKey("getnbt")) cch.registerCommand(new getNbtCommand());
+
+        if (!cch.getCommands().containsKey("jerry")) cch.registerCommand(new jerryCommand());
 
         if (!cch.getCommands().containsKey("sky")) cch.registerCommand(new SkyCommand());
 

@@ -11,6 +11,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.DataFetcher;
+import mrfast.skyblockfeatures.events.BlockChangeEvent;
 import mrfast.skyblockfeatures.events.PacketEvent;
 import mrfast.skyblockfeatures.features.impl.misc.MiscFeatures;
 import mrfast.skyblockfeatures.utils.RenderUtil;
@@ -19,6 +20,9 @@ import mrfast.skyblockfeatures.utils.ScoreboardUtil;
 import mrfast.skyblockfeatures.utils.StringUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockAir;
+import net.minecraft.block.BlockObsidian;
+import net.minecraft.block.BlockStone;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
@@ -117,6 +121,14 @@ public class MiningFeatures {
         }
     }
     @SubscribeEvent
+    public void onPlayerInteractEvent(BlockChangeEvent event) {
+        if(Utils.inSkyblock && skyblockfeatures.config.highlightEnderNodes) {
+            BlockPos p1 = Utils.GetMC().thePlayer.getPosition();
+            BlockPos p2 = event.pos;
+            if(p1.distanceSq(p2.getX(), p2.getY(), p2.getZ())<25) enderParticles.clear();
+        }
+    }
+    @SubscribeEvent
     public void onRenderWorld(RenderWorldLastEvent event) {
         if (!Utils.inSkyblock) return;
         if (skyblockfeatures.config.puzzlerSolver && puzzlerSolution != null) {
@@ -125,9 +137,53 @@ public class MiningFeatures {
             double z = puzzlerSolution.getZ() ;
             RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(x, y, z, x + 1, y + 1.01, z + 1), new Color(255, 0, 0, 200), event.partialTicks);
         }
+        if(skyblockfeatures.config.highlightEnderNodes && skyblockfeatures.locationString.contains("The End")) {
+            try {
+                GlStateManager.disableDepth();
+                List<Vec3> drawnPositions = new ArrayList<Vec3>();
 
-        if(!skyblockfeatures.config.treasureChestSolver) return;
+                for(Vec3 packet:enderParticles) {
+                    boolean dupe =false;
+                    double x = packet.xCoord;
+                    double y = packet.yCoord;
+                    double z = packet.zCoord;
+                    
+                    if(!drawnPositions.contains(packet)) {
+                        for(Vec3 packet2:drawnPositions) {
+                            if(packet.distanceTo(packet2)<1.5) {
+                                dupe=true;
+                            }
+                        }
+                        if(dupe) continue;
+                    }
+
+                    if((x-Math.floor(x))==0.25) {
+                        RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(x-0.25, y-0.5, z-0.5, Math.floor(x)-1, Math.floor(y)+1, Math.floor(z)+1), Color.magenta, event.partialTicks);
+                        drawnPositions.add(packet);
+                    }
+                    if((y-Math.floor(y))==0.25) {
+                        RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(x-0.5, y-0.25, z-0.5, Math.floor(x)+1, Math.floor(y)-1, Math.floor(z)+1), Color.magenta, event.partialTicks);
+                        drawnPositions.add(packet);
+                    }
+                    if((z-Math.floor(z))==0.25) {
+                        RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(x-0.5, y-0.5, z-0.25, Math.floor(x)+1, Math.floor(y)+1, Math.floor(z)-1), Color.magenta, event.partialTicks);
+                        drawnPositions.add(packet);
+                    }
+                    if((x-Math.floor(x))==0.75) {
+                        RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(x+1.25, y-0.5, z-0.5, Math.floor(x)+1, Math.floor(y)+1, Math.floor(z)+1), Color.magenta, event.partialTicks);
+                        drawnPositions.add(packet);
+                    }
+                    if((z-Math.floor(z))==0.75) {
+                        RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(x-0.5, y-0.5, z+1.25, Math.floor(x)+1, Math.floor(y)+1, Math.floor(z)+1), Color.magenta, event.partialTicks);
+                        drawnPositions.add(packet);
+                    }
+                }
+                GlStateManager.enableDepth();
+            } catch (Exception e) {}
+        }
+        
         try {
+            if(!skyblockfeatures.config.treasureChestSolver || !SBInfo.getInstance().getLocation().equals("crystal_hollows")) return;
             Block block = Minecraft.getMinecraft().theWorld.getBlockState(new BlockPos(treasureChest)).getBlock();
             if(treasureChest != null) {
                 Vec3 stringPos = new Vec3(treasureChest.getX()+0.5, treasureChest.getY()+1.25, treasureChest.getZ()+0.5);
@@ -154,14 +210,24 @@ public class MiningFeatures {
         puzzlerSolution = null;
         treasureChest = null;
         particles.clear();
+        enderParticles.clear();
         progress = 0;
     }
     BlockPos treasureChest = null;
     List<Vec3> particles = new ArrayList<Vec3>();
+    List<Vec3> enderParticles = new ArrayList<Vec3>();
     int progress = 0;
 
     @SubscribeEvent
     public void onRecievePacket(PacketEvent.ReceiveEvent event) {
+        if(event.packet instanceof S2APacketParticles) {
+            S2APacketParticles packet = (S2APacketParticles) event.packet;
+            EnumParticleTypes type = packet.getParticleType();
+            Vec3 pos = new Vec3(packet.getXCoordinate(),packet.getYCoordinate(),packet.getZCoordinate());
+            if(type == EnumParticleTypes.PORTAL && !enderParticles.contains(pos)) {
+                enderParticles.add(pos);
+            }
+        }
         if(event.packet instanceof S2APacketParticles && skyblockfeatures.config.treasureChestSolver) {
             S2APacketParticles packet = (S2APacketParticles) event.packet;
             EnumParticleTypes type = packet.getParticleType();

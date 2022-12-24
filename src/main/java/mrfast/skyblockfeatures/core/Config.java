@@ -140,26 +140,44 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Glacial Cave Ice Treasure Detector",
             description = "Highlights ice treasures in the wall when inside the Glacial Cave",
-            category = "General",
-	    subcategory = "Rendering"
+            category = "Mining",
+	    subcategory = "Glacial Cave"
     )
     public boolean icecaveHighlight = false;
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "Glacial Cave Ice Treasure Detector",
-            description = "Highlights ice treasures in the wall when inside the Glacial Cave",
-            category = "General",
-	    subcategory = "Rendering"
+            name = "Glacial Cave Ice Treasure Tracker",
+            description = "Tracks the items you get from ice treasures",
+            category = "Mining",
+	    subcategory = "Trackers"
     )
     public boolean IceTreasureTracker = false;
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Ender Node Tracker",
+            description = "Tracks the items you get from ender nodes",
+            category = "Mining",
+	    subcategory = "Trackers"
+    )
+    public boolean EnderNodeTracker = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Highlight Ender Nodes",
+            description = "Highlights the sparkly blocks in the end",
+            category = "Mining",
+	    subcategory = "End Island"
+    )
+    public boolean highlightEnderNodes = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Glacial Cave Ice Treasure Detector Through Walls",
             description = "§cWarning Use At Own Risk",
-            category = "General",
-	    subcategory = "Rendering"
+            category = "§1§rFarming",
+	    subcategory = "Glacial Cave"
     )
     public boolean icecaveHighlightWalls = false;
 
@@ -345,6 +363,16 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Jerry Mode",
+            description = "JERRYYY",
+            category = "General",
+            subcategory = "Jerry Mode",
+            hidden = true
+    )
+    public boolean jerryMode = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Mythological Helper",
             description = "Draw an extended line of where the Mythological burrow could be",
             category = "§1§rEvents",
@@ -518,6 +546,15 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Highlight Placed Cobblestone",
+            description = "Highlights the cobblestone you place in crystal hollows",
+            category = "Mining",
+            subcategory = "Quality of Life"
+    )
+    public boolean highlightCobblestone = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Crystal Hollows Map",
             description = "Show a map of the crystal hollows",
             category = "Mining",
@@ -615,15 +652,6 @@ public class Config extends Vigilant {
         subcategory = "Quality of Life"
     )
     public boolean cropBox = false;
-
-    @Property(
-            type = PropertyType.SWITCH,
-            name = "Remove Armor Stands",
-            description = "Hides ALL Named Armor Stands, Except those of starred mobs. May slightly increase preformance",
-            category = "Miscellaneous",
-            subcategory = "Quality of Life"
-    )
-    public boolean removeArmorStands = false;
 
     @Property(
             type = PropertyType.SWITCH,
