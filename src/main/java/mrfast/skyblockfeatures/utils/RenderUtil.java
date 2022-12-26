@@ -224,8 +224,8 @@ public class RenderUtil {
     }
 
     /**
-     * Taken from NotEnoughUpdates under Creative Commons Attribution-NonCommercial 3.0
-     * https://github.com/Moulberry/NotEnoughUpdates/blob/master/LICENSE
+     * Taken from NotEnoughUpdates under GNU Lesser General Public License v3.0
+     * https://github.com/Moulberry/NotEnoughUpdates/blob/master/COPYING
      * @author Moulberry
      */
     public static void drawFilledBoundingBox(AxisAlignedBB aabb, Color c, float alphaMultiplier) {
@@ -452,8 +452,8 @@ public class RenderUtil {
     private static final ResourceLocation beaconBeam = new ResourceLocation("textures/entity/beacon_beam.png");
 
     /**
-     * Taken from NotEnoughUpdates under Creative Commons Attribution-NonCommercial 3.0
-     * https://github.com/Moulberry/NotEnoughUpdates/blob/master/LICENSE
+     * Taken from NotEnoughUpdates under GNU Lesser General Public License v3.0
+     * https://github.com/Moulberry/NotEnoughUpdates/blob/master/COPYING
      * @author Moulberry
      */
     public static void renderBeaconBeam(double x, double y, double z, int rgb, float alphaMultiplier, float partialTicks) {

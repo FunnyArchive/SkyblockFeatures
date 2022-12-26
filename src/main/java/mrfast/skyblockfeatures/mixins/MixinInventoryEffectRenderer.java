@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 /**
- * Taken from NotEnoughUpdates under Creative Commons Attribution-NonCommercial 3.0
- * https://github.com/Moulberry/NotEnoughUpdates/blob/master/LICENSE
+ * Taken from NotEnoughUpdates under GNU LESSER GENERAL PUBLIC LICENSE
+ * https://github.com/Moulberry/NotEnoughUpdates/blob/master/COPYING
  *
  * @author Moulberry
  */

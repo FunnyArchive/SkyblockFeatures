@@ -30,8 +30,8 @@ import java.util.regex.Pattern;
 
 
 /**
- * Taken from NotEnoughUpdates under Creative Commons Attribution-NonCommercial 3.0
- * https://github.com/Moulberry/NotEnoughUpdates/blob/master/LICENSE
+ * Taken from NotEnoughUpdates under GNU Lesser General Public License v3.0
+ * https://github.com/Moulberry/NotEnoughUpdates/blob/master/COPYING
  *
  * @author Moulberry
  */
