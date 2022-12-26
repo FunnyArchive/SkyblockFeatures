@@ -194,17 +194,6 @@ public class Utils {
         return list.toArray(new String[0]);
     }
 
-    public static int getAlpha(int color) {
-        return (color >> 24 & 255);
-    }
-    
-    public static void applyHex(int col) {
-		GlStateManager.color(((col >> 16) & 0xFF) / 255f,
-				((col >> 8) & 0xFF) / 255f,
-				(col & 0xFF) / 255f,
-				((col >> 24) & 0xFF) / 255f);
-	}
-
     public static double xpToSkillLevel(double xp, int limit) {
 		for (int i = 0, xpAdded = 0; i < limit + 1; i++) {
 			xpAdded += skillXPPerLevel[i];
@@ -354,40 +343,6 @@ public class Utils {
             EntityLivingBase entityLivingBase = (EntityLivingBase) entity;
             return entity.getUniqueID().version() == 2 && entityLivingBase.getHealth() == 20.0F && !entityLivingBase.isPlayerSleeping() && Utils.inSkyblock;
         } else return false;
-        
-    }
-
-    public static void drawRect(double left, double top, double right, double bottom, int color) {
-        if (left < right) {
-            double i = left;
-            left = right;
-            right = i;
-        }
-
-        if (top < bottom) {
-            double j = top;
-            top = bottom;
-            bottom = j;
-        }
-
-        float f3 = (float)(color >> 24 & 255) / 255.0F;
-        float f = (float)(color >> 16 & 255) / 255.0F;
-        float f1 = (float)(color >> 8 & 255) / 255.0F;
-        float f2 = (float)(color & 255) / 255.0F;
-        Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-        GlStateManager.enableBlend();
-        GlStateManager.disableTexture2D();
-        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        GlStateManager.color(f, f1, f2, f3);
-        worldrenderer.begin(7, DefaultVertexFormats.POSITION);
-        worldrenderer.pos(left, bottom, 0.0D).endVertex();
-        worldrenderer.pos(right, bottom, 0.0D).endVertex();
-        worldrenderer.pos(right, top, 0.0D).endVertex();
-        worldrenderer.pos(left, top, 0.0D).endVertex();
-        tessellator.draw();
-        GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
     }
 
     public static void setTimeout(Runnable code, int ms) {
