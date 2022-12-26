@@ -58,3 +58,4 @@ Added highlight dungeon bats, livid solver, crystal hollows treasure chest solve
 - /bank \<name\> (*Displays another players current purse/bank balance*)
 - /dungeons \<name\> (*Shows another players dungeon stats*)
 - /shrug \<msg\> (*Sends a message followed by a "¯\\_(ツ)_/¯"*)
+- /jerry (*TOGGLES JERRYYY MODEE*)
