@@ -8,7 +8,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-
+/**
+ * Taken from NotEnoughUpdates under Creative Commons Attribution-NonCommercial 3.0
+ * https://github.com/Moulberry/NotEnoughUpdates/blob/master/LICENSE
+ *
+ * @author Moulberry
+ */
 @Mixin({InventoryEffectRenderer.class})
 public class MixinInventoryEffectRenderer {
 

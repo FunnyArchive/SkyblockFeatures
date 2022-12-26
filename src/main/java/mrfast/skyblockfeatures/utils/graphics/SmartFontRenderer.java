@@ -37,9 +37,7 @@ public class SmartFontRenderer extends FontRenderer {
     public float drawString(String text, float x, float y, CustomColor customColor, TextAlignment alignment, TextShadow shadow) {
         if (text == null) return 0f;
 
-        if (customColor == CommonColors.RAINBOW) {
-            return drawRainbowText(text, x, y, alignment, shadow);
-        } else if (customColor == CommonColors.CRITICAL) {
+        if (customColor == CommonColors.CRITICAL) {
             return drawCritText(text, x, y, alignment, shadow);
         }
 
@@ -59,66 +57,6 @@ public class SmartFontRenderer extends FontRenderer {
                 return drawChars(text, colour, shadow);
         }
 
-    }
-
-    private float drawRainbowText(String input, float x, float y, TextAlignment alignment, TextShadow shadow) {
-        if (alignment == TextAlignment.MIDDLE)
-            return drawRainbowText(input, x - getStringWidth(input) / 2.0f, y, TextAlignment.LEFT_RIGHT, shadow);
-        else if (alignment == TextAlignment.RIGHT_LEFT)
-            return drawRainbowText(input, x - getStringWidth(input), y, TextAlignment.LEFT_RIGHT, shadow);
-
-        posX = x; posY = y;
-
-        for (char c : input.toCharArray()) {
-            long dif = ((long)posX * 10) - ((long)posY * 10);
-
-            // color settings
-            long time = System.currentTimeMillis() - dif;
-            float z = 2000.0F;
-            int color = Color.HSBtoRGB((float) (time % (int) z) / z, 0.8F, 0.8F);
-
-            float red = (float)(color >> 16 & 255) / 255.0F;
-            float blue = (float)(color >> 8 & 255) / 255.0F;
-            float green = (float)(color & 255) / 255.0F;
-
-            // rendering shadows
-            float originPosX = posX; float originPosY = posY;
-            float offset = (this.getUnicodeFlag() ? 0.5f : 1f);
-            switch (shadow) {
-                case OUTLINE:
-                    GlStateManager.color(red * (1 - 0.8f), green * (1 - 0.8f), blue * (1 - 0.8f), 1);
-                    posX = originPosX - offset;
-                    posY = originPosY;
-                    renderChar(c);
-                    posX = originPosX + offset;
-                    posY = originPosY;
-                    renderChar(c);
-                    posX = originPosX;
-                    posY = originPosY - offset;
-                    renderChar(c);
-                    posX = originPosX;
-                    posY = originPosY + offset;
-                    renderChar(c);
-                    posX = originPosX;
-                    posY = originPosY;
-                    break;
-                case NORMAL:
-                    GlStateManager.color(red * (1 - 0.8f), green * (1 - 0.8f), blue * (1 - 0.8f), 1);
-                    posX = originPosX + offset;
-                    posY = originPosY + offset;
-                    renderChar(c);
-                    posX = originPosX;
-                    posY = originPosY;
-                    break;
-            }
-
-            // rendering the text
-            GlStateManager.color(red, green, blue, 1);
-            float charLength = renderChar(c);
-            posX += charLength + CHAR_SPACING;
-        }
-
-        return posX;
     }
 
     private float drawCritText(String input, float x, float y, TextAlignment alignment, TextShadow shadow) {

@@ -34,7 +34,12 @@ public class MixinEntityRenderer {
         return world.getLastLightningBolt();
     }
 
-
+    /**
+     * Modified from OldAnimations under GNU Lesser General Public License v3.0
+     * https://github.com/Sk1erLLC/OldAnimations/blob/master/LICENSE
+     *
+     * @author Sk1erLLC
+     */
     @Inject(method = "renderHand", at = @At("TAIL"))
     private void renderHand(float partialTicks, int xOffset, CallbackInfo ci) {
         if (skyblockfeatures.config.oldAnimations) {

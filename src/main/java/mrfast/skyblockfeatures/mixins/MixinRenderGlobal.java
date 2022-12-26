@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -14,8 +15,13 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import club.sk1er.mods.core.transformers.RendererLivingEntityTransformer;
-import net.minecraft.block.BlockBed.EnumPartType;
+import mrfast.skyblockfeatures.skyblockfeatures;
+import mrfast.skyblockfeatures.features.impl.dungeons.DungeonsFeatures;
+import mrfast.skyblockfeatures.features.impl.dungeons.Nametags;
+import mrfast.skyblockfeatures.utils.ItemRarity;
+import mrfast.skyblockfeatures.utils.ItemUtil;
+import mrfast.skyblockfeatures.utils.SBInfo;
+import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -23,9 +29,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.culling.ICamera;
-import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.client.shader.ShaderGroup;
@@ -36,18 +40,13 @@ import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Team.EnumVisible;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraftforge.client.event.RenderLivingEvent;
-import mrfast.skyblockfeatures.skyblockfeatures;
-import mrfast.skyblockfeatures.features.impl.dungeons.DungeonsFeatures;
-import mrfast.skyblockfeatures.features.impl.dungeons.Nametags;
-import mrfast.skyblockfeatures.utils.ColorCode;
-import mrfast.skyblockfeatures.utils.DrawUtils;
-import mrfast.skyblockfeatures.utils.ItemRarity;
-import mrfast.skyblockfeatures.utils.ItemUtil;
-import mrfast.skyblockfeatures.utils.SBInfo;
-import mrfast.skyblockfeatures.utils.Utils;
 
+
+/**
+ * Modified from LobbyGlow
+ * https://github.com/biscuut/LobbyGlow
+ * @author Biscuut
+ */
 @Mixin(RenderGlobal.class)
 public abstract class MixinRenderGlobal {
 
@@ -131,7 +130,14 @@ public abstract class MixinRenderGlobal {
             GlStateManager.disableFog();
             mc.getRenderManager().setRenderOutlines(true);
             
-            DrawUtils.enableOutlineMode();
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL13.GL_COMBINE);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_COMBINE_RGB, GL11.GL_REPLACE);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_SOURCE0_RGB, GL13.GL_CONSTANT);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_OPERAND0_RGB, GL11.GL_SRC_COLOR);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_COMBINE_ALPHA, GL11.GL_REPLACE);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_SOURCE0_ALPHA, GL11.GL_TEXTURE);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_OPERAND0_ALPHA, GL11.GL_SRC_ALPHA);
+
             GlStateManager.depthFunc(GL11.GL_ALWAYS);
             try {
                 for (Entity entity : entities) {
@@ -166,7 +172,13 @@ public abstract class MixinRenderGlobal {
             }
             GlStateManager.depthFunc(GL11.GL_LEQUAL);
 
-            DrawUtils.disableOutlineMode();
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_COMBINE_RGB, GL11.GL_MODULATE);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_SOURCE0_RGB, GL11.GL_TEXTURE);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_OPERAND0_RGB, GL11.GL_SRC_COLOR);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_COMBINE_ALPHA, GL11.GL_MODULATE);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_SOURCE0_ALPHA, GL11.GL_TEXTURE);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_OPERAND0_ALPHA, GL11.GL_SRC_ALPHA);
 
             // Vanilla options
             RenderHelper.enableStandardItemLighting();

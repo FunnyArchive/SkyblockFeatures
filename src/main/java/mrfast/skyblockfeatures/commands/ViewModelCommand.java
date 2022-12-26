@@ -19,7 +19,7 @@ public class ViewModelCommand extends Command {
     
     @DefaultHandler
     public void handle() {
-        GuiUtil.open(Objects.requireNonNull(new ViewModel.AuctionPriceScreen()));
+        GuiUtil.open(Objects.requireNonNull(new ViewModel.ViewModelScreen()));
     }
 
     @Nullable

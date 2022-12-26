@@ -28,31 +28,6 @@ import mrfast.skyblockfeatures.utils.Utils;
 
 @Mixin(PlayerControllerMP.class)
 public class MixinPlayerControllerMP {
-
-    @Final
-    @Shadow
-    private Minecraft mc;
-
-    @Inject(method = "isPlayerRightClickingOnEntity", at = @At("HEAD"), cancellable = true)
-    private void onRightClickEntity(EntityPlayer player, Entity target, MovingObjectPosition movingObject, CallbackInfoReturnable<Boolean> cir) {
-        handleRightClickEntity(player, target, cir);
-    }
-
-    @Inject(method = "interactWithEntitySendPacket", at = @At("HEAD"), cancellable = true)
-    private void onInteractWithEntitySendPacket(EntityPlayer player, Entity target, CallbackInfoReturnable<Boolean> cir) {
-        handleRightClickEntity(player, target, cir);
-    }
-
-    private void handleRightClickEntity(EntityPlayer player, Entity target, CallbackInfoReturnable<Boolean> cir) {
-        if (!Utils.inSkyblock || Utils.inDungeons) return;
-        ItemStack item = player.getHeldItem();
-        if (item != null && !(target instanceof EntityArmorStand)) {
-            if (ItemUtil.hasRightClickAbility(item)) {
-                cir.setReturnValue(false);
-            }
-        }
-    }
-
     @Inject(method = "onPlayerDamageBlock", at = @At("HEAD"), cancellable = true)
     private void onPlayerDamageBlock(BlockPos pos, EnumFacing directionFacing, CallbackInfoReturnable<Boolean> cir) {
         try {
@@ -61,9 +36,4 @@ public class MixinPlayerControllerMP {
             e.printStackTrace();
         }
     }
-
-	@Accessor
-    void setIsHittingBlock(final boolean p0) {
-		
-	}
 }

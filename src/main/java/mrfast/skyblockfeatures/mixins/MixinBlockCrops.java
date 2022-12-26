@@ -13,7 +13,12 @@ import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.utils.Utils;
 
 import org.spongepowered.asm.mixin.Mixin;
-
+/**
+ * Modified from Patcher under Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+ * https://github.com/Sk1erLLC/Patcher/blob/master/LICENSE.md
+ *
+ * @author Sk1erLLC
+ */
 @Mixin(BlockCrops.class)
 public abstract class MixinBlockCrops extends BlockBush {
 

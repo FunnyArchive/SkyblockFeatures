@@ -11,7 +11,12 @@ import net.minecraft.world.World;
 import mrfast.skyblockfeatures.utils.Utils;
 
 import org.spongepowered.asm.mixin.Mixin;
-
+/**
+ * Taken from Patcher under Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+ * https://github.com/Sk1erLLC/Patcher/blob/master/LICENSE.md
+ *
+ * @author Sk1erLLC
+ */
 @Mixin(BlockNetherWart.class)
 public abstract class MixinBlockNetherWart extends BlockBush {
 

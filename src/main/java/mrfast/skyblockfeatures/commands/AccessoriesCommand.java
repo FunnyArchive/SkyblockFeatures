@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +13,9 @@ import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import gg.essential.api.utils.GuiUtil;
+import mrfast.skyblockfeatures.skyblockfeatures;
+import mrfast.skyblockfeatures.utils.APIUtil;
+import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -28,11 +30,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
-import mrfast.skyblockfeatures.skyblockfeatures;
-import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
-import mrfast.skyblockfeatures.utils.APIUtil;
-import mrfast.skyblockfeatures.utils.ItemUtil;
-import mrfast.skyblockfeatures.utils.Utils;
 
 public class AccessoriesCommand extends CommandBase {
 

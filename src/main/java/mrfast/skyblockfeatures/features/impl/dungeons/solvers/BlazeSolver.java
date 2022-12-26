@@ -17,15 +17,17 @@ import java.util.List;
 
 import mrfast.skyblockfeatures.utils.RenderUtil;
 import mrfast.skyblockfeatures.utils.Utils;
-
+/**
+ * Modified from SkyblockMod under GNU Lesser General Public License v3.0
+ * https://github.com/bowser0000/SkyblockMod/blob/master/COPYING
+ * @author Bowser0000
+ */
 public class BlazeSolver {
 
     static Entity highestBlaze = null;
     static Entity lowestBlaze = null;
     static boolean higherToLower = false;
     static boolean foundChest = false;
-    public static int LOWEST_BLAZE_COLOUR = 0x00FF00;
-    public static int HIGHEST_BLAZE_COLOUR = 0x00FF00;
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
@@ -99,20 +101,20 @@ public class BlazeSolver {
             if (foundChest) {
                 if (lowestBlaze != null && !higherToLower) {
                     AxisAlignedBB aabb = new AxisAlignedBB(lowestBlaze.posX - 0.5, lowestBlaze.posY - 2, lowestBlaze.posZ - 0.5, lowestBlaze.posX + 0.5, lowestBlaze.posY, lowestBlaze.posZ + 0.5);
-                    RenderUtil.drawOutlinedFilledBoundingBox(aabb, new Color(LOWEST_BLAZE_COLOUR), event.partialTicks);
+                    RenderUtil.drawOutlinedFilledBoundingBox(aabb, new Color(0x00FF00), event.partialTicks);
                 }
                 if (highestBlaze != null && higherToLower) {
                     AxisAlignedBB aabb = new AxisAlignedBB(highestBlaze.posX - 0.5, highestBlaze.posY - 2, highestBlaze.posZ - 0.5, highestBlaze.posX + 0.5, highestBlaze.posY, highestBlaze.posZ + 0.5);
-                    RenderUtil.drawOutlinedFilledBoundingBox(aabb, new Color(LOWEST_BLAZE_COLOUR), event.partialTicks);
+                    RenderUtil.drawOutlinedFilledBoundingBox(aabb, new Color(0x00FF00), event.partialTicks);
                 }
             } else {
                 if (lowestBlaze != null) {
                     AxisAlignedBB aabb = new AxisAlignedBB(lowestBlaze.posX - 0.5, lowestBlaze.posY - 2, lowestBlaze.posZ - 0.5, lowestBlaze.posX + 0.5, lowestBlaze.posY, lowestBlaze.posZ + 0.5);
-                    RenderUtil.drawOutlinedFilledBoundingBox(aabb, new Color(LOWEST_BLAZE_COLOUR), event.partialTicks);
+                    RenderUtil.drawOutlinedFilledBoundingBox(aabb, new Color(0x00FF00), event.partialTicks);
                 }
                 if (highestBlaze != null) {
                     AxisAlignedBB aabb = new AxisAlignedBB(highestBlaze.posX - 0.5, highestBlaze.posY - 2, highestBlaze.posZ - 0.5, highestBlaze.posX + 0.5, highestBlaze.posY, highestBlaze.posZ + 0.5);
-                    RenderUtil.drawOutlinedFilledBoundingBox(aabb, new Color(HIGHEST_BLAZE_COLOUR), event.partialTicks);
+                    RenderUtil.drawOutlinedFilledBoundingBox(aabb, new Color(0x00FF00), event.partialTicks);
                 }
             }
         }

@@ -20,6 +20,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class CrystalHollowsMap {
+    // Map Asset Inspired by Skyblock Extra's
     public static final ResourceLocation map = new ResourceLocation("skyblockfeatures","map/CrystalHollowsMap.png");
     public static final ResourceLocation playerIcon = new ResourceLocation("skyblockfeatures","map/mapIcon.png");
     public static final ResourceLocation playerIcon2 = new ResourceLocation("skyblockfeatures","map/mapIcon2.png");

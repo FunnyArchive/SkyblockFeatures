@@ -22,12 +22,12 @@ public class CommisionsTracker {
   private static final Minecraft mc = Minecraft.getMinecraft();
 
   static {
-      new JerryTimerGUI();
+      new CommisionsTrackerGUI();
   }
   
-  public static class JerryTimerGUI extends GuiElement {
+  public static class CommisionsTrackerGUI extends GuiElement {
 
-      public JerryTimerGUI() {
+      public CommisionsTrackerGUI() {
           super("Commissions Tracker", new FloatPair(0.45052084f, 0.86944443f));
           skyblockfeatures.GUIMANAGER.registerElement(this);
       }

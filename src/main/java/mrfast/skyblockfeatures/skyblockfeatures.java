@@ -104,7 +104,8 @@ public class skyblockfeatures {
         GUIMANAGER = new GuiManager();
         jarFile = event.getSourceFile();
     }
-    
+    // Saving for a later date maybe?
+
     // boolean a = false;
     // String delimiter = EnumChatFormatting.AQUA.toString() + EnumChatFormatting.STRIKETHROUGH.toString() + "" + EnumChatFormatting.BOLD + "--------------------------------------";
     // @SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
@@ -116,7 +117,7 @@ public class skyblockfeatures {
     //         "");
     //         ChatStyle clickableChatStyle = new ChatStyle().setChatClickEvent(versionCheckChatClickEvent);
     //         ChatComponentText versionWarningChatComponent = 
-    //         new ChatComponentText(EnumChatFormatting.RED+"Your running an outdated version of Skyblock! Click Here to update.");
+    //         new ChatComponentText(EnumChatFormatting.RED+"Your running an outdated version of Skyblock Features! Click Here to update.");
     //         versionWarningChatComponent.setChatStyle(clickableChatStyle);
     //         // mc.thePlayer.addChatMessage(versionWarningChatComponent);
     //         Utils.GetMC().thePlayer.addChatMessage(
@@ -372,15 +373,13 @@ public class skyblockfeatures {
 
     @SubscribeEvent
     public void onGuiMouseInputPre(GuiScreenEvent.MouseInputEvent.Pre event) {
-        // if (!Utils.inSkyblock) return;
         if (Mouse.getEventButton() != 0 && Mouse.getEventButton() != 1 && Mouse.getEventButton() != 2)
-            return; // Left click, middle click or right click
+            return;
         if (!Mouse.getEventButtonState()) return;
 
         if (event.gui instanceof GuiChest) {
             Container containerChest = ((GuiChest) event.gui).inventorySlots;
             if (containerChest instanceof ContainerChest) {
-                // a lot of declarations here, if you get scarred, my bad
                 GuiChest chest = (GuiChest) event.gui;
                 IInventory inventory = ((ContainerChest) containerChest).getLowerChestInventory();
                 Slot slot = chest.getSlotUnderMouse();
@@ -399,8 +398,8 @@ public class skyblockfeatures {
     private KeyBinding toggleSprint;
     private static boolean toggled = true;
 
-    public final static KeyBinding favoritePetKeybind = new KeyBinding("Toggle Favorite Pet", Keyboard.KEY_F, "skyblockfeatures 2.0");
-    public final static KeyBinding reloadAH = new KeyBinding("Reload AH", Keyboard.KEY_R, "skyblockfeatures 2.0");
+    public final static KeyBinding favoritePetKeybind = new KeyBinding("Toggle Favorite Pet", Keyboard.KEY_F, "Skyblock Features");
+    public final static KeyBinding reloadAH = new KeyBinding("Reload AH", Keyboard.KEY_R, "Skyblock Features");
 
     
     @EventHandler
@@ -409,7 +408,7 @@ public class skyblockfeatures {
         ClientRegistry.registerKeyBinding(favoritePetKeybind);
         ClientRegistry.registerKeyBinding(reloadAH);
 
-        toggleSprint = new KeyBinding("Toggle Sprint", Keyboard.KEY_I, "skyblockfeatures 2.0");
+        toggleSprint = new KeyBinding("Toggle Sprint", Keyboard.KEY_I, "Skyblock Features");
         ClientRegistry.registerKeyBinding(toggleSprint);
     }
 

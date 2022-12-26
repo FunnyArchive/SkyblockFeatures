@@ -17,7 +17,11 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
+/**
+ * Modified from SkyblockMod under GNU Lesser General Public License v3.0
+ * https://github.com/bowser0000/SkyblockMod/blob/master/COPYING
+ * @author Bowser0000
+ */
 public class ThreeWeirdosSolver {
 
     static String[] riddleSolutions = {"The reward is not in my chest!", "At least one of them is lying, and the reward is not in",

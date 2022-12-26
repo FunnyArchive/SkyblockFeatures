@@ -17,6 +17,12 @@ import net.minecraft.item.Item;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.utils.Utils;
 
+/**
+ * Modified from OldAnimations under GNU Lesser General Public License v3.0
+ * https://github.com/Sk1erLLC/OldAnimations/blob/master/LICENSE
+ *
+ * @author Sk1erLLC
+ */
 @Mixin(ItemRenderer.class)
 public class MixinItemRenderer {
     

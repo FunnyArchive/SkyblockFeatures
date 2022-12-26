@@ -13,7 +13,7 @@ import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
 import mrfast.skyblockfeatures.utils.graphics.SmartFontRenderer;
 
 public class ViewModel {
-    public static class AuctionPriceScreen extends GuiScreen {
+    public static class ViewModelScreen extends GuiScreen {
 
         public CleanButton undercutButton;
         public static GuiTextField xField;

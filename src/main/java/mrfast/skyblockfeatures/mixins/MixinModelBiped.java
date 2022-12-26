@@ -12,6 +12,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/**
+ * Taken from OldAnimations under GNU Lesser General Public License v3.0
+ * https://github.com/Sk1erLLC/OldAnimations/blob/master/LICENSE
+ *
+ * @author Sk1erLLC
+ */
 @Mixin(ModelBiped.class)
 public class MixinModelBiped extends ModelBase
 {

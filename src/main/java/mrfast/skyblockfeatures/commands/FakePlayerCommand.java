@@ -1,12 +1,8 @@
 package mrfast.skyblockfeatures.commands;
 
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.commons.io.IOUtils;
 

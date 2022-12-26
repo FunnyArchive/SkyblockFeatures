@@ -47,7 +47,11 @@ public abstract class MixinRender<T extends Entity> {
             ci.cancel();
         }
     }
-
+    /**
+     * Taken from NotEnoughUpdates under Creative Commons Attribution-NonCommercial 3.0
+     * https://github.com/Moulberry/NotEnoughUpdates/blob/master/LICENSE
+     * @author Moulberry
+     */
     @Inject(method="bindEntityTexture", at=@At("HEAD"), cancellable = true)
     public void bindEntityTexture(Entity entity, CallbackInfoReturnable<Boolean> cir) {
         if(entity instanceof EntityBat && DungeonBlocks.isOverriding()) {

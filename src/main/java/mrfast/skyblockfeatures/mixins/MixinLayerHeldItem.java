@@ -23,6 +23,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
+/**
+ * Modified from OldAnimations under GNU Lesser General Public License v3.0
+ * https://github.com/Sk1erLLC/OldAnimations/blob/master/LICENSE
+ *
+ * @author Sk1erLLC
+ */
 @Mixin({ LayerHeldItem.class })
 public abstract class MixinLayerHeldItem {
 
