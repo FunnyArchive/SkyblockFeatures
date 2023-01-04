@@ -34,7 +34,7 @@ For Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
 #### Quick Start Guide
 - Download mod from releases tab
 - Put mod into mods folder and start up game
-- type /api new into chat to set a new api key
+- type '/api new' into chat to set a new api key
 - type '/sf' for help
 
 <h1 align="center">Top Feature List</h1>
