@@ -25,6 +25,7 @@
         <img src="https://img.shields.io/github/downloads/MrFast-js/SkyblockFeatures/total?label=downloads&color=informational&logo=GitHub" alt="downloads">
     </a>
 </div>
+
 *A simple Hypixel Skyblock mod that adds features that are not commonly found in other mods but are very useful*
 
 
@@ -37,6 +38,7 @@ For Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
 - type '/sf' for help
 
 <h1 align="center">Top Feature List</h1>
+
 ## Solvers:
 - Glacial Cave Treasure Finder
 - Highlight Correct Livid
