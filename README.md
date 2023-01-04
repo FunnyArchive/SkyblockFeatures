@@ -39,7 +39,7 @@ For Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
 
 <h1 align="center">Top Feature List</h1>
 
-# Solvers:
+#### Solvers:
 - Glacial Cave Treasure Finder
 - Highlight Correct Livid
 - Crystal Hollows Treasure Chest Solver
@@ -48,7 +48,7 @@ For Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
 - Puzzler Solver
 - Chronomotron & Ultrasequencer Solver
 
-# Dungeons:
+#### Dungeons:
 - Dungeon Blocks
 - Crypt Display
 - Highlight Dungeon Bats
@@ -57,18 +57,18 @@ For Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
 - Dungeon Map with Player Heads And Names
 - Dungeon Chest Profit
 
-## Trackers: 
+#### Trackers: 
 - Automaton Loot/Profit Tracker
 - Gemstone Profit Tracker
 - Endernode Tracker
 - Glacial Cave Treasure Tracker
 - Commissions Tracker
 
-# Mining:
+#### Mining:
 - Commissions Tracker
 - Crystal Hollows Map
 
-# Visual:
+#### Visual:
 - Small Items
 - 1.7 Animations
 - Glowing Players!
@@ -77,13 +77,13 @@ For Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
 - Fancy Damage Numbers
 - Ad Blocker (Hides people advertising in chat)
 
-# Guis:
+#### Guis:
 - Minion Profit Overlay (Coins Per Hour, Cooldown, ect)
 - Helpful Auction Guis (for flipping, selling, and buying)
 - Highlight Auction Flips
 - Show Extra Profile Info (Shows networth, skill avg and discord when looking at someones profile)
 
-# Helpers:
+#### Helpers:
 - Auto Auction Flipping Bot (like TFM/COFL)
 - Show Gift Compass Waypoints
 - Fairy Soul Helper
@@ -96,7 +96,7 @@ For Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
 - Highlight Glowing Mushrooms
 - And Much More!
 
-# Cool Commands:
+#### Cool Commands:
 - /acc \<name\> (*Allows you see another players accessory bag*)
 - /vm (*Change the item view model*)
 - /terminal (*Allows you to practice a f7 dungeon terminal*)
