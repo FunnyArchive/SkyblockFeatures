@@ -88,7 +88,30 @@ public class DungeonMap {
 		playerSkins.clear();
 		playerNames.clear();
 		dungeonTeammates.clear();
+		farplayerPosition.clear();
+		closePlayerPosition.clear();
     }
+
+	public static class MapPosition {
+	    double rotation = 0;
+		double x = 0;
+		double y = 0;
+		public MapPosition(double x,double y, double rotation) {
+			this.x = x;
+			this.y = y;
+			this.rotation = rotation;
+		}
+	}
+
+
+	static HashMap<String, NetworkPlayerInfo> dungeonTeammates = new HashMap<String, NetworkPlayerInfo>();
+	static HashMap<Integer, ResourceLocation> playerSkins = new HashMap<Integer, ResourceLocation>();
+	static HashMap<Integer, String> playerNames = new HashMap<Integer, String>();
+	static HashMap<String, MapPosition> farplayerPosition = new HashMap<>();
+	static HashMap<String, MapPosition> closePlayerPosition = new HashMap<>();
+
+	static Double playerHeadOffsetX = null;
+	static Double playerHeadOffsetY = null;
 
 	public static void drawPlayersOnMap() {
 		GlStateManager.pushMatrix();
@@ -99,6 +122,8 @@ public class DungeonMap {
 		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
 		float z = 1.0F;
 		for (Entry<String,Vec4b> entry : mapData.mapDecorations.entrySet()) {
+			Integer playerId = Integer.parseInt(entry.getKey().replaceAll("[^0-9]", ""));
+			if(playerSkins.get(playerId)!=null) continue;
 			Vec4b vec4b = entry.getValue();
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(0, 0, z);
@@ -128,13 +153,6 @@ public class DungeonMap {
 		GlStateManager.translate(1.0F, 1.0F, 1.0F);
 		GlStateManager.popMatrix();
 	};
-
-	static HashMap<String, NetworkPlayerInfo> dungeonTeammates = new HashMap<String, NetworkPlayerInfo>();
-	static HashMap<String, NetworkPlayerInfo> dungeonTeammatesCopy = new HashMap<String, NetworkPlayerInfo>();
-	static HashMap<Integer, ResourceLocation> playerSkins = new HashMap<Integer, ResourceLocation>();
-	static HashMap<Integer, String> playerNames = new HashMap<Integer, String>();
-	static Double playerHeadOffsetX = null;
-	static Double playerHeadOffsetY = null;
 
 	// Draw head on map
 	public static void DrawHead(Double x,Double z,ResourceLocation skin, Float rotation,String name) {
@@ -184,15 +202,15 @@ public class DungeonMap {
 		count++;
 
 		if(count == 200) {
-			System.out.println("----------------START-------------");
-			for(int i=0;i<intArray.length;i++) {
-				NetworkPlayerInfo player = tablist.get(intArray[i]);
-				if(player.getDisplayName().getUnformattedText().split(" ").length > 1) {
-					String name = StringUtils.stripControlCodes(player.getDisplayName().getUnformattedText().split(" ")[1]);
-					System.out.println("icon-"+i+" "+name);
-				}
-			}
-			System.out.println("----------------FINISH-------------");
+			// System.out.println("----------------START-------------");
+			// for(int i=0;i<intArray.length;i++) {
+			// 	NetworkPlayerInfo player = tablist.get(intArray[i]);
+			// 	if(player.getDisplayName().getUnformattedText().split(" ").length > 1) {
+			// 		String name = StringUtils.stripControlCodes(player.getDisplayName().getUnformattedText().split(" ")[1]);
+			// 		System.out.println("icon-"+i+" "+name);
+			// 	}
+			// }
+			// System.out.println("----------------FINISH-------------");
 			count = 0;
 			for(int i=0;i<intArray.length;i++) {
 				NetworkPlayerInfo player = tablist.get(intArray[i]);
@@ -203,7 +221,6 @@ public class DungeonMap {
 						playerSkins.clear();
 						playerNames.clear();
 						dungeonTeammates.clear();
-						System.out.println("SOMEONE DIED RESETTING STUFF");
 					}
 				}
 			}
@@ -232,10 +249,32 @@ public class DungeonMap {
 				if(self != "" && playerId == Integer.parseInt(self.replaceAll("[^0-9]", ""))) {
 					EntityPlayer player = Utils.GetMC().thePlayer;
 					if(player != null) {
-						double x = Math.round((player.posX)/(mapData.scale*0.8));
-						double z = Math.round((player.posZ)/(mapData.scale*0.8));
+						
+						double x = (player.posX)/(mapData.scale*0.8);
+						double z = (player.posZ)/(mapData.scale*0.8);
+						double rotation = player.rotationYawHead;
+
+						String shortName = player.getName().length()>5?player.getName().substring(0, 5):player.getName();
 						AbstractClientPlayer aplayer = (AbstractClientPlayer) player;
 						ResourceLocation skin = aplayer.getLocationSkin();
+						if(closePlayerPosition.containsKey(shortName)) {
+							x = closePlayerPosition.get(shortName).x-playerHeadOffsetX;
+							z = closePlayerPosition.get(shortName).y-playerHeadOffsetY;
+							rotation = closePlayerPosition.get(shortName).rotation;
+							
+							double newX = (player.posX)/(mapData.scale*0.8);
+							double newZ = (player.posZ)/(mapData.scale*0.8);
+							double newRotation = player.rotationYawHead;
+
+							double deltaX = newX-x;
+							double deltaZ = newZ-z;
+							double deltaR = newRotation-rotation;
+
+							x+=deltaX/50;
+							z+=deltaZ/50;
+							rotation+=deltaR/50;
+						}
+
 						if(playerHeadOffsetX == null) playerHeadOffsetX = Math.abs(x-Math.round((mapEntry.getValue().func_176112_b()/2)+64));
 						else x+=playerHeadOffsetX;
 						
@@ -244,7 +283,7 @@ public class DungeonMap {
 						
 						
 						if(skin != DefaultPlayerSkin.getDefaultSkin(aplayer.getUniqueID())) {
-							String shortName = aplayer.getName().length()>5?aplayer.getName().substring(0, 5):aplayer.getName();
+							closePlayerPosition.put(shortName,new MapPosition(x, z,rotation));
 							DrawHead(x,z,skin,player.rotationYawHead,shortName);
 						}
 					}
@@ -254,36 +293,83 @@ public class DungeonMap {
 				else if(playerId == Integer.parseInt(entrySelf)) {
 					EntityPlayer player = Utils.GetMC().theWorld.getPlayerEntityByName(entry.getValue().getDisplayName().getUnformattedText().split(" ")[1]);
 					if(player != null) {
-						double x = Math.round((player.posX)/(mapData.scale*0.8));
-						double z = Math.round((player.posZ)/(mapData.scale*0.8));
+						double x = (player.posX)/(mapData.scale*0.8);
+						double z = (player.posZ)/(mapData.scale*0.8);
+						double rotation = player.rotationYawHead;
+
 						AbstractClientPlayer aplayer = (AbstractClientPlayer) player;
 						ResourceLocation skin = aplayer.getLocationSkin();
+						String shortName = "";
+
+						if(playerNames.get(playerId) != null) {
+							String name = playerNames.get(playerId);
+							shortName = name.length()>5?name.substring(0, 5):name;
+						}
+
+						if(closePlayerPosition.containsKey(shortName)) {
+							x = closePlayerPosition.get(shortName).x-playerHeadOffsetX;
+							z = closePlayerPosition.get(shortName).y-playerHeadOffsetY;
+							rotation = closePlayerPosition.get(shortName).rotation;
+							
+							double newX = (player.posX)/(mapData.scale*0.8);
+							double newZ = (player.posZ)/(mapData.scale*0.8);
+							double newRotation = player.rotationYawHead;
+
+							double deltaX = newX-x;
+							double deltaZ = newZ-z;
+							double deltaR = newRotation-rotation;
+
+							x+=deltaX/50;
+							z+=deltaZ/50;
+							rotation+=deltaR/50;
+
+						}
 						if(playerHeadOffsetX != null) x+=playerHeadOffsetX;
 						if(playerHeadOffsetY != null) z+=playerHeadOffsetY;
+
 						// Fancy Heads people close smooth
 						if(skin != DefaultPlayerSkin.getDefaultSkin(aplayer.getUniqueID())) {
 							playerSkins.put(playerId, skin);
-							if(player.getName() != null) {
-								playerNames.put(playerId, player.getName());
-							}
-							
-							String shortName = player.getName().length()>5?player.getName().substring(0, 5):player.getName();
-							DrawHead(x,z,skin,player.rotationYawHead,shortName);
+							if(player.getName() != null) playerNames.put(playerId, player.getName());
+							closePlayerPosition.put(shortName,new MapPosition(x, z,rotation));
+							farplayerPosition.put(shortName,new MapPosition(x, z,rotation));
+							DrawHead(x,z,skin,(float) rotation,shortName);
 						}
 					} else {
 						// Draw skin just on the icons based off previous data
 						if(playerSkins.get(playerId) != null) {
+							String shortName = "";
+							if(playerNames.get(playerId) != null) {
+								String name = playerNames.get(playerId);
+								shortName = name.length()>5?name.substring(0, 5):name;
+							}
 							double x = Math.round((mapEntry.getValue().func_176112_b()/2)+64);
 							double z = Math.round((mapEntry.getValue().func_176113_c()/2)+64);
+							double rotation = mapEntry.getValue().func_176111_d()* 360F;;
+							if(farplayerPosition.containsKey(shortName)) {
+								x = farplayerPosition.get(shortName).x;
+								z = farplayerPosition.get(shortName).y;
+								rotation = farplayerPosition.get(shortName).rotation;
+
+								double newX = Math.round((mapEntry.getValue().func_176112_b()/2)+64);
+								double newZ = Math.round((mapEntry.getValue().func_176113_c()/2)+64);
+								double newRotation = mapEntry.getValue().func_176111_d()* 360F;
+								double deltaX = newX-x;
+								double deltaZ = newZ-z;
+								double deltaR = newRotation-rotation;
+
+								x+=deltaX/50;
+								z+=deltaZ/50;
+								rotation+=deltaR/50;
+
+							}
+
 							ResourceLocation skin = playerSkins.get(playerId);
 							
 							if(skin != null) {
-								String shortName = "";
-								if(playerNames.get(playerId) != null) {
-									String name = playerNames.get(playerId);
-									shortName = name.length()>5?name.substring(0, 5):name;
-								}
-								DrawHead(x,z,skin,(mapEntry.getValue().func_176111_d()* 360F) / 16.0F,shortName);
+								farplayerPosition.put(shortName,new MapPosition(x, z,rotation));
+								closePlayerPosition.put(shortName,new MapPosition(x, z,rotation));
+								DrawHead(x,z,skin,(float) ((rotation) / 16.0F),shortName);
 							}
 						}
 					}
@@ -300,6 +386,7 @@ public class DungeonMap {
 	}
 
 	private static final Minecraft mc = Minecraft.getMinecraft();
+	private static double newZ;
     
     static {
         new DungeonMapMove();

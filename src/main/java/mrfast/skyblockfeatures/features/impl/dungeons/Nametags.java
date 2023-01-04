@@ -31,8 +31,12 @@ public class Nametags {
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
-        players.clear();
-        NPCs.clear();
+        try {
+            players.clear();
+            NPCs.clear();
+        } catch(Exception e) {
+
+        }
     }
 
     @SubscribeEvent

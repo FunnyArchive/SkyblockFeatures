@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import gg.essential.api.utils.GuiUtil;
+import net.minecraft.block.BlockStainedGlassPane;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -75,9 +76,14 @@ public class InventoryCommand extends CommandBase {
 			// Get UUID for Hypixel API requests
 			String username;
 			String uuid;
-			username = arg1[0];
+			if (arg1.length == 0) {
+				username = player.getName();
+				uuid = player.getUniqueID().toString().replaceAll("[\\-]", "");
+			} else {
+				username = arg1[0];
+				uuid = APIUtil.getUUID(username);
+			}
 			player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Checking inventory of " + EnumChatFormatting.DARK_GREEN + username));
-			uuid = APIUtil.getUUID(username);
 			
 			// Find stats of latest profile
 			String latestProfile = APIUtil.getLatestProfileID(uuid, key);
@@ -117,6 +123,9 @@ public class InventoryCommand extends CommandBase {
 
 					TargetInventory.setInventorySlotContents(index, item);
 				}
+			} else {
+				ItemStack noApi = new ItemStack(Blocks.stained_glass_pane, 1, 14).setStackDisplayName(ChatFormatting.RED+"This Player Has Their API Disabled");
+				TargetInventory.setInventorySlotContents(31, noApi);
 			}
 
 			if(profileResponse.get("profile").getAsJsonObject().get("members").getAsJsonObject().get(uuid).getAsJsonObject().has("inv_armor")) {

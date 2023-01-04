@@ -29,7 +29,7 @@ public class SpamHider {
         if (!Utils.inSkyblock) return;
         
         try {
-            if (unformatted.contains("[Auction]") || unformatted.contains("Bid of") || unformatted.contains("created a") || unformatted.contains("Auction started")) return;
+            if (unformatted.contains("[Auction]") || unformatted.contains("claimed") || unformatted.contains("Bid of") || unformatted.contains("created a") || unformatted.contains("Auction started")) return;
             if (unformatted.toLowerCase().contains("cheap") || unformatted.toLowerCase().contains("selling") || unformatted.toLowerCase().contains("buying") || unformatted.toLowerCase().contains("visit") || unformatted.toLowerCase().contains("ah") || unformatted.toLowerCase().contains("auction")) {
                 if (skyblockfeatures.config.hideAdvertisments) {
                     cancelChatPacket(event, false);

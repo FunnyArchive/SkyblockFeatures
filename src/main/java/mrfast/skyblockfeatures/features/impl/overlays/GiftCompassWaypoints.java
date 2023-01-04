@@ -46,74 +46,70 @@ public class GiftCompassWaypoints {
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
       Minecraft mc = Minecraft.getMinecraft();
-
-      if (mc.theWorld != null) {
-      Iterator<Entity> var3 = mc.theWorld.loadedEntityList.iterator();
+      if(mc.theWorld == null || Utils.inDungeons) return;
       if(skyblockfeatures.config.icecaveHighlightWalls) GlStateManager.disableDepth();
-      while(var3.hasNext()) {
-            Entity entity = (Entity)var3.next();
-            if (skyblockfeatures.config.presentWaypoints && entity instanceof EntityArmorStand && !skyblockfeatures.locationString.contains("Glacial")&& ((EntityArmorStand)entity).getCurrentArmor(3) != null && ((EntityArmorStand)entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTBmNTM5ODUxMGIxYTA1YWZjNWIyMDFlYWQ4YmZjNTgzZTU3ZDcyMDJmNTE5M2IwYjc2MWZjYmQwYWUyIn19fQ=")) {
-               boolean isPlayerGift = false;
-               for(Entity otherEntity:mc.theWorld.loadedEntityList) {
-                  if(otherEntity instanceof EntityArmorStand && otherEntity.getDistanceToEntity(entity)<0.5 && otherEntity.getName().contains("From: ")) {
-                     isPlayerGift = true;
-                  }
-               }
-               if (!sessionSouls.contains(entity) && !isPlayerGift) {
-                  highlightBlock(Color.YELLOW, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
+      for(Entity entity:mc.theWorld.loadedEntityList) {
+         if (skyblockfeatures.config.presentWaypoints && entity instanceof EntityArmorStand && !skyblockfeatures.locationString.contains("Glacial")&& ((EntityArmorStand)entity).getCurrentArmor(3) != null && ((EntityArmorStand)entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTBmNTM5ODUxMGIxYTA1YWZjNWIyMDFlYWQ4YmZjNTgzZTU3ZDcyMDJmNTE5M2IwYjc2MWZjYmQwYWUyIn19fQ=")) {
+            boolean isPlayerGift = false;
+            for(Entity otherEntity:mc.theWorld.loadedEntityList) {
+               if(otherEntity instanceof EntityArmorStand && otherEntity.getDistanceToEntity(entity)<0.5 && otherEntity.getName().contains("From: ")) {
+                  isPlayerGift = true;
                }
             }
-            if(skyblockfeatures.locationString.contains("Glacial")) {
-               Block blockstate = mc.theWorld.getBlockState(entity.getPosition()).getBlock();
-               if(skyblockfeatures.config.icecaveHighlight && (blockstate instanceof BlockIce || blockstate instanceof BlockPackedIce) && entity instanceof EntityArmorStand && ((EntityArmorStand)entity).getCurrentArmor(3) != null) {
-                  String texture = ((EntityArmorStand)entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("display").getString("Name");
-                  Vec3 StringPos = new Vec3(entity.posX, entity.posY+3, entity.posZ);
+            if (!sessionSouls.contains(entity) && !isPlayerGift) {
+               highlightBlock(Color.YELLOW, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
+            }
+         }
+         if(skyblockfeatures.locationString.contains("Glacial")) {
+            Block blockstate = mc.theWorld.getBlockState(entity.getPosition()).getBlock();
+            if(skyblockfeatures.config.icecaveHighlight && (blockstate instanceof BlockIce || blockstate instanceof BlockPackedIce) && entity instanceof EntityArmorStand && ((EntityArmorStand)entity).getCurrentArmor(3) != null) {
+               String texture = ((EntityArmorStand)entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("display").getString("Name");
+               Vec3 StringPos = new Vec3(entity.posX, entity.posY+3, entity.posZ);
 
-                  // White gift
-                  if (texture.contains("White Gift")) {
-                     highlightBlock(Color.WHITE, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
-                     RenderUtil.draw3DString(StringPos, ChatFormatting.WHITE+"White Gift", 0, event.partialTicks);
-                  }
-                  // Green Gift
-                  else if (texture.contains("Green Gift")) {
-                     highlightBlock(Color.GREEN, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
-                     RenderUtil.draw3DString(StringPos, ChatFormatting.GREEN+"Green Gift", 0, event.partialTicks);
-                  }
-                  // Red Gift
-                  else if (texture.contains("Red Gift")) {
-                     highlightBlock(Color.RED, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
-                     RenderUtil.draw3DString(StringPos, ChatFormatting.RED+"Red Gift", 0, event.partialTicks);
-                  }
-                  // Glacial Talisman
-                  else if (texture.contains("Talisman")) {
-                     highlightBlock(Color.ORANGE, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
-                     RenderUtil.draw3DString(StringPos, ChatFormatting.GOLD+"Talisman", 0, event.partialTicks);
-                  }
-                  // Glacial Frag
-                  else if (texture.contains("Fragment")) {
-                     highlightBlock(Color.MAGENTA, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
-                     RenderUtil.draw3DString(StringPos, ChatFormatting.LIGHT_PURPLE+"Frag", 0, event.partialTicks);
-                  }
-                  // Packed Ice
-                  else if (texture.contains("Enchanted Ice")) {
-                     highlightBlock(new Color(0x0a0d61), entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
-                     RenderUtil.draw3DString(StringPos, ChatFormatting.DARK_BLUE+"E. Ice", 0, event.partialTicks);
-                  }
-                  // Enchanted Packed Ice
-                  else if (texture.contains("Enchanted Packed Ice")) {
-                     highlightBlock(new Color(0x361ba6), entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
-                     RenderUtil.draw3DString(StringPos, ChatFormatting.DARK_BLUE+"E. Packed Ice", 0, event.partialTicks);
-                  }
-                  // Highlight everything else gray
-                  else {
-                     highlightBlock(Color.lightGray, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
-                     RenderUtil.draw3DString(StringPos, ChatFormatting.GRAY+"Trash", 0, event.partialTicks);
-                  }
+               // White gift
+               if (texture.contains("White Gift")) {
+                  highlightBlock(Color.WHITE, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
+                  RenderUtil.draw3DString(StringPos, ChatFormatting.WHITE+"White Gift", 0, event.partialTicks);
+               }
+               // Green Gift
+               else if (texture.contains("Green Gift")) {
+                  highlightBlock(Color.GREEN, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
+                  RenderUtil.draw3DString(StringPos, ChatFormatting.GREEN+"Green Gift", 0, event.partialTicks);
+               }
+               // Red Gift
+               else if (texture.contains("Red Gift")) {
+                  highlightBlock(Color.RED, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
+                  RenderUtil.draw3DString(StringPos, ChatFormatting.RED+"Red Gift", 0, event.partialTicks);
+               }
+               // Glacial Talisman
+               else if (texture.contains("Talisman")) {
+                  highlightBlock(Color.ORANGE, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
+                  RenderUtil.draw3DString(StringPos, ChatFormatting.GOLD+"Talisman", 0, event.partialTicks);
+               }
+               // Glacial Frag
+               else if (texture.contains("Fragment")) {
+                  highlightBlock(Color.MAGENTA, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
+                  RenderUtil.draw3DString(StringPos, ChatFormatting.LIGHT_PURPLE+"Frag", 0, event.partialTicks);
+               }
+               // Packed Ice
+               else if (texture.contains("Enchanted Ice")) {
+                  highlightBlock(new Color(0x0a0d61), entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
+                  RenderUtil.draw3DString(StringPos, ChatFormatting.DARK_BLUE+"E. Ice", 0, event.partialTicks);
+               }
+               // Enchanted Packed Ice
+               else if (texture.contains("Enchanted Packed Ice")) {
+                  highlightBlock(new Color(0x361ba6), entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
+                  RenderUtil.draw3DString(StringPos, ChatFormatting.DARK_BLUE+"E. Packed Ice", 0, event.partialTicks);
+               }
+               // Highlight everything else gray
+               else {
+                  highlightBlock(Color.lightGray, entity.posX-0.5, entity.posY+1.5, entity.posZ-0.5, 1.0D,event.partialTicks);
+                  RenderUtil.draw3DString(StringPos, ChatFormatting.GRAY+"Trash", 0, event.partialTicks);
                }
             }
          }
-         if(skyblockfeatures.config.icecaveHighlightWalls) GlStateManager.enableDepth();
       }
+      if(skyblockfeatures.config.icecaveHighlightWalls) GlStateManager.enableDepth();
    }
 
    public static void highlightBlock(Color c, double d, double d1, double d2, double size,float ticks) {

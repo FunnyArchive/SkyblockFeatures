@@ -21,7 +21,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class MinionOverlay {
     @SubscribeEvent
     public void onDrawContainerTitle(GuiContainerEvent.TitleDrawnEvent.Post event) {
-        if (event.gui instanceof GuiChest && skyblockfeatures.config.minionOverlay) {
+        if (event.gui !=null && event.gui instanceof GuiChest && skyblockfeatures.config.minionOverlay) {
             GuiChest gui = (GuiChest) event.gui;
             ContainerChest chest = (ContainerChest) gui.inventorySlots;
             IInventory inv = chest.getLowerChestInventory();

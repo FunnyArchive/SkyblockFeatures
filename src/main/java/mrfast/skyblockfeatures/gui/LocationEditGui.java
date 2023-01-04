@@ -79,8 +79,8 @@ public class LocationEditGui extends GuiScreen {
     /**
      * Set the coordinates when the mouse moves.
      */
-    float prevX = 0;
-    float prevY = 0;
+    public static float prevX = 0;
+    public static float prevY = 0;
     protected void onMouseMove(int mouseX, int mouseY) {
         ScaledResolution sr = new ScaledResolution(mc);
         float minecraftScale = sr.getScaleFactor();

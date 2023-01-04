@@ -59,8 +59,12 @@ public class HighlightCobblestone {
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
-        if(!skyblockfeatures.config.highlightCobblestone) return;
-        cobblestonePostitions.clear();
+        try {
+            if(!skyblockfeatures.config.highlightCobblestone) return;
+            cobblestonePostitions.clear();
+        } catch(Exception e) {
+
+        }
     }
 
     @SubscribeEvent

@@ -34,9 +34,9 @@ import mrfast.skyblockfeatures.features.impl.handlers.KeyShortcuts;
 import mrfast.skyblockfeatures.features.impl.hidestuff.HideStuff;
 import mrfast.skyblockfeatures.features.impl.mining.CommisionsTracker;
 import mrfast.skyblockfeatures.features.impl.mining.HighlightCobblestone;
+import mrfast.skyblockfeatures.features.impl.mining.MetalDetectorSolver;
 import mrfast.skyblockfeatures.features.impl.mining.MiningFeatures;
 import mrfast.skyblockfeatures.features.impl.misc.*;
-import mrfast.skyblockfeatures.features.impl.misc.TreecapCooldown;
 import mrfast.skyblockfeatures.features.impl.overlays.*;
 import mrfast.skyblockfeatures.features.impl.trackers.*;
 import mrfast.skyblockfeatures.listeners.ChatListener;
@@ -183,7 +183,7 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new DefenceDisplay());
         MinecraftForge.EVENT_BUS.register(new HideStuff());
         MinecraftForge.EVENT_BUS.register(new ActionBarListener());
-        MinecraftForge.EVENT_BUS.register(new CompactChat());
+        // MinecraftForge.EVENT_BUS.register(new CompactChat());
         MinecraftForge.EVENT_BUS.register(new BetterParties());
         MinecraftForge.EVENT_BUS.register(new CommisionsTracker());
         MinecraftForge.EVENT_BUS.register(new FairySoulWaypoints());
@@ -202,6 +202,12 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new IceTreasureTracker());
         MinecraftForge.EVENT_BUS.register(new EnderNodeTracker());
         MinecraftForge.EVENT_BUS.register(new HighlightCobblestone());
+        MinecraftForge.EVENT_BUS.register(new MissingTalismans());
+        MinecraftForge.EVENT_BUS.register(new PlayerDiguiser());
+        MinecraftForge.EVENT_BUS.register(new AutoAuctionFlip());
+        MinecraftForge.EVENT_BUS.register(new MetalDetectorSolver());
+        MinecraftForge.EVENT_BUS.register(new ChronomotronSolver());
+        MinecraftForge.EVENT_BUS.register(new UltrasequencerSolver());
 
 
         // Solvers
@@ -255,6 +261,8 @@ public class skyblockfeatures {
 
         if (!cch.getCommands().containsKey("fakePlayer")) cch.registerCommand(new FakePlayerCommand());
 
+        if (!cch.getCommands().containsKey("networth")) cch.registerCommand(new NetworthCommand());
+
         if (!cch.getCommands().containsKey("rp")) {
             ((AccessorCommandHandler) cch).getCommandSet().add(new RepartyCommand());
             ((AccessorCommandHandler) cch).getCommandMap().put("rp", new RepartyCommand());
@@ -278,6 +286,7 @@ public class skyblockfeatures {
     public boolean start = true;
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
+        skyblockfeatures.config.autoAuctionFlipMargin = skyblockfeatures.config.autoAuctionFlipMargin.replaceAll("[^0-9]", "");
         if (event.phase != TickEvent.Phase.START) return;
         if(start) {
             smallItems = skyblockfeatures.config.smallItems;
@@ -301,7 +310,7 @@ public class skyblockfeatures {
                 mc.thePlayer.sendChatMessage(msg);
             }
         }
-
+        
         if (ticks % 20 == 0) {
             if (mc.thePlayer != null) {
                 Utils.checkForSkyblock();
@@ -399,14 +408,15 @@ public class skyblockfeatures {
     private static boolean toggled = true;
 
     public final static KeyBinding favoritePetKeybind = new KeyBinding("Toggle Favorite Pet", Keyboard.KEY_F, "Skyblock Features");
-    public final static KeyBinding reloadAH = new KeyBinding("Reload AH", Keyboard.KEY_R, "Skyblock Features");
-
+    public final static KeyBinding reloadAH = new KeyBinding("Reload Party Finder/Auction House", Keyboard.KEY_R, "Skyblock Features");
+    public final static KeyBinding openBestFlipKeybind = new KeyBinding("Open Best Flip", Keyboard.KEY_J, "Skyblock Features");
     
     @EventHandler
     public void inist(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
         ClientRegistry.registerKeyBinding(favoritePetKeybind);
         ClientRegistry.registerKeyBinding(reloadAH);
+        ClientRegistry.registerKeyBinding(openBestFlipKeybind);
 
         toggleSprint = new KeyBinding("Toggle Sprint", Keyboard.KEY_I, "Skyblock Features");
         ClientRegistry.registerKeyBinding(toggleSprint);
@@ -424,8 +434,6 @@ public class skyblockfeatures {
         }
         if (toggled) {
             KeyBinding.setKeyBindState(mc.gameSettings.keyBindSprint.getKeyCode(), true);
-        } else {
-            KeyBinding.setKeyBindState(mc.gameSettings.keyBindSprint.getKeyCode(), false);
         }
     }
 }

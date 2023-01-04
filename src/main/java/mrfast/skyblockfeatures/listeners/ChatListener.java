@@ -52,7 +52,11 @@ public class ChatListener {
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
-        barCount = 0;
+        try {
+            barCount = 0;
+        } catch(Exception e) {
+
+        }
     }
     
     @SubscribeEvent(receiveCanceled = true, priority = EventPriority.HIGHEST)
@@ -68,7 +72,7 @@ public class ChatListener {
             mc.thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "skyblockfeatures updated your set Hypixel API key to " + EnumChatFormatting.DARK_GREEN + apiKey));
         }
 
-        if (unformatted.startsWith("Dungeon Finder")) {
+        if (unformatted.startsWith("Party Finder")) {
             String[] args = unformatted.split(" ");
             if(args[3] != null) {
                 new Thread(() -> {

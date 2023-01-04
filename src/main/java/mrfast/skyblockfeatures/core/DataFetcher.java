@@ -17,27 +17,12 @@ public class DataFetcher {
 
     private static long lastReload = 0;
 
-    private static void loadData() {
-        String dataUrl = skyblockfeatures.config.dataURL;
-        new Thread(() -> {
-            JsonObject fetchurData = APIUtil.getJSONResponse(dataUrl + "solvers/fetchur.json");
-            for (Map.Entry<String, JsonElement> solution : fetchurData.entrySet()) {
-                MiningFeatures.fetchurItems.put(solution.getKey(), solution.getValue().getAsString());
-            }
-            for (Map.Entry<String, JsonElement> sellPrice : APIUtil.getJSONResponse(dataUrl + "constants/sellprices.json").entrySet()) {
-                ItemFeatures.sellPrices.put(sellPrice.getKey(), sellPrice.getValue().getAsDouble());
-            }
-        }).start();
-    }
-
     private static void clearData() {
         ItemFeatures.sellPrices.clear();
-        MiningFeatures.fetchurItems.clear();
     }
 
     public static void reloadData() {
         clearData();
-        loadData();
     }
 
     public static String[] getStringArrayFromJsonArray(JsonArray jsonArray) {

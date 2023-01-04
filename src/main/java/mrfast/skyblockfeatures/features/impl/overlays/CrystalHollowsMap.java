@@ -1,6 +1,11 @@
 package mrfast.skyblockfeatures.features.impl.overlays;
 
+import java.awt.Color;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import javax.vecmath.Vector2d;
 
 import org.lwjgl.opengl.GL11;
 
@@ -29,14 +34,20 @@ public class CrystalHollowsMap {
     static boolean start = false;   
     static int ticks = 0;
     public static HashMap<String,BlockPos> locations = new HashMap<>();
+    public static List<Vector2d> playerBreadcrumbs = new ArrayList<>();
     @SubscribeEvent
     public void onload(WorldEvent.Load event) {
-        locations.clear();
-        loaded = false;
-        ticks = 0;
-        start = false;
-        if(Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && skyblockfeatures.config.CrystalHollowsMap) {
-            start = true;
+        try {
+            locations.clear();
+            playerBreadcrumbs.clear();
+            loaded = false;
+            ticks = 0;
+            start = false;
+            if(Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && skyblockfeatures.config.CrystalHollowsMap) {
+                start = true;
+            }
+        } catch(Exception e) {
+            
         }
     }
     
@@ -45,6 +56,12 @@ public class CrystalHollowsMap {
     public void onTick(TickEvent.ClientTickEvent event) {
         if(start && Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && skyblockfeatures.config.CrystalHollowsMap) {
             ticks++;
+            if(ticks%4==0) {
+                Vector2d vector = new Vector2d((Utils.GetMC().thePlayer.posX-202)/4.9,(Utils.GetMC().thePlayer.posZ-202)/4.9);
+                if(!playerBreadcrumbs.contains(vector)) {
+                    playerBreadcrumbs.add(vector);
+                }
+            }
             if(ticks >= 40) {
                 loaded = true;
                 ticks = 0;
@@ -59,6 +76,9 @@ public class CrystalHollowsMap {
         }
     }
 
+    static double lastPlayerX = 0;
+    static double lastPlayerZ = 0;
+    static double lastPlayerR = 0;
 
     static {
         new CHMap();
@@ -80,6 +100,13 @@ public class CrystalHollowsMap {
                             Utils.GetMC().getTextureManager().bindTexture(map);
                             Utils.drawTexturedRect(0, 0, 512/4,512/4, 0, 1, 0, 1, GL11.GL_NEAREST);
                         GlStateManager.popMatrix();
+                        GlStateManager.pushMatrix();
+                        for(int i=1;i<playerBreadcrumbs.size();i++) {
+                            if(i<playerBreadcrumbs.size()-1) {
+                                Utils.drawLine((int) playerBreadcrumbs.get(i).x, (int) playerBreadcrumbs.get(i).y,(int)  playerBreadcrumbs.get(i+1).x,(int)  playerBreadcrumbs.get(i+1).y, new Color(0,0,0),5);
+                            }
+                        }
+                        GlStateManager.popMatrix();
     
                         for(String name:locations.keySet()) {
                             ResourceLocation locationIcon = new ResourceLocation("skyblockfeatures","map/locations/"+Utils.cleanColour(name.toLowerCase())+".png");
@@ -98,9 +125,26 @@ public class CrystalHollowsMap {
                         }
 
                         EntityPlayerSP player = Utils.GetMC().thePlayer;
-                        double x = Math.round((player.posX-202)/4.9);
-                        double z = Math.round((player.posZ-202)/4.9);
+                        double x = lastPlayerX;
+                        double z = lastPlayerZ;
+                        double rotation = lastPlayerR;
     
+                        double newX = Math.round((player.posX-202)/4.9);
+                        double newZ = Math.round((player.posZ-202)/4.9);
+                        double newRotation = player.rotationYawHead;
+
+                        double deltaX = newX-x;
+                        double deltaZ = newZ-z;
+                        double deltaR = newRotation-rotation;
+
+                        x+=deltaX/50;
+                        z+=deltaZ/50;
+                        rotation+=deltaR/50;
+
+                        lastPlayerX = x;
+                        lastPlayerZ = z;
+                        lastPlayerR = rotation;
+
                         GlStateManager.color(1, 1, 1, 1);
                         Utils.GetMC().getTextureManager().bindTexture(playerIcon);
                         GlStateManager.pushMatrix();

@@ -3,6 +3,7 @@ package mrfast.skyblockfeatures.features.impl.misc;
 import java.util.HashMap;
 import java.util.List;
 
+import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.skyblockfeatures.skyblockfeatures;
@@ -37,42 +38,48 @@ public class ItemFeatures {
         NBTTagCompound extraAttr = ItemUtil.getExtraAttributes(item);
         String itemId = ItemUtil.getSkyBlockItemID(extraAttr);
 
-        boolean isSuperpairsReward = false;
-
-        if (item != null && mc.thePlayer.openContainer != null && StringUtils.startsWith(SBInfo.getInstance().lastOpenContainerName, "Superpairs (")) {
-            if (StringUtils.stripControlCodes(ItemUtil.getDisplayName(item)).equals("Enchanted Book")) {
-                List<String> lore = ItemUtil.getItemLore(item);
-                if (lore.size() >= 3) {
-                    if (lore.get(0).equals("§8Item Reward") && lore.get(1).isEmpty()) {
-                        String line2 = StringUtils.stripControlCodes(lore.get(2));
-                        String enchantName = line2.substring(0, line2.lastIndexOf(" ")).replaceAll(" ", "_").toUpperCase();
-                        itemId = "ENCHANTED_BOOK-" + enchantName + "-" + item.stackSize;
-                        isSuperpairsReward = true;
-                    }
-                }
-            }
-        }
         
         if (itemId != null) {
             if (skyblockfeatures.config.showLowestBINPrice) {
-                String auctionIdentifier = isSuperpairsReward ? itemId : AuctionData.getIdentifier(item);
-                if (auctionIdentifier != null) {
+                String auctionIdentifier = AuctionData.getIdentifier(item);
+                if (auctionIdentifier != null && item!=null) {
                     Double valuePer = AuctionData.lowestBINs.get(auctionIdentifier);
-                    if (skyblockfeatures.config.showLowestBINPrice&&valuePer!=null) {
-                        String total = isSuperpairsReward ? NumberUtil.nf.format(valuePer) : NumberUtil.nf.format(valuePer * item.stackSize);
-                        event.toolTip.add("§6Lowest BIN Price: §b" + total + (item.stackSize > 1 && !isSuperpairsReward ? " §7(" + NumberUtil.nf.format(Math.round(valuePer)) + " each§7)" : ""));
+                    
+                    NBTTagCompound enchants = ItemUtil.getExtraAttributes(item).getCompoundTag("enchantments");
+                    Double enchantValue = 0d;
+                    Double starValue = 0d;
+                    try {
+                        starValue = AutoAuctionFlip.starValue(item.getDisplayName());
+                        for(String enchant:enchants.getKeySet()) {enchantValue+=AutoAuctionFlip.getEnchantWorth(enchant,enchants.getInteger(enchant));}
+                    } catch (Exception e) {
+                        // TODO: handle exception
                     }
 
+                    if (skyblockfeatures.config.showEstimatedPrice && valuePer!=null) {
+                        Double total = Math.floor(valuePer+starValue+enchantValue) * item.stackSize;
+                        event.toolTip.add("§6Estimated Price: §b" + NumberUtil.nf.format(total));
+                    }
+
+                    if (skyblockfeatures.config.showLowestBINPrice && valuePer!=null) {
+                        String total = NumberUtil.nf.format(valuePer * item.stackSize);
+                        event.toolTip.add("§6Lowest BIN Price: §b" + total + (item.stackSize > 1 ? " §7(" + NumberUtil.nf.format(Math.round(valuePer)) + " each§7)" : ""));
+                    }
+                    
                     valuePer = AuctionData.bazaarPrices.get(auctionIdentifier);
                     if (valuePer != null) {
-                        String total = isSuperpairsReward ? NumberUtil.nf.format(valuePer) : NumberUtil.nf.format(valuePer * item.stackSize);
-                        event.toolTip.add("§6Lowest Bazaar Price: §b" + total + (item.stackSize > 1 && !isSuperpairsReward ? " §7(" + NumberUtil.nf.format(Math.round(valuePer)) + " each§7)" : ""));
+                        String total = NumberUtil.nf.format(valuePer * item.stackSize);
+                        event.toolTip.add("§6Lowest Bazaar Price: §b" + total + (item.stackSize > 1 ? " §7(" + NumberUtil.nf.format(Math.round(valuePer)) + " each§7)" : ""));
                     }
 
                     Double avgValuePer = AuctionData.averageLowestBINs.get(auctionIdentifier);
                     if (skyblockfeatures.config.showAvgLowestBINPrice && avgValuePer!=null) {
-                        String total = isSuperpairsReward ? NumberUtil.nf.format(valuePer) : NumberUtil.nf.format(avgValuePer * item.stackSize);
-                        event.toolTip.add("§6Average BIN Price: §b" + total + (item.stackSize > 1 && !isSuperpairsReward ? " §7(" + NumberUtil.nf.format(Math.round(avgValuePer)) + " each§7)" : ""));
+                        String total = NumberUtil.nf.format(avgValuePer * item.stackSize);
+                        event.toolTip.add("§6Average BIN Price: §b" + total + (item.stackSize > 1 ? " §7(" + NumberUtil.nf.format(Math.round(avgValuePer)) + " each§7)" : ""));
+                    }
+
+                    JsonObject auctionData = AuctionData.getItemAuctionInfo(auctionIdentifier);
+                    if (skyblockfeatures.config.showSalesPerDay && auctionData!=null) {
+                        event.toolTip.add("§6Sales Per Day: §b" + NumberUtil.nf.format(auctionData.get("sales").getAsInt()));
                     }
                 }
             }

@@ -91,7 +91,7 @@ public abstract class MixinGuiContainer extends GuiScreen {
         try {
             if (MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.SlotClickEvent(that, inventorySlots, slot, slotId, clickedButton, clickType))) ci.cancel();
         } catch (Throwable e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
     }
 

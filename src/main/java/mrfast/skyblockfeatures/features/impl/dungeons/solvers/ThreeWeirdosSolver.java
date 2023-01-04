@@ -32,7 +32,11 @@ public class ThreeWeirdosSolver {
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
-        riddleChest = null;
+        try {
+            riddleChest = null;
+        } catch(Exception e) {
+
+        }
     }
 
     @SubscribeEvent
@@ -43,7 +47,7 @@ public class ThreeWeirdosSolver {
         if (message.contains("[NPC]") && skyblockfeatures.config.ThreeWeirdosSolver) {
             for (String solution : riddleSolutions) {
                 if (message.contains(solution)) {
-                    String npcName = message.split(" ")[2].replace(":","");
+                    String npcName = message.split(" ")[1].replace(":","");
                     Utils.SendMessage(EnumChatFormatting.GOLD+""+ EnumChatFormatting.BOLD+"The rewards in " + StringUtils.stripControlCodes(npcName)+"'s Chest");
                     if (riddleChest == null) {
                         for (Entity entity : mc.theWorld.loadedEntityList) {

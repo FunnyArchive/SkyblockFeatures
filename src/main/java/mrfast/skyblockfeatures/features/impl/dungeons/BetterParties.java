@@ -21,6 +21,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
@@ -33,6 +34,11 @@ import mrfast.skyblockfeatures.utils.Utils;
 public class BetterParties {
     boolean done = false;
     boolean canRefresh = true;
+    @SubscribeEvent
+    public void onWorldChange(WorldEvent.Load event) {
+        done = false;
+        canRefresh = true;
+    }
     @SubscribeEvent
     public void onKeyInput(GuiScreenEvent.KeyboardInputEvent keyboardInputEvent) {
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;
@@ -71,7 +77,7 @@ public class BetterParties {
 
     @SubscribeEvent
     public void onDrawContainerTitle(GuiContainerEvent.TitleDrawnEvent.Post event) {
-        if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest)) return;
+        if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest) || event.gui == null) return;
         if(!skyblockfeatures.config.betterpartys) return;
         GuiChest chest = (GuiChest) Minecraft.getMinecraft().currentScreen;
         ContainerChest cont = (ContainerChest) chest.inventorySlots;

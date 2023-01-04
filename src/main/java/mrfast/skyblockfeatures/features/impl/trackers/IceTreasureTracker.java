@@ -50,8 +50,12 @@ public class IceTreasureTracker {
     static double coinsPerHour = 0;
     @SubscribeEvent
     public void onload(WorldEvent.Load event) {
-        seconds = 0;
-        hidden = true;
+        try {
+            seconds = 0;
+            hidden = true;
+        } catch(Exception e) {
+
+        }
     }
 
     @SubscribeEvent

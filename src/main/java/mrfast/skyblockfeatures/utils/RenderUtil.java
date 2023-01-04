@@ -1,6 +1,7 @@
 package mrfast.skyblockfeatures.utils;
 
 import java.awt.Color;
+import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
@@ -301,4 +302,12 @@ public class RenderUtil {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.popMatrix();
     }
+
+    public static void drawLines(List<Vec3> solution, Color color, float f, float partialTicks, boolean b) {
+        for(int i=0;i<solution.size();i++) {
+            if(i!=solution.size()-1) draw3DLine(solution.get(i), solution.get(i+1), 3, color, partialTicks);
+        }
+    }
+
+
 }

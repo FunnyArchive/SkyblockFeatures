@@ -6,17 +6,6 @@ import gg.essential.vigilance.data.*;
 import java.io.File;
 
 public class Config extends Vigilant {
-
-    @Property(
-            type = PropertyType.TEXT,
-            name = "skyblockfeatures Data",
-            description = "URL for skyblockfeatures data.",
-            category = "General",
-            subcategory = "API",
-            hidden = true
-    )
-    public String dataURL = "https://raw.githubusercontent.com/skyblockfeatures/skyblockfeaturessMod-Data/main/";
-
     @Property(
             type = PropertyType.TEXT,
             name = "Hypixel API Key",
@@ -81,6 +70,15 @@ public class Config extends Vigilant {
             subcategory = "Miscellaneous"
     )
     public boolean dungeonBlocks = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Quick Close Chest",
+            description = "Press any key or click to close secret chest screen",
+            category = "§1§rDungeons",
+            subcategory = "Miscellaneous"
+    )
+    public boolean quickCloseChest = false;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -176,7 +174,7 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Glacial Cave Ice Treasure Detector Through Walls",
             description = "§cWarning Use At Own Risk",
-            category = "§1§rFarming",
+            category = "Mining",
 	    subcategory = "Glacial Cave"
     )
     public boolean icecaveHighlightWalls = false;
@@ -238,7 +236,7 @@ public class Config extends Vigilant {
     @Property(
             type = PropertyType.SWITCH,
             name = "Mana Display",
-            description = "Moveable mana pog",
+            description = "Moveable mana",
             category = "General",
             subcategory = "Health & Mana Bars"
     )
@@ -309,6 +307,24 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Show Missing Accessories",
+            description = "Shows a list of what talismans your missing when in you accessory bag",
+            category = "Miscellaneous",
+            subcategory = "Quality of Life"
+    )
+    public boolean showMissingAccessories = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Show Extra Profile Info",
+            description = "Shows a a players networth,discord,weight, and skill avg when you right click on someone",
+            category = "Miscellaneous",
+            subcategory = "Quality of Life"
+    )
+    public boolean extraProfileInfo = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Hide Armor Bar",
             description = "Hide the armor icons above health bar",
             category = "General",
@@ -370,6 +386,24 @@ public class Config extends Vigilant {
             hidden = true
     )
     public boolean jerryMode = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Player Disguiser",
+            description = "Disguises players as different things",
+            category = "§1§rFun",
+            subcategory = "Player Disguiser"
+    )
+    public boolean playerDiguiser = false;
+
+    @Property(
+            type = PropertyType.SELECTOR,
+            name = "Disguise Players As",
+            category = "§1§rFun",
+            subcategory = "Player Disguiser",
+            options = {"Cow","Pig","Sheep","Zombie","Jerry","Enderman","Giant","Baby Player"}
+    )
+    public int DisguisePlayersAs = 0;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -501,15 +535,6 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "Fetchur Solver",
-            description = "Tells you what item Fetchur wants.",
-            category = "Mining",
-            subcategory = "Solvers"
-    )
-    public boolean fetchurSolver = false;
-
-    @Property(
-            type = PropertyType.SWITCH,
             name = "Treasure Chest Solver",
             description = "Highlights the particles to look at when opening a treasure chest.",
             category = "Mining",
@@ -573,6 +598,15 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Mines of Divan Metal Detector Solver",
+            description = "Shows where the treasure chest is in the Mines of Divan",
+            category = "Mining",
+            subcategory = "Solvers"
+    )
+    public boolean MetalDetectorSolver = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Show NPC Sell Price",
             description = "Shows the NPC Sell Price on certain items.",
             category = "Miscellaneous",
@@ -607,6 +641,16 @@ public class Config extends Vigilant {
             subcategory = "Quality of Life"
     )
     public boolean timestamps = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Enchanting Solvers",
+            description = "Solvers for ultrasequencer and chronomotron",
+            category = "Miscellaneous",
+            subcategory = "Quality of Life"
+    )
+    public boolean enchantingSolvers = false;
+    
 
     @Property(
             type = PropertyType.SWITCH,
@@ -745,6 +789,24 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Show Sales Per Day",
+            description = "Shows the sales per day for various items in Skyblock.",
+            category = "Miscellaneous",
+            subcategory = "Auction Utilities"
+    )
+    public boolean showSalesPerDay = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Show Estimated Price",
+            description = "Shows the estimated price for various items in Skyblock. Calculates using things like enchants and stars",
+            category = "Miscellaneous",
+            subcategory = "Auction Utilities"
+    )
+    public boolean showEstimatedPrice = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Show Average BIN Price",
             description = "Shows the average Buy It Now price for various items in Skyblock.",
             category = "Miscellaneous",
@@ -781,6 +843,143 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Auto Auction Flip",
+            description = "Shows you auctions that have a flip value of more than your margin.\n§cDo not put 100% trust in the mod, it can and probably will make mistakes.",
+            category = "§1§rAuto Auction Flipper",
+            subcategory = "Settings"
+    )
+    public boolean autoAuctionFlip = false;
+
+    @Property(
+            type = PropertyType.TEXT,
+            name = "Profit Margin",
+            description = "The minimum amount of profit for an auction to be shown to you. §3(Numbers Only)",
+            category = "§1§rAuto Auction Flipper",
+            subcategory = "Settings"
+    )
+    public String autoAuctionFlipMargin = "100000";
+    
+    @Property(
+            type = PropertyType.TEXT,
+            name = "Minimum Volume",
+            description = "The minimum amount of sales per day for an auction to be shown to you. §3(Numbers Only)",
+            category = "§1§rAuto Auction Flipper",
+            subcategory = "Settings"
+    )
+    public String autoAuctionFlipMinVolume = "10";
+ 
+    @Property(
+            type = PropertyType.TEXT,
+            name = "Minimum Flip Percent",
+            description = "The minimum percent of profit from an auction to be shown to you. §3(Numbers Only)",
+            category = "§1§rAuto Auction Flipper",
+            subcategory = "Settings"
+    )
+    public String autoAuctionFlipMinPercent = "0";
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Make Purse Max Amount",
+            description = "Make the amount of money you can spend on an auction equal to your purse.",
+            category = "§1§rAuto Auction Flipper",
+            subcategory = "Settings"
+    )
+    public boolean autoAuctionFlipSetPurse = false;
+    
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Change Item Estimation",
+        description = "Include stars and enchants into item value estimation.",
+        category = "§1§rAuto Auction Flipper",
+        subcategory = "Settings"
+    )
+    public boolean autoFlipAddEnchAndStar = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Refresh Countdown",
+            description = "Show the countdown till refreshing.",
+            category = "§1§rAuto Auction Flipper",
+            subcategory = "Settings"
+    )
+    public boolean autoAuctionFlipCounter = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Auto Open",
+            description = "Opens up the bid menu for the item with the highest profit. \n§cThis is slower than holding down key",
+            category = "§1§rAuto Auction Flipper",
+            subcategory = "Settings"
+    )
+    public boolean autoAuctionFlipOpen = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Easy Auction Buying",
+            description = "By spam clicking you will auto buy the item from bin auction view that opens with Auto Auction Flip.",
+            category = "§1§rAuto Auction Flipper",
+            subcategory = "Settings"
+    )
+    public boolean autoAuctionFlipEasyBuy = false;
+
+//   Auto Auction Filters
+
+    @Property(
+            type = PropertyType.CHECKBOX,
+            name = "Filter Out Pets",
+            description = "Filters out pets from Auto Flipper",
+            category = "§1§rAuto Auction Flipper",
+            subcategory = "§1§rFilter"
+    )
+    public boolean autoAuctionFilterOutPets = false;
+
+    @Property(
+            type = PropertyType.CHECKBOX,
+            name = "Filter Out Skins",
+            description = "Filters out minion skins, armor skins, and pet skins from Auto Flipper",
+            category = "§1§rAuto Auction Flipper",
+            subcategory = "§1§rFilter"
+    )
+    public boolean autoAuctionFilterOutSkins = false;
+
+    @Property(
+            type = PropertyType.CHECKBOX,
+            name = "Filter Out Furniture",
+            description = "Filters out furniture from Auto Flipper",
+            category = "§1§rAuto Auction Flipper",
+            subcategory = "§1§rFilter"
+    )
+    public boolean autoAuctionFilterOutFurniture = false;
+
+    @Property(
+            type = PropertyType.CHECKBOX,
+            name = "Filter Out Dyes",
+            description = "Filters out dyes from Auto Flipper",
+            category = "§1§rAuto Auction Flipper",
+            subcategory = "§1§rFilter"
+    )
+    public boolean autoAuctionFilterOutDyes = false;
+
+    @Property(
+            type = PropertyType.CHECKBOX,
+            name = "Filter Out Runes",
+            description = "Filters out runes from Auto Flipper",
+            category = "§1§rAuto Auction Flipper",
+            subcategory = "§1§rFilter"
+    )
+    public boolean autoAuctionFilterOutRunes = false;
+
+    @Property(
+            type = PropertyType.PARAGRAPH,
+            name = "Blacklist",
+            description = "Filters out any items who's name contain something from the blacklist. Seperate each entry with a §a;§r.\n§aExample: 'perfect;bonemerang;zombie soldier'",
+            category = "§1§rAuto Auction Flipper",
+            subcategory = "§1§rFilter"
+    )
+    public String autoAuctionBlacklist = "";
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Favorite Pets",
             description = "Highlights Favorite Pets",
             category = "Pets",
@@ -797,14 +996,14 @@ public class Config extends Vigilant {
     )
     public boolean hideFishingHooks = false;
 
-    @Property(
-            type = PropertyType.SWITCH,
-            name = "Compact Chat",
-            description = "Compact Chat allows you to have a cleaner chat by stacking duplicates into a single message.",
-            category = "Spam",
-            subcategory = "Display"
-    )
-    public boolean compactChat = false;
+//     @Property(
+//             type = PropertyType.SWITCH,
+//             name = "Compact Chat",
+//             description = "Compact Chat allows you to have a cleaner chat by stacking duplicates into a single message.",
+//             category = "Spam",
+//             subcategory = "Display"
+//     )
+//     public boolean compactChat = false;
 
      @Property(
             type = PropertyType.SWITCH,

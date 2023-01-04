@@ -17,7 +17,11 @@ public class CapeUtils {
 
     @SubscribeEvent
     public void worldLoadEvent(WorldEvent.Load event) {
-        final_name_list = get_names();
+        try {
+            final_name_list = get_names();
+        } catch(Exception e) {
+
+        }
     }
 
     public static ArrayList<String> get_names() {

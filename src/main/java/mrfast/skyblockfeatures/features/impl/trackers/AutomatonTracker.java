@@ -48,11 +48,15 @@ public class AutomatonTracker {
     static int totalSeconds = 0;
     @SubscribeEvent
     public void onload(WorldEvent.Load event) {
-        seconds = 0;
-        kills = 0;
-        oldKills = 0;
-        hidden = true;
-        totalSeconds = 0;
+        try {
+            seconds = 0;
+            kills = 0;
+            oldKills = 0;
+            hidden = true;
+            totalSeconds = 0;
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
     }
 
     @SubscribeEvent

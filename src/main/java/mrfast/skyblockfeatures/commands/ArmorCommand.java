@@ -139,12 +139,12 @@ public class ArmorCommand extends CommandBase {
 						String itemLore = "";
 						if (display.hasKey("Lore", ItemUtil.NBT_LIST)) {
 							NBTTagList lore = display.getTagList("Lore", ItemUtil.NBT_STRING);
-			
+							
 							List<String> loreAsList = new ArrayList<>();
 							for (int lineNumber = 0; lineNumber < lore.tagCount(); lineNumber++) {
 								loreAsList.add(lore.getStringTagAt(lineNumber));
 							}
-			
+							
 							itemLore = itemName+"\n"+String.join("\n",Collections.unmodifiableList(loreAsList));
 						}
 						// NBT is served boots -> helmet

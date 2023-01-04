@@ -30,9 +30,13 @@ public class GemstoneMiningOverlay {
     public static List<Gemstone> gemstones = new ArrayList<>();
     @SubscribeEvent
     public void onload(WorldEvent.Load event) {
-        seconds = 0;
-        start = false;
-        gemstones.clear();
+        try {
+            seconds = 0;
+            start = false;
+            gemstones.clear();
+        } catch(Exception e) {
+
+        }
     }
 
     public class Gemstone {

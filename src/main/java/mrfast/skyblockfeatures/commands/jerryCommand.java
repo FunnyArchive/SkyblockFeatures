@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.features.impl.misc.MiscFeatures;
 import mrfast.skyblockfeatures.utils.Utils;
@@ -31,12 +33,6 @@ public class jerryCommand extends CommandBase {
 	}
 	@Override
 	public void processCommand(ICommandSender arg0, String[] args) throws CommandException {
-        skyblockfeatures.config.jerryMode=!skyblockfeatures.config.jerryMode;
-        if(!skyblockfeatures.config.jerryMode) {
-            for(Entity entity:MiscFeatures.tracker.keySet()) {
-                Utils.GetMC().theWorld.removeEntityFromWorld(MiscFeatures.tracker.get(entity).getEntityId());
-            }
-            MiscFeatures.tracker.clear();
-        }
+        Utils.SendMessage(ChatFormatting.RED+"This command has been moved to the player disguises feature");
 	}
 }

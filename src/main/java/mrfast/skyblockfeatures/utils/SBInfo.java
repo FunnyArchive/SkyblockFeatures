@@ -41,6 +41,7 @@ public class SBInfo {
 
     private static final Pattern timePattern = Pattern.compile(".+(am|pm)");
     public String location = "";
+    public float coins = 0;
     public String date = "";
     public String currentProfile = null;
     public String time = "";
@@ -74,11 +75,15 @@ public class SBInfo {
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
-        lastLocRaw = -1;
-        locraw = null;
-        mode = null;
-        joinedWorld = System.currentTimeMillis();
-        lastOpenContainerName = null;
+        try {
+            lastLocRaw = -1;
+            locraw = null;
+            mode = null;
+            joinedWorld = System.currentTimeMillis();
+            lastOpenContainerName = null;
+        } catch(Exception e) {
+
+        }
     }
 
     @SubscribeEvent
@@ -175,7 +180,9 @@ public class SBInfo {
                 if (objTextLast) {
                     objective = line;
                 }
-
+                if(line.contains("Purse")) {
+                    coins = Float.parseFloat(Utils.cleanColour(line).replaceAll("[^0-9]", ""))/10;
+                }
                 objTextLast = line.equals("Objective");
             }
         } catch (Exception e) {

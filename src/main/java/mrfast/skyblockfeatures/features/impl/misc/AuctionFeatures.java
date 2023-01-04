@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.lwjgl.input.Keyboard;
+
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.skyblockfeatures.skyblockfeatures;
@@ -15,12 +17,15 @@ import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.NumberUtil;
 import mrfast.skyblockfeatures.utils.StringUtils;
 import mrfast.skyblockfeatures.utils.Utils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
@@ -34,6 +39,51 @@ public class AuctionFeatures {
     public void onSeconds(SecondPassedEvent event) {
         selfItems.clear();
     }
+
+    boolean canRefresh = true;
+
+    @SubscribeEvent
+    public void onGuiClose(GuiContainerEvent.CloseWindowEvent event) {
+        canRefresh = true;
+    }
+    @SubscribeEvent
+    public void onKeyInput(GuiScreenEvent.KeyboardInputEvent keyboardInputEvent) {
+        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+        if (screen instanceof GuiChest && Keyboard.isKeyDown(skyblockfeatures.reloadAH.getKeyCode()) && canRefresh){
+            canRefresh = false;
+            ContainerChest ch = (ContainerChest) ((GuiChest)screen).inventorySlots;
+            if (!ch.getLowerChestInventory().getName().contains("Auctions")) return;
+            int selectedSlot = 0;
+            for(int i=0;i<=45;i+=9) {
+                ItemStack item = ch.getSlot(i).getStack();
+                List<String> lore = ItemUtil.getItemLore(item);
+                for(String line:lore) {
+                    if(line.contains("Currently")) selectedSlot = i;
+                }
+            }
+            int slot = selectedSlot;
+            Utils.setTimeout(()->{
+                if(slot<45) {
+                    Utils.GetMC().playerController.windowClick(Utils.GetMC().thePlayer.openContainer.windowId, slot+9, 0, 3, Utils.GetMC().thePlayer);
+                    Utils.setTimeout(()->{
+                        Utils.GetMC().playerController.windowClick(Utils.GetMC().thePlayer.openContainer.windowId,slot, 0, 3, Utils.GetMC().thePlayer);
+                    }, 200);
+                    Utils.setTimeout(()->{
+                        canRefresh = true;
+                    }, 500);
+                } else {
+                    Utils.GetMC().playerController.windowClick(Utils.GetMC().thePlayer.openContainer.windowId, slot-9, 0, 3, Utils.GetMC().thePlayer);
+                    Utils.setTimeout(()->{
+                        Utils.GetMC().playerController.windowClick(Utils.GetMC().thePlayer.openContainer.windowId,slot, 0, 3, Utils.GetMC().thePlayer);
+                    }, 200);
+                    Utils.setTimeout(()->{
+                        canRefresh = true;
+                    }, 500);
+                }
+            }, 100);
+        }
+    }
+    ItemStack hoverItemStack = null;
     
     @SubscribeEvent
     public void onTick(ClientTickEvent event) {
@@ -94,7 +144,9 @@ public class AuctionFeatures {
                                 Double profit = (avgBinValue*stack.stackSize) - price;
                                 if (price < (avgBinValue)) {
                                     if(profit > 100000) {
-                                        Gui.drawRect(x, y, x + 16, y + 16, new Color(85, 255, 85, 255).getRGB());
+                                        // Draw Green Square
+                                        Gui.drawRect(x, y, x + 16, y + 16, new Color(85, 255, 85).getRGB());
+                                        Utils.drawLine(x, y, x + 16, y + 16, new Color(255, 85, 85));
                                     }
                                 }
                                 items.put(stack, profit);
@@ -181,7 +233,7 @@ public class AuctionFeatures {
 
     @SubscribeEvent
     public void onDrawContainerTitle(GuiContainerEvent.TitleDrawnEvent.Post event) {
-        if (event.gui instanceof GuiChest && skyblockfeatures.config.auctionGuis) {
+        if (event.gui !=null && event.gui instanceof GuiChest && skyblockfeatures.config.auctionGuis) {
             GuiChest gui = (GuiChest) event.gui;
             ContainerChest chest = (ContainerChest) gui.inventorySlots;
             IInventory inv = chest.getLowerChestInventory();
@@ -209,7 +261,7 @@ public class AuctionFeatures {
                                 }
                             }
                             if(resellProfit != 0) {
-                                Utils.drawGraySquareWithBorder(180, 0, 150, 7*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
+                                Utils.drawGraySquareWithBorder(180, 0, 150, (int) (8.5*Utils.GetMC().fontRendererObj.FONT_HEIGHT),3);
                                 String resellString = resellProfit>0? ChatFormatting.GREEN+"":ChatFormatting.RED+"";
                                 Boolean Manipulated = false;
                                 if(lowestBin != null && avgBin!=null) {
@@ -221,25 +273,26 @@ public class AuctionFeatures {
                                         Manipulated = true;
                                     }
                                 }
-                                if(lowestBin == null && avgBin != null) {
-                                    if(cost > avgBin+150000) {
-                                        Manipulated = true;
-                                    }   
-                                }
                                 if(avgBin == null && lowestBin!=null) {
                                     if(cost > lowestBin+150000) {
                                         Manipulated = true;
                                     }
                                 }
-                            
+                                cost = (int) Math.floor(cost);
                                 String avgBinString = avgBin != null?ChatFormatting.GOLD+NumberUtil.nf.format(avgBin):ChatFormatting.RED+"Unknown";
                                 String lowestBinString = lowestBin != null?ChatFormatting.GOLD+NumberUtil.nf.format(lowestBin):ChatFormatting.RED+"Unknown";
+                                double putupTax = Math.floor(lowestBin*0.01);
+                                double collectAuctionTax = cost>=1000000?Math.floor(lowestBin*0.01):0;
+                                double totalTax = Math.floor(putupTax+collectAuctionTax);
+
+                                String resellTax = collectAuctionTax>0?(NumberUtil.nf.format(totalTax))+ChatFormatting.GRAY+" (2%)":NumberUtil.nf.format(putupTax)+ChatFormatting.GRAY+" (1%)";
                                 String[] lines = {
                                     ChatFormatting.WHITE+"Item Price: "+ChatFormatting.GOLD+NumberUtil.nf.format(cost),
                                     ChatFormatting.WHITE+"Lowest BIN: "+lowestBinString,
                                     ChatFormatting.WHITE+"Average BIN: "+avgBinString,
+                                    ChatFormatting.WHITE+"Taxes: "+ChatFormatting.GOLD+resellTax,
                                     "",
-                                    ChatFormatting.WHITE+"Resell Profit: "+resellString+(NumberUtil.nf.format(resellProfit))
+                                    ChatFormatting.WHITE+"Resell Profit: "+resellString+(NumberUtil.nf.format(Math.floor(resellProfit*0.99)))
                                 };
                                 int lineCount = 0;
                                 for(String line:lines) {
@@ -247,14 +300,14 @@ public class AuctionFeatures {
                                     lineCount++;
                                 }
                                 if(Manipulated) {
-                                    Utils.drawGraySquareWithBorder(180, 8*Utils.GetMC().fontRendererObj.FONT_HEIGHT, 170, 3*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
-                                    Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+""+ChatFormatting.BOLD+"Warning! This items price", 190, 8*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
-                                    Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+""+ChatFormatting.BOLD+"is higher than usual!", 190, 9*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
+                                    Utils.drawGraySquareWithBorder(180, 9*Utils.GetMC().fontRendererObj.FONT_HEIGHT, 170, 3*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
+                                    Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+""+ChatFormatting.BOLD+"Warning! This items price", 190, 9*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
+                                    Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+""+ChatFormatting.BOLD+"is higher than usual!", 190, 10*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
                                 }
                                 if(stack.getDisplayName().contains("Minion Skin")) {
-                                    Utils.drawGraySquareWithBorder(180, 8*Utils.GetMC().fontRendererObj.FONT_HEIGHT, 170, 3*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
-                                    Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+""+ChatFormatting.BOLD+"Warning! Minion skins are", 190, 8*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
-                                    Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+""+ChatFormatting.BOLD+"often manipulated!!", 190, 9*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
+                                    Utils.drawGraySquareWithBorder(180, 9*Utils.GetMC().fontRendererObj.FONT_HEIGHT, 170, 3*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
+                                    Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+""+ChatFormatting.BOLD+"Warning! Minion skins are", 190, 9*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
+                                    Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+""+ChatFormatting.BOLD+"often manipulated!!", 190, 10*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
                                 }
                             }
                         }

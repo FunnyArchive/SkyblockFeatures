@@ -25,6 +25,7 @@ public class AuctionData {
     public static final HashMap<String, Double> lowestBINs = new HashMap<>();
     public static final HashMap<String, Double> averageLowestBINs = new HashMap<>();
     public static final HashMap<String, Double> bazaarPrices = new HashMap<>();
+    static JsonObject auctionPricesJson = null;
     public static final StopWatch reloadTimer = new StopWatch();
 
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -69,9 +70,17 @@ public class AuctionData {
                 }
             break;
         }
-        // hi
         return id;
     }
+
+    public static JsonObject getItemAuctionInfo(String internalname) {
+		if (auctionPricesJson == null) return null;
+		JsonElement e = auctionPricesJson.get(internalname);
+		if (e == null) {
+			return null;
+		}
+		return e.getAsJsonObject();
+	}
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
@@ -86,12 +95,19 @@ public class AuctionData {
                     for (Map.Entry<String, JsonElement> items : data.entrySet()) {
                         lowestBINs.put(items.getKey(), Math.floor(items.getValue().getAsDouble()));
                     }
-                    AuctionUtil.getMyApiGZIPAsync("https://moulberry.codes/auction_averages_lbin/3day.json.gz", (jsonObject) -> {
+                    AuctionUtil.getMyApiGZIPAsync("https://moulberry.codes/auction_averages_lbin/1day.json.gz", (jsonObject) -> {
                         for (Map.Entry<String, JsonElement> items : jsonObject.entrySet()) {
                             averageLowestBINs.put(items.getKey(), Math.floor(items.getValue().getAsDouble()));
                         }
                     }, ()->{});
                 }, "skyblockfeatures-FetchAuctionData").start();
+            }
+            if (skyblockfeatures.config.auctionGuis || skyblockfeatures.config.autoAuctionFlip) {
+                new Thread(() -> {
+                    AuctionUtil.getMyApiGZIPAsync("https://moulberry.codes/auction_averages/3day.json.gz", (jsonObject) -> {
+                        auctionPricesJson = jsonObject;
+                    }, ()->{});
+                }, "skyblockfeatures-FetchAuctionStuff").start();
             }
             if (bazaarPrices.size() == 0 && (skyblockfeatures.config.showLowestBINPrice || skyblockfeatures.config.minionOverlay || skyblockfeatures.config.dungeonChestProfit || skyblockfeatures.config.auctionGuis) && skyblockfeatures.config.apiKey.length()>1) {
                 new Thread(() -> {
@@ -110,5 +126,4 @@ public class AuctionData {
             }
         }
     }
-
 }

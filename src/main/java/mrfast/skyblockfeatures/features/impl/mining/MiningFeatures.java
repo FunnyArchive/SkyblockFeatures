@@ -45,11 +45,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class MiningFeatures {
 
-    public static LinkedHashMap<String, String> fetchurItems = new LinkedHashMap<>();
-
     private static final Minecraft mc = Minecraft.getMinecraft();
     private static BlockPos puzzlerSolution = null;
-
 
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
     public void onChat(ClientChatReceivedEvent event) {
@@ -93,31 +90,6 @@ public class MiningFeatures {
                     mc.thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Mine the block highlighted in " + EnumChatFormatting.RED + EnumChatFormatting.BOLD + "RED" + EnumChatFormatting.GREEN + "!"));
                 }
             }
-        }
-
-        if (skyblockfeatures.config.fetchurSolver && unformatted.startsWith("[NPC] Fetchur:")) {
-            if (fetchurItems.size() == 0) {
-                mc.thePlayer.addChatMessage(new ChatComponentText("§cskyblockfeatures did not load any solutions."));
-                DataFetcher.reloadData();
-                return;
-            }
-            String solution = fetchurItems.keySet().stream().filter(unformatted::contains).findFirst().map(fetchurItems::get).orElse(null);
-            new Thread(() -> {
-                try {
-                    Thread.sleep(2500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (solution != null) {
-                    mc.thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Fetchur needs: " + EnumChatFormatting.DARK_GREEN + EnumChatFormatting.BOLD + solution + EnumChatFormatting.GREEN + "!"));
-                } else {
-                    if (unformatted.contains("its") || unformatted.contains("theyre")) {
-                        System.out.println("Missing Fetchur item: " + unformatted);
-                        mc.thePlayer.addChatMessage(new ChatComponentText(String.format("§cskyblockfeatures couldn't determine the Fetchur item. There were %s solutions loaded.", fetchurItems.size())));
-                    }
-                }
-
-            }).start();
         }
     }
     @SubscribeEvent
@@ -207,11 +179,15 @@ public class MiningFeatures {
 
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
-        puzzlerSolution = null;
-        treasureChest = null;
-        particles.clear();
-        enderParticles.clear();
-        progress = 0;
+        try {
+            puzzlerSolution = null;
+            treasureChest = null;
+            particles.clear();
+            enderParticles.clear();
+            progress = 0;
+        } catch(Exception e) {
+
+        }
     }
     BlockPos treasureChest = null;
     List<Vec3> particles = new ArrayList<Vec3>();

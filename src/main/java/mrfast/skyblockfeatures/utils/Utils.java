@@ -1,43 +1,40 @@
 package mrfast.skyblockfeatures.utils;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
+import org.lwjgl.util.vector.Vector2f;
 
-import com.mojang.realmsclient.client.Ping;
+import com.mojang.realmsclient.gui.ChatFormatting;
 
-import mrfast.skyblockfeatures.events.PacketEvent;
 import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
 import mrfast.skyblockfeatures.utils.graphics.SmartFontRenderer;
 import mrfast.skyblockfeatures.utils.graphics.colors.CommonColors;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.scoreboard.ScoreObjective;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.minecraftforge.common.MinecraftForge;
 
 public class Utils {
 
@@ -189,7 +186,7 @@ public class Utils {
         final Collection<NetworkPlayerInfo> players = Utils.GetMC().getNetHandler().getPlayerInfoMap();
         final List<String> list = new ArrayList<>();
         for (final NetworkPlayerInfo info : players) {
-            list.add(info.getGameProfile().getName());
+            if(!info.getGameProfile().getName().contains("!")) list.add(info.getGameProfile().getName());
         }
         return list.toArray(new String[0]);
     }
@@ -288,7 +285,10 @@ public class Utils {
 
     public static void SendMessage(String string)
     {
-        if (Utils.GetMC().ingameGUI != null || Utils.GetMC().thePlayer == null) Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(string));
+        if (Utils.GetMC().ingameGUI != null || Utils.GetMC().thePlayer == null) {
+            Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(ChatFormatting.LIGHT_PURPLE+"[SBF] "+string));
+            // MinecraftForge.EVENT_BUS.post(new ClientChatReceivedEvent((byte) 0, new ChatComponentText(string)));
+        }
     }
 
     private static char[] c = new char[]{'K', 'M', 'B', 'T'};
@@ -362,6 +362,65 @@ public class Utils {
         Utils.drawTexturedRect(x, y, width, height, 0, 1, 0, 1, GL11.GL_NEAREST);
     }
 
+    public static void drawLine(int x1, int y1, int x2, int y2,Color color,float width) {
+        GlStateManager.disableLighting();
+		RenderHelper.disableStandardItemLighting();
+		GlStateManager.disableTexture2D();
+		GlStateManager.enableBlend();
+		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        
+		Vector2f vec = new Vector2f(x2 - x1, y2 - y1);
+		vec.normalise(vec);
+		Vector2f side = new Vector2f(vec.y, -vec.x);
+        
+		GL11.glLineWidth(width);
+		GL11.glEnable(GL11.GL_LINE_SMOOTH);
+        GlStateManager.color(color.getRed(), color.getGreen(), color.getBlue(),(float) 0.3);
+
+		Tessellator tessellator = Tessellator.getInstance();
+		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+
+        worldrenderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
+        worldrenderer.pos(x1 - side.x + side.x, y1 - side.y + side.y, 0.0D).endVertex();
+        worldrenderer.pos(x2 - side.x + side.x, y2 - side.y + side.y, 0.0D).endVertex();
+        tessellator.draw();
+        GlStateManager.enableTexture2D();
+	}
+    
+
+    public static void drawLineInGui(int x1, int y1, int x2, int y2,Color color,float width) {
+        ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
+        int guiLeft = (sr.getScaledWidth() - 176) / 2;
+        int guiTop = (sr.getScaledHeight() - 222) / 2;
+        x1 = guiLeft + x1;
+        y1 = guiTop + y1;
+        x2 = guiLeft + x2;
+        y2 = guiTop + y2;
+
+        GlStateManager.disableLighting();
+		RenderHelper.disableStandardItemLighting();
+		GlStateManager.disableTexture2D();
+		GlStateManager.enableBlend();
+		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        
+		Vector2f vec = new Vector2f(x2 - x1, y2 - y1);
+		vec.normalise(vec);
+		Vector2f side = new Vector2f(vec.y, -vec.x);
+        
+		GL11.glLineWidth(width);
+		GL11.glEnable(GL11.GL_LINE_SMOOTH);
+        GlStateManager.color(color.getRed(), color.getGreen(), color.getBlue(),(float) 0.3);
+
+		Tessellator tessellator = Tessellator.getInstance();
+		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+
+        worldrenderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
+        worldrenderer.pos(x1 - side.x + side.x, y1 - side.y + side.y, 0.0D).endVertex();
+        worldrenderer.pos(x2 - side.x + side.x, y2 - side.y + side.y, 0.0D).endVertex();
+        tessellator.draw();
+        GlStateManager.enableTexture2D();
+	}
+
     public static void drawGraySquareWithBorder(int x,int y,int width,int height,int borderWidth) {
         drawGraySquare(x,y,width,height);
 
@@ -380,6 +439,23 @@ public class Utils {
 
         // Left
         Utils.drawTexturedRect(x, y, borderWidth, height, 0, 1, 0, 1, GL11.GL_NEAREST);
+    }
+
+    public static void drawOnSlot(int size, int xSlotPos, int ySlotPos, int colour) {
+		ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
+		int guiLeft = (sr.getScaledWidth() - 176) / 2;
+		int guiTop = (sr.getScaledHeight() - 222) / 2;
+		int x = guiLeft + xSlotPos;
+		int y = guiTop + ySlotPos;
+		// Move down when chest isn't 6 rows
+		if (size != 90) y += (6 - (size - 36) / 9) * 9;
+		
+		GL11.glTranslated(0, 0, 1);
+		Gui.drawRect(x, y, x + 16, y + 16, colour);
+		GL11.glTranslated(0, 0, -1);
+	}
+
+    public static void drawLine(float prevX, float prevY, int xDisplayPosition, int yDisplayPosition, Color blue) {
     }
 
 }

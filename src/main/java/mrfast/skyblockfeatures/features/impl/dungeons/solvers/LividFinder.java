@@ -20,7 +20,11 @@ public class LividFinder {
     public static Entity livid = null;
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
-        livid = null;
+        try {
+            livid = null;
+        } catch(Exception e) {
+
+        }
     }
 
     @SubscribeEvent

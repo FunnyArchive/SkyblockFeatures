@@ -42,7 +42,6 @@ Added highlight dungeon bats, livid solver, crystal hollows treasure chest solve
 - Average BIN Price
 - Helpful Auction Guis (for flipping, selling, and buying)
 - Highlight Auction Flips
-- Compact Chat
 - Ad Blocker (Hides people advertising in chat)
 - Highlight Glowing Mushrooms
 - Minion Profit Overlay (Coins Per Hour, Cooldown, ect)

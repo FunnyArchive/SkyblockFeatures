@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.lwjgl.input.Mouse;
+
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.skyblockfeatures.skyblockfeatures;
@@ -27,6 +29,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.renderer.GlStateManager;
@@ -62,9 +65,13 @@ public class DungeonsFeatures {
     public static Entity livid = null;
 
     @SubscribeEvent
-    public void onWorldChange(WorldEvent.Load event) {
-        foundLivid = false;
-        livid = null;
+    public void onWorldChanges2(WorldEvent.Load event) {
+        try {
+            foundLivid = false;
+            livid = null;
+        } catch (Exception e) {
+
+        }
     }
 
     @SubscribeEvent
@@ -78,13 +85,17 @@ public class DungeonsFeatures {
     
     @SubscribeEvent
     public void onWorldChanges(WorldEvent.Load event) {
-        count = 0;
-        dungeonFloor = null;
-        hasBossSpawned = false;
-        bloodguy = null;
-        blessings.clear();
-        livid = null;
-        foundLivid = false;
+        try {
+            count = 0;
+            dungeonFloor = null;
+            hasBossSpawned = false;
+            bloodguy = null;
+            blessings.clear();
+            livid = null;
+            foundLivid = false;
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
     }
 
     String delimiter = EnumChatFormatting.AQUA.toString() + EnumChatFormatting.STRIKETHROUGH.toString() + "" + EnumChatFormatting.BOLD + "--------------------------------------";
@@ -102,7 +113,12 @@ public class DungeonsFeatures {
         }
 
         if(text.contains("Granted you ") && text.contains("and")) {
-            int stat1 = Integer.parseInt(text.split(" ")[2]);
+            int stat1 = 0;
+            try {
+                stat1 = Integer.parseInt(text.split(" ")[2]);
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
             String stat1Type = text.split(" ")[3];
             if(blessings.get(stat1Type) == null) blessings.put(stat1Type, stat1);
             else {
@@ -354,6 +370,33 @@ public class DungeonsFeatures {
         @Override
         public int getWidth() {
             return ScreenRenderer.fontRenderer.getStringWidth("§dBlessing of Life XIII")+12;
+        }
+    }
+
+    @SubscribeEvent
+    public void onKeyInput(GuiScreenEvent.KeyboardInputEvent keyboardInputEvent) {
+        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+        if (!skyblockfeatures.config.quickCloseChest || !Utils.inDungeons) return;
+
+        if (screen instanceof GuiChest){
+            ContainerChest ch = (ContainerChest) ((GuiChest)screen).inventorySlots;
+            if (!("Large Chest".equals(ch.getLowerChestInventory().getName()) || "Chest".equals(ch.getLowerChestInventory().getName()))) return;
+
+            Minecraft.getMinecraft().thePlayer.closeScreen();
+        }
+    }
+
+    @SubscribeEvent
+    public void onMouseInput(GuiScreenEvent.MouseInputEvent.Pre mouseInputEvent) {
+        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+        if (!skyblockfeatures.config.quickCloseChest || !Utils.inDungeons) return;
+        if (Mouse.getEventButton() == -1) return;
+
+        if (screen instanceof GuiChest){
+            ContainerChest ch = (ContainerChest) ((GuiChest)screen).inventorySlots;
+            if (!("Large Chest".equals(ch.getLowerChestInventory().getName()) || "Chest".equals(ch.getLowerChestInventory().getName()))) return;
+
+            Minecraft.getMinecraft().thePlayer.closeScreen();
         }
     }
 }

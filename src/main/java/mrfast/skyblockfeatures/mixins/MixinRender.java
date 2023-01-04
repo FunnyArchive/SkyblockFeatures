@@ -7,27 +7,20 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityOtherPlayerMP;
+import mrfast.skyblockfeatures.skyblockfeatures;
+import mrfast.skyblockfeatures.events.CheckRenderEntityEvent;
+import mrfast.skyblockfeatures.features.impl.dungeons.DungeonBlocks;
+import mrfast.skyblockfeatures.utils.SpecialColour;
+import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityBat;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
-import mrfast.skyblockfeatures.skyblockfeatures;
-import mrfast.skyblockfeatures.events.CheckRenderEntityEvent;
-import mrfast.skyblockfeatures.features.impl.dungeons.DungeonBlocks;
-import mrfast.skyblockfeatures.features.impl.dungeons.DungeonsFeatures;
-import mrfast.skyblockfeatures.features.impl.dungeons.Nametags;
-import mrfast.skyblockfeatures.utils.SpecialColour;
-import mrfast.skyblockfeatures.utils.Utils;
 
 @Mixin(Render.class)
 public abstract class MixinRender<T extends Entity> {
-
     @Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
     private void shouldRender(T livingEntity, ICamera camera, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> cir) {
         if(!Utils.isNPC(livingEntity) && livingEntity.getDistanceToEntity(Utils.GetMC().thePlayer) > 49 && Utils.inSkyblock && skyblockfeatures.config.HideFarEntity && !Utils.inDungeons) {

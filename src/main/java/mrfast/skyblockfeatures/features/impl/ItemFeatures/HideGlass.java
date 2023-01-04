@@ -90,6 +90,7 @@ public class HideGlass {
         return itemStack != null && (itemStack.getItem() == Item.getItemFromBlock(Blocks.stained_glass_pane)
                 || itemStack.getItem() == Item.getItemFromBlock(Blocks.glass_pane)) && itemStack.hasDisplayName() && Utils.cleanColour(itemStack.getDisplayName().trim()).isEmpty();
     }
+    
     @SubscribeEvent
     public void onSlotClick(ChestSlotClickedEvent event) {
         if(event.inventoryName.contains("Practice Terminal")) {
@@ -98,7 +99,7 @@ public class HideGlass {
                     if(event.item.getUnlocalizedName().contains("red")) {
                         Utils.playLoudSound("note.pling", 2);
                         TerminalCommand.clicked.add(event.slot.slotNumber);
-                        TerminalCommand.Terminal.setInventorySlotContents(event.slot.slotNumber, new ItemStack(Blocks.stained_glass_pane, 1, 5).setStackDisplayName(ChatFormatting.RESET+""));
+                        TerminalCommand.Terminal.setInventorySlotContents(event.slot.slotNumber, new ItemStack(Blocks.stained_glass_pane, 1, 5).setStackDisplayName(" "));
                         if(TerminalCommand.clicked.size() == 14) {
                             Utils.SendMessage(ChatFormatting.GREEN+"You completed 'Correct all the panes!' in "+(System.currentTimeMillis()-TerminalCommand.start)+"ms");
                             mc.thePlayer.closeScreen();
@@ -114,10 +115,6 @@ public class HideGlass {
             if(event.inventoryName.contains("✯")) event.setCanceled(true);
         } catch (Exception e) {
             //TODO: handle exception
-        }
-      
-        if(isEmptyGlassPane(event.item)) {
-            event.setCanceled(true);
         }
     }
 }

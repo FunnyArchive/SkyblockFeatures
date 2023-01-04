@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
@@ -13,8 +14,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 
+import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.utils.RenderUtil;
 import mrfast.skyblockfeatures.utils.Utils;
 /**
@@ -24,17 +27,28 @@ import mrfast.skyblockfeatures.utils.Utils;
  */
 public class BlazeSolver {
 
-    static Entity highestBlaze = null;
-    static Entity lowestBlaze = null;
     static boolean higherToLower = false;
     static boolean foundChest = false;
+    static List<Blaze> blazes = new ArrayList<>();
 
+    public class Blaze {
+        int health = 0;
+        Entity EntityBlaze;
+
+        public Blaze(Entity entity,int hp) {
+            health = hp;
+            EntityBlaze = entity;
+        }
+    }
+    
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
-        higherToLower = false;
-        foundChest = false;
-        lowestBlaze = null;
-        highestBlaze = null;
+        try {
+            higherToLower = false;
+            foundChest = false;
+        } catch(Exception e) {
+
+        }
     }
 
     @SubscribeEvent
@@ -45,27 +59,16 @@ public class BlazeSolver {
         EntityPlayerSP player = mc.thePlayer;
         World world = mc.theWorld;
 
-        if (Utils.inDungeons && world != null && player != null) {
-
+        if (Utils.inDungeons && world != null && player != null && skyblockfeatures.config.blazeSolver) {
+            blazes.clear();
             List<Entity> entities = world.getLoadedEntityList();
-            int highestHealth = 0;
-            highestBlaze = null;
-            int lowestHealth = 99999999;
-            lowestBlaze = null;
 
             for (Entity entity : entities) {
                 if (entity.getName().contains("Blaze") && entity.getName().contains("/")) {
                     String blazeName = StringUtils.stripControlCodes(entity.getName());
                     try {
                         int health = Integer.parseInt(blazeName.substring(blazeName.indexOf("/") + 1, blazeName.length() - 1));
-                        if (health > highestHealth) {
-                            highestHealth = health;
-                            highestBlaze = entity;
-                        }
-                        if (health < lowestHealth) {
-                            lowestHealth = health;
-                            lowestBlaze = entity;
-                        }
+                        blazes.add(new Blaze(entity, health));
                     } catch (NumberFormatException ex) {
                         ex.printStackTrace();
                     }
@@ -97,24 +100,40 @@ public class BlazeSolver {
 
     @SubscribeEvent
     public void onWorldRender(RenderWorldLastEvent event) {
-        if (Utils.inDungeons) {
+        if (Utils.inDungeons && skyblockfeatures.config.blazeSolver) {
             if (foundChest) {
-                if (lowestBlaze != null && !higherToLower) {
-                    AxisAlignedBB aabb = new AxisAlignedBB(lowestBlaze.posX - 0.5, lowestBlaze.posY - 2, lowestBlaze.posZ - 0.5, lowestBlaze.posX + 0.5, lowestBlaze.posY, lowestBlaze.posZ + 0.5);
+                // Low-High
+                blazes.sort((a,b)->{
+                    return a.health-b.health;
+                });
+                
+                Entity currentBlaze = null;
+                Entity nextBlaze = null;
+                try {
+                    if(higherToLower) {
+                        if(blazes.get(blazes.size()-1)!=null) currentBlaze = blazes.get(blazes.size()-1).EntityBlaze;
+                        if(blazes.get(blazes.size()-2)!=null) nextBlaze = blazes.get(blazes.size()-2).EntityBlaze;
+                    } else {
+                        if(blazes.get(0)!=null) currentBlaze = blazes.get(0).EntityBlaze;
+                        if(blazes.get(0)!=null) nextBlaze = blazes.get(1).EntityBlaze;
+                    }
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
+
+                // Highlight current blaze
+                if(currentBlaze !=null) {
+                    AxisAlignedBB aabb = new AxisAlignedBB(currentBlaze.posX - 0.5, currentBlaze.posY - 2, currentBlaze.posZ - 0.5, currentBlaze.posX + 0.5, currentBlaze.posY, currentBlaze.posZ + 0.5);
                     RenderUtil.drawOutlinedFilledBoundingBox(aabb, new Color(0x00FF00), event.partialTicks);
                 }
-                if (highestBlaze != null && higherToLower) {
-                    AxisAlignedBB aabb = new AxisAlignedBB(highestBlaze.posX - 0.5, highestBlaze.posY - 2, highestBlaze.posZ - 0.5, highestBlaze.posX + 0.5, highestBlaze.posY, highestBlaze.posZ + 0.5);
-                    RenderUtil.drawOutlinedFilledBoundingBox(aabb, new Color(0x00FF00), event.partialTicks);
+                // Highlight next blaze
+                if(nextBlaze !=null) {
+                    AxisAlignedBB aabb = new AxisAlignedBB(nextBlaze.posX - 0.5, nextBlaze.posY - 2, nextBlaze.posZ - 0.5, nextBlaze.posX + 0.5, nextBlaze.posY, nextBlaze.posZ + 0.5);
+                    RenderUtil.drawOutlinedFilledBoundingBox(aabb, new Color(0xFFFF00), event.partialTicks);
                 }
-            } else {
-                if (lowestBlaze != null) {
-                    AxisAlignedBB aabb = new AxisAlignedBB(lowestBlaze.posX - 0.5, lowestBlaze.posY - 2, lowestBlaze.posZ - 0.5, lowestBlaze.posX + 0.5, lowestBlaze.posY, lowestBlaze.posZ + 0.5);
-                    RenderUtil.drawOutlinedFilledBoundingBox(aabb, new Color(0x00FF00), event.partialTicks);
-                }
-                if (highestBlaze != null) {
-                    AxisAlignedBB aabb = new AxisAlignedBB(highestBlaze.posX - 0.5, highestBlaze.posY - 2, highestBlaze.posZ - 0.5, highestBlaze.posX + 0.5, highestBlaze.posY, highestBlaze.posZ + 0.5);
-                    RenderUtil.drawOutlinedFilledBoundingBox(aabb, new Color(0x00FF00), event.partialTicks);
+                // Draw line to next blaze
+                if(nextBlaze !=null && currentBlaze !=null) {
+                    RenderUtil.draw3DLine(currentBlaze.getPositionVector(), nextBlaze.getPositionVector(), 0, new Color(0x00FFFF), event.partialTicks);
                 }
             }
         }

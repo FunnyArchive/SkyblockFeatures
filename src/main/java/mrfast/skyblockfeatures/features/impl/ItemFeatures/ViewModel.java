@@ -8,14 +8,12 @@ import org.lwjgl.input.Keyboard;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import mrfast.skyblockfeatures.skyblockfeatures;
-import mrfast.skyblockfeatures.gui.commandaliases.elements.CleanButton;
 import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
 import mrfast.skyblockfeatures.utils.graphics.SmartFontRenderer;
 
 public class ViewModel {
     public static class ViewModelScreen extends GuiScreen {
 
-        public CleanButton undercutButton;
         public static GuiTextField xField;
         public static GuiTextField yField;
         public static GuiTextField zField;
