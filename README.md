@@ -1,7 +1,7 @@
 <div align="center">
     <!-- release -->
     <a href="https://github.com/MrFast-js/SkyblockFeatures/releases/latest" target="_blank">
-        <img src="https://img.shields.io/github/v/release/MrFast-js/SkyblockFeatures-REPO?color=informational&include_prereleases&label=release&logo=github&logoColor=white" alt="release">
+        <img src="https://img.shields.io/github/v/release/MrFast-js/SkyblockFeatures?color=informational&include_prereleases&label=release&logo=github&logoColor=white" alt="release">
     </a>
     <!-- lines -->
     <a href="https://github.com/MrFast-js/SkyblockFeatures/graphs/code-frequency" target="_blank">
