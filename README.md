@@ -33,7 +33,7 @@
 For Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
 
 #### Quick Start Guide
-- Download mod from releases[https://github.com/MrFast-js/SkyblockFeatures/releases/latest] tab
+- Download mod from [https://github.com/MrFast-js/SkyblockFeatures/releases/latest](releases) tab
 - Put mod into mods folder and start up game
 - type '/api new' into chat to set a new api key
 - type '/sf' for help
