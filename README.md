@@ -30,13 +30,13 @@
 
 For Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
 
-**Quick Start Guide**
+#### Quick Start Guide
 - Download mod from releases tab
 - Put mod into mods folder and start up game
 - type /api new into chat to set a new api key
 - type '/sf' for help
 
-**Best Feature List**
+#### Top Feature List
 ## Solvers:
 - Glacial Cave Treasure Finder
 - Highlight Correct Livid
