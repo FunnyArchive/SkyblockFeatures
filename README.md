@@ -44,6 +44,7 @@ For Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
 - 3 Weirdo Solver
 - Blaze Solver
 - Puzzler Solver
+- Chronomotron & Ultrasequencer Solver
 
 ## Dungeons:
 - Dungeon Blocks
@@ -78,6 +79,7 @@ For Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
 - Minion Profit Overlay (Coins Per Hour, Cooldown, ect)
 - Helpful Auction Guis (for flipping, selling, and buying)
 - Highlight Auction Flips
+- Show Extra Profile Info (Shows networth, skill avg and discord when looking at someones profile)
 
 ## Helpers:
 - Auto Auction Flipping Bot (like TFM/COFL)
