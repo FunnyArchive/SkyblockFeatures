@@ -109,3 +109,7 @@ For Beta Releases, Suggestions, and Support join the discord! https://discord.gg
 - /dungeons \<name\> (*Shows another players dungeon stats*)
 - /shrug \<msg\> (*Sends a message followed by a "¯\\_(ツ)_/¯"*)
 - /networth \<name\> (*Shows you a players networth*) *Provided by skyleamoe API*
+
+## License
+
+This project is licensed under MIT License, see [LICENSE](LICENSE) for more details.
