@@ -35,8 +35,8 @@ For Beta Releases, Suggestions, and Support join the discord! https://discord.gg
 #### Quick Start Guide
 - Download mod from [releases](https://github.com/MrFast-js/SkyblockFeatures/releases/latest) tab
 - Put mod into mods folder and start up game
-- type '/api new' into chat to set a new api key
-- type '/sf' for help
+- Type '/api new' into chat to set a new api key
+- Type '/sf' for help
 
 <h1 align="center">Top Feature List</h1>
 
