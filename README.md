@@ -26,7 +26,9 @@
 </div>
 <h1 align="center">Skyblock Features</h1>
 *A simple Hypixel Skyblock mod that adds features that are not commonly found in other mods but are very useful*
-<br><br>For Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
+
+
+For Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
 
 **Quick Start Guide**
 - Download mod from releases tab
@@ -35,45 +37,62 @@
 - type '/sf' for help
 
 **Best Feature List**
+## Solvers:
 - Glacial Cave Treasure Finder
+- Highlight Correct Livid
+- Crystal Hollows Treasure Chest Solver
+- 3 Weirdo Solver
+- Blaze Solver
+- Puzzler Solver
+
+## Dungeons:
 - Dungeon Blocks
 - Crypt Display
 - Highlight Dungeon Bats
-- Highlight Correct Livid
-- Crystal Hollows Treasure Chest Solver
-- Small Items
-- 3 Weirdo Solver
-- Blaze Solver
-- Show Gift Compass Waypoints
-- Dungeon Chest Profit
-- Fairy Soul Helper
-- Fishing Helper
-- Diana Mythological Helper
-- 1.7 Animations
 - Dungeon Nametags
 - Dungeon Teammate Glowing
 - Dungeon Map with Player Heads And Names
-- Glowing Players!
-- Glowing Items based on rarity
+- Dungeon Chest Profit
+
+## Trackers: 
 - Automaton Loot/Profit Tracker
 - Gemstone Profit Tracker
+- Endernode Tracker
+- Glacial Cave Treasure Tracker
+- Commissions Tracker
+
+## Mining:
 - Commissions Tracker
 - Crystal Hollows Map
-- Fancy Damage Numbers
+
+## Visual:
+- Small Items
+- 1.7 Animations
+- Glowing Players!
+- Glowing Items based on rarity
 - Glowing Zealots
+- Fancy Damage Numbers
+- Ad Blocker (Hides people advertising in chat)
+
+## Guis:
+- Minion Profit Overlay (Coins Per Hour, Cooldown, ect)
+- Helpful Auction Guis (for flipping, selling, and buying)
+- Highlight Auction Flips
+
+## Helpers:
+- Auto Auction Flipping Bot (like TFM/COFL)
+- Show Gift Compass Waypoints
+- Fairy Soul Helper
+- Fishing Helper
+- Diana Mythological Helper
 - Highlight Zealots Spawn Locations
 - 1.12 Crop Hitbox
 - Lowest BIN Price
 - Average BIN Price
-- Helpful Auction Guis (for flipping, selling, and buying)
-- Highlight Auction Flips
-- Compact Chat
-- Ad Blocker (Hides people advertising in chat)
 - Highlight Glowing Mushrooms
-- Minion Profit Overlay (Coins Per Hour, Cooldown, ect)
 - And Much More!
 
-**Best Command List**
+## Cool Commands:
 - /acc \<name\> (*Allows you see another players accessory bag*)
 - /vm (*Change the item view model*)
 - /terminal (*Allows you to practice a f7 dungeon terminal*)
