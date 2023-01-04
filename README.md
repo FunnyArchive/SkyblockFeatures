@@ -36,7 +36,7 @@ For Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
 - type /api new into chat to set a new api key
 - type '/sf' for help
 
-#### Top Feature List
+<h1 align="center">Top Feature List</h1>
 ## Solvers:
 - Glacial Cave Treasure Finder
 - Highlight Correct Livid
