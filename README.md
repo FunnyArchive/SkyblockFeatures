@@ -30,7 +30,7 @@
 *A simple Hypixel Skyblock mod that adds features that are not commonly found in other mods but are very useful*
 
 
-For Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
+For Beta Releases, Suggestions, and Support join the discord! https://discord.gg/UVXCPDAmJK
 
 #### Quick Start Guide
 - Download mod from [releases](https://github.com/MrFast-js/SkyblockFeatures/releases/latest) tab
