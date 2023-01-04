@@ -24,7 +24,7 @@
         <img src="https://img.shields.io/github/downloads/MrFast-js/SkyblockFeatures/total?label=downloads&color=informational&logo=GitHub" alt="downloads">
     </a>
 </div>
-# Skyblock Features
+<h1 align="center">Skyblock Features</h1>
 *A simple Hypixel Skyblock mod that adds features that are not commonly found in other mods but are very useful*
 <br><br>For Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
 
