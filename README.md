@@ -1,3 +1,4 @@
+<h1 align="center">Skyblock Features</h1>
 <div align="center">
     <!-- release -->
     <a href="https://github.com/MrFast-js/SkyblockFeatures/releases/latest" target="_blank">
@@ -24,7 +25,6 @@
         <img src="https://img.shields.io/github/downloads/MrFast-js/SkyblockFeatures/total?label=downloads&color=informational&logo=GitHub" alt="downloads">
     </a>
 </div>
-<h1 align="center">Skyblock Features</h1>
 *A simple Hypixel Skyblock mod that adds features that are not commonly found in other mods but are very useful*
 
 
