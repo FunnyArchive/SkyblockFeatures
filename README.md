@@ -1,3 +1,29 @@
+<div align="center">
+    <!-- release -->
+    <a href="https://github.com/MrFast-js/SkyblockFeatures/releases/latest" target="_blank">
+        <img src="https://img.shields.io/github/v/release/MrFast-js/SkyblockFeatures-REPO?color=informational&include_prereleases&label=release&logo=github&logoColor=white" alt="release">
+    </a>
+    <!-- lines -->
+    <a href="https://github.com/MrFast-js/SkyblockFeatures/graphs/code-frequency" target="_blank">
+        <img src="https://img.shields.io/tokei/lines/github/NotEnoughUpdates/NotEnoughUpdates?label=lines&color=informational&logo=GitHub" alt="lines">
+    </a>
+    <!-- license -->
+    <a href="./LICENSE" target="_blank">
+        <img src="https://img.shields.io/github/license/MrFast-js/SkyblockFeatures?color=informational" alt="license">
+    </a>
+    <!-- contributors -->
+    <a href="https://github.com/MrFast-js/SkyblockFeatures/graphs/contributors" target="_blank">
+        <img src="https://img.shields.io/github/contributors/MrFast-js/SkyblockFeatures?color=informational&logo=GitHub" alt="contributors">
+    </a>
+    <!-- discord -->
+    <a href="https://discord.gg/UVXCPDAmJK" target="_blank">
+        <img src="https://img.shields.io/discord/516977525906341928?label=discord&color=informational&logo=Discord&logoColor=FFFFFF" alt="discord">
+    </a>
+    <!-- downloads -->
+    <a href="https://github.com/MrFast-js/SkyblockFeatures/releases" target="_blank">
+        <img src="https://img.shields.io/github/downloads/MrFast-js/SkyblockFeatures/total?label=downloads&color=informational&logo=GitHub" alt="downloads">
+    </a>
+</div>
 # Skyblock Features
 *A simple Hypixel Skyblock mod that adds features that are not commonly found in other mods but are very useful*
 <br><br>For Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
