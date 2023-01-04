@@ -33,7 +33,6 @@
 - Put mod into mods folder and start up game
 - type /api new into chat to set a new api key
 - type '/sf' for help
-Added highlight dungeon bats, livid solver, crystal hollows treasure chest solver, small items, redid block/entity box highlights, blaze solver, 3 weirdos solver, cleaned up code
 
 **Best Feature List**
 - Glacial Cave Treasure Finder
