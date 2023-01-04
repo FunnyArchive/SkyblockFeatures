@@ -1,4 +1,4 @@
-<img src='https://user-images.githubusercontent.com/78495381/210632546-691f468d-f4e7-4b82-b1ff-8ea37591d957.png' style='user-select:none;'/>
+<img src='https://user-images.githubusercontent.com/78495381/210632546-691f468d-f4e7-4b82-b1ff-8ea37591d957.png' style='pointer-events: none;'/>
 <div align="center">
     <!-- release -->
     <a href="https://github.com/MrFast-js/SkyblockFeatures/releases/latest" target="_blank">
