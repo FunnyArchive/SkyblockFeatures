@@ -1,4 +1,6 @@
 <h1 align="center">Skyblock Features</h1>
+![image](https://user-images.githubusercontent.com/78495381/210632075-c8401a50-aa36-4c57-b67b-a03a557f078f.png)
+
 <div align="center">
     <!-- release -->
     <a href="https://github.com/MrFast-js/SkyblockFeatures/releases/latest" target="_blank">
