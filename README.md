@@ -89,6 +89,7 @@ For Suggestions and Support join the discord! https://discord.gg/UVXCPDAmJK
 - Fairy Soul Helper
 - Fishing Helper
 - Diana Mythological Helper
+- Endernode Highlighter
 - Highlight Zealots Spawn Locations
 - 1.12 Crop Hitbox
 - Lowest BIN Price
