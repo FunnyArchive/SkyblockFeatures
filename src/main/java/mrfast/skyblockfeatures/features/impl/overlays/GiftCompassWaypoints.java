@@ -1,34 +1,25 @@
 package mrfast.skyblockfeatures.features.impl.overlays;
 
+import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import java.awt.Color;
-
+import mrfast.skyblockfeatures.skyblockfeatures;
+import mrfast.skyblockfeatures.utils.RenderUtil;
+import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockIce;
 import net.minecraft.block.BlockPackedIce;
-import net.minecraft.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import mrfast.skyblockfeatures.skyblockfeatures;
-import mrfast.skyblockfeatures.utils.RenderUtil;
-import mrfast.skyblockfeatures.utils.Utils;
 
 public class GiftCompassWaypoints {
 

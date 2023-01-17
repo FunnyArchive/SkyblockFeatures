@@ -27,6 +27,18 @@ public abstract class GuiContainerEvent extends Event {
         }
     }
 
+    public static class AfterItemsDrawnEvent extends GuiContainerEvent {
+        public int mouseX, mouseY;
+        public float partialTicks;
+
+        public AfterItemsDrawnEvent(GuiContainer gui, Container container, int mouseX, int mouseY, float partialTicks) {
+            super(gui, container);
+            this.mouseX = mouseX;
+            this.mouseY = mouseY;
+            this.partialTicks = partialTicks;
+        }
+    }
+
     public static class TitleDrawnEvent extends GuiContainerEvent {
         public int mouseX, mouseY;
         public float partialTicks;
@@ -36,19 +48,6 @@ public abstract class GuiContainerEvent extends Event {
             this.mouseX = mouseX;
             this.mouseY = mouseY;
             this.partialTicks = partialTicks;
-        }
-
-        @Cancelable
-        public static class Pre extends TitleDrawnEvent {
-            public Pre(GuiContainer gui, Container container, int mouseX, int mouseY, float partialTicks) {
-                super(gui, container, mouseY, mouseY, partialTicks);
-            }
-        }
-
-        public static class Post extends TitleDrawnEvent {
-            public Post(GuiContainer gui, Container container, int mouseX, int mouseY, float partialTicks) {
-                super(gui, container, mouseY, mouseY, partialTicks);
-            }
         }
     }
 

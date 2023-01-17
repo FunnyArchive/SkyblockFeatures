@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.structure.FloatPair;
 import mrfast.skyblockfeatures.core.structure.GuiElement;
@@ -160,6 +162,11 @@ public class DungeonMap {
 		// Draw Username
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(0.75f, 0.75f, 0);
+		if(DungeonsFeatures.bloodguy!=null) {
+			if(DungeonsFeatures.bloodguy.getName().contains(shortName)) {
+				shortName = ChatFormatting.RED+shortName;
+			}
+		}
 		ScreenRenderer.fontRenderer.drawString(shortName,(float) (((x-2)-(FontUtils.getStringWidth(shortName)/3))*1.33), (float) ((z-13)*1.33),CommonColors.WHITE, SmartFontRenderer.TextAlignment.LEFT_RIGHT, SmartFontRenderer.TextShadow.NORMAL);
 		GlStateManager.popMatrix();
 		GlStateManager.pushMatrix();
@@ -386,7 +393,6 @@ public class DungeonMap {
 	}
 
 	private static final Minecraft mc = Minecraft.getMinecraft();
-	private static double newZ;
     
     static {
         new DungeonMapMove();

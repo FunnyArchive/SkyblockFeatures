@@ -11,7 +11,6 @@ import java.util.List;
 
 import org.apache.commons.codec.binary.Base64InputStream;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -257,7 +256,7 @@ public class AutoAuctionFlip {
 
                         double percentage = Math.floor(((valueOfTheItem/binPrice)-1)*100);
                         String[] lore = itemData.get("item_lore").getAsString().split("Â");
-                        
+                        // Utils.SendMessage("Checking Item: "+name);
                         auctionsFilteredThrough++;
                         // Filters
                         if(skyblockfeatures.config.autoAuctionFilterOutPets && id.contains("PET")) {
@@ -309,7 +308,7 @@ public class AutoAuctionFlip {
                         }
                         auctionsPassedFilteredThrough++;
                         
-                        if(Utils.GetMC().currentScreen == null) {
+                        if(Utils.GetMC().currentScreen == null && auctionData!=null) {
                             Auction auction = new Auction(auctionId, itemData, profit,name);
                             auctionFlips.add(auction);
 
@@ -330,6 +329,7 @@ public class AutoAuctionFlip {
                         }
                     } catch (java.io.IOException e) {
                         e.printStackTrace();
+                        // Utils.SendMessage("ERROR ON AUCTION FILTERING");
                         // TODO: handle exception
                     }
                 }
@@ -343,12 +343,7 @@ public class AutoAuctionFlip {
             reversed.add(auctionFlips.get(auctionFlips.size()-i-1));
         }
         auctionFlips = reversed;
-
-        // try {
-        //     Collections.sort(auctionFlips, Collections.reverseOrder());
-        // } catch (Exception e) {
-        //     // TODO: handle exception
-        // }
+        // Utils.SendMessage("Auctions reveresed");
     }
 
     private static final Minecraft mc = Minecraft.getMinecraft();

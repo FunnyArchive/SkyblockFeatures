@@ -19,7 +19,7 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import mrfast.skyblockfeatures.skyblockfeatures;
-import mrfast.skyblockfeatures.features.impl.handlers.ScoreboardHandler;
+import mrfast.skyblockfeatures.utils.ScoreboardUtil;
 import mrfast.skyblockfeatures.utils.Utils;
 
 public class Nametags {
@@ -48,8 +48,8 @@ public class Nametags {
                 double y = interpolate(player.lastTickPosY, player.posY, event.partialTicks) - Utils.GetMC().getRenderManager().viewerPosY;
                 double z = interpolate(player.lastTickPosZ, player.posZ, event.partialTicks) - Utils.GetMC().getRenderManager().viewerPosZ;
                 // renderNameTag(player, ChatFormatting.GREEN+player.getName(), x , y, z, event.partialTicks);
-                for (String line : ScoreboardHandler.getSidebarLines()) {
-                    String cleanedLine = ScoreboardHandler.cleanSB(line);
+                for (String line : ScoreboardUtil.getSidebarLines()) {
+                    String cleanedLine = ScoreboardUtil.cleanSB(line);
                     String cutShort = player.getName();
                     if(cutShort.length()>12) {
                         cutShort = cutShort.substring(0, 12);

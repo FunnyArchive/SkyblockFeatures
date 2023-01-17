@@ -1,20 +1,15 @@
 package mrfast.skyblockfeatures.features.impl.misc;
 
 import java.util.HashMap;
-import java.util.List;
 
 import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.skyblockfeatures.skyblockfeatures;
-import mrfast.skyblockfeatures.features.impl.ItemFeatures.HideGlass;
 import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
 import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.NumberUtil;
-import mrfast.skyblockfeatures.utils.SBInfo;
-import mrfast.skyblockfeatures.utils.StringUtils;
 import mrfast.skyblockfeatures.utils.Utils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.item.ItemStack;
@@ -25,9 +20,6 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ItemFeatures {
-
-    private final static Minecraft mc = Minecraft.getMinecraft();
-
     public static final HashMap<String, Double> sellPrices = new HashMap<>();
     public static final HashMap<String, Integer> bitCosts = new HashMap<>();
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -95,7 +87,7 @@ public class ItemFeatures {
                 }
             }
 
-            if (skyblockfeatures.config.showNPCSellPrice) {
+            if (skyblockfeatures.config.showNPCSellPrice && item!=null) {
                 Double valuePer = sellPrices.get(itemId);
                 if (valuePer != null) event.toolTip.add("§6NPC Value: §b" + NumberUtil.nf.format(valuePer * item.stackSize) + (item.stackSize > 1 ? " §7(" + NumberUtil.nf.format(valuePer) + " each§7)" : ""));
             }

@@ -85,7 +85,6 @@ public class NetworthCommand extends CommandBase {
 				return;
 			}
 
-			System.out.println(profileResponse);
 			profileResponse = profileResponse.get("profiles").getAsJsonObject();
 			
 			System.out.println("Player Data ");

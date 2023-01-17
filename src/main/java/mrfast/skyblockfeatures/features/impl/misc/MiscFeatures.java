@@ -1,11 +1,9 @@
 package mrfast.skyblockfeatures.features.impl.misc;
 
 import java.awt.Color;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 import com.google.gson.JsonObject;
@@ -15,6 +13,7 @@ import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.events.CheckRenderEntityEvent;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
 import mrfast.skyblockfeatures.events.PacketEvent;
+import mrfast.skyblockfeatures.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.skyblockfeatures.utils.APIUtil;
 import mrfast.skyblockfeatures.utils.NumberUtil;
 import mrfast.skyblockfeatures.utils.RenderUtil;
@@ -37,8 +36,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.S2APacketParticles;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderBlockOverlayEvent;
@@ -59,27 +56,11 @@ public class MiscFeatures {
 
         }
     }
-    // Jerry Talk
-    // String[] jerryMessages = new String[]{"Jerry","hrrrmm","huuugh","hrngh","hurngh"};
-    // @SubscribeEvent
-    // public void onChat(ClientChatReceivedEvent event) {
-    //     if(!skyblockfeatures.config.jerryMode) return;
-    //     String raw = event.message.getFormattedText();
-    //     if(raw.contains(":") && Utils.inSkyblock && !raw.contains("{\"server")) {
-    //         String message = raw.replace(raw.split(":")[0],"");
-    //         String[] arr = message.split(" ");
-    //         String newMessage = ": ";
-    //         for(String msg:arr) {
-    //             newMessage+=jerryMessages[new Random().nextInt(jerryMessages.length)]+" ";
-    //         }
-    //         event.message = new ChatComponentText(raw.replace(message, newMessage));
-    //     }
-    // }
 
     @SubscribeEvent
     public void onCheckRender(CheckRenderEntityEvent event) {
         if (!Utils.inSkyblock) return;
-    
+        // mc.thePlayer.rayTrace(mc.playerController.getBlockReachDistance(), event.partialTicks);
         if (event.entity instanceof EntityItem) {
             EntityItem entity = (EntityItem) event.entity;
             if (skyblockfeatures.config.hideJerryRune) {
@@ -201,7 +182,7 @@ public class MiscFeatures {
     }
 
     @SubscribeEvent
-    public void onDrawContainerTitle(GuiContainerEvent.TitleDrawnEvent.Post event) {
+    public void onDrawContainerTitle(TitleDrawnEvent event) {
         if (event.gui !=null && event.gui instanceof GuiChest && skyblockfeatures.config.extraProfileInfo) {
             GuiChest gui = (GuiChest) event.gui;
             ContainerChest chest = (ContainerChest) gui.inventorySlots;

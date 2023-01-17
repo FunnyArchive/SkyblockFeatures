@@ -6,7 +6,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.command.CommandBase;

@@ -18,6 +18,7 @@ import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.world.WorldEvent;
@@ -56,17 +57,22 @@ public class CrystalHollowsMap {
     public void onTick(TickEvent.ClientTickEvent event) {
         if(start && Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && skyblockfeatures.config.CrystalHollowsMap) {
             ticks++;
+            BlockPos location = Utils.GetMC().thePlayer.getPosition().up(2);
             if(ticks%4==0) {
                 Vector2d vector = new Vector2d((Utils.GetMC().thePlayer.posX-202)/4.9,(Utils.GetMC().thePlayer.posZ-202)/4.9);
                 if(!playerBreadcrumbs.contains(vector)) {
                     playerBreadcrumbs.add(vector);
+                }
+                for(EntityPlayer entity:Utils.GetMC().theWorld.playerEntities) {
+                    if(entity.getDisplayName().getUnformattedText().contains("Corleone") && !locations.containsKey("§5Corleone")) {
+                        locations.put("§5Corleone",entity.getPosition().up(2));
+                    }
                 }
             }
             if(ticks >= 40) {
                 loaded = true;
                 ticks = 0;
             }
-            BlockPos location = Utils.GetMC().thePlayer.getPosition().up(2);
             String position = skyblockfeatures.locationString.toLowerCase();
             if(position.contains("lost precursor city") && !locations.containsKey("§fCity")) locations.put("§fCity",location);
             if(position.contains("khazaddm") && !locations.containsKey("§cBal")) locations.put("§cBal",location);

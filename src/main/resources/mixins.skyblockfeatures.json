@@ -41,7 +41,8 @@
     "MixinVboRenderList",
     "MixinInventoryEffectRenderer",
     "MixinWorld",
-    "MixinRenderPlayer"
+    "MixinRenderPlayer",
+    "MixinEntityBreakingFX"
   ],
   "verbose": true
 }

@@ -2,7 +2,6 @@ package mrfast.skyblockfeatures.features.impl.mining;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,22 +9,16 @@ import java.util.regex.Pattern;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.skyblockfeatures.skyblockfeatures;
-import mrfast.skyblockfeatures.core.DataFetcher;
 import mrfast.skyblockfeatures.events.BlockChangeEvent;
 import mrfast.skyblockfeatures.events.PacketEvent;
-import mrfast.skyblockfeatures.features.impl.misc.MiscFeatures;
 import mrfast.skyblockfeatures.utils.RenderUtil;
 import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.ScoreboardUtil;
 import mrfast.skyblockfeatures.utils.StringUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockAir;
-import net.minecraft.block.BlockObsidian;
-import net.minecraft.block.BlockStone;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.play.server.S29PacketSoundEffect;
 import net.minecraft.network.play.server.S2APacketParticles;
@@ -160,7 +153,7 @@ public class MiningFeatures {
             if(treasureChest != null) {
                 Vec3 stringPos = new Vec3(treasureChest.getX()+0.5, treasureChest.getY()+1.25, treasureChest.getZ()+0.5);
                 RenderUtil.draw3DString(stringPos, ChatFormatting.AQUA+""+progress+" / 5", 0xFFFFFF, event.partialTicks);
-                RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(treasureChest, treasureChest.add(1, 1, 1)), Color.green, event.partialTicks);
+                // RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(treasureChest, treasureChest.add(1, 1, 1)), Color.green, event.partialTicks);
             }
             for(Vec3 packet:particles) {
                 RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(packet.xCoord-0.05, packet.yCoord-0.05, packet.zCoord-0.05, packet.xCoord+0.1, packet.yCoord+0.1, packet.zCoord+0.1), Color.red, event.partialTicks);

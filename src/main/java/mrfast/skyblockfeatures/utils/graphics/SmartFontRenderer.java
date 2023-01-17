@@ -1,20 +1,15 @@
 package mrfast.skyblockfeatures.utils.graphics;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.settings.GameSettings;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.obj.OBJModel;
+import java.util.Random;
+
+import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.utils.graphics.colors.CommonColors;
 import mrfast.skyblockfeatures.utils.graphics.colors.CustomColor;
 import mrfast.skyblockfeatures.utils.graphics.colors.MinecraftChatColors;
-
-import java.awt.Color;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Random;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Taken from Wynntils under GNU Affero General Public License v3.0
@@ -31,7 +26,7 @@ public class SmartFontRenderer extends FontRenderer {
     private static final int[] minecraftColors = MinecraftChatColors.set.asInts();
 
     public SmartFontRenderer() {
-        super(Minecraft.getMinecraft().gameSettings, new ResourceLocation("textures/font/ascii.png"), Minecraft.getMinecraft().getTextureManager(), false);
+        super(Minecraft.getMinecraft().gameSettings, skyblockfeatures.config.customFont?new ResourceLocation("skyblockfeatures:font/ascii.png"):new ResourceLocation("textures/font/ascii.png"), Minecraft.getMinecraft().getTextureManager(), false);
     }
 
     public float drawString(String text, float x, float y, CustomColor customColor, TextAlignment alignment, TextShadow shadow) {

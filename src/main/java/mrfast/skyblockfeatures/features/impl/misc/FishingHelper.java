@@ -7,13 +7,12 @@ import java.util.List;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.skyblockfeatures.skyblockfeatures;
+import mrfast.skyblockfeatures.core.GuiManager;
 import mrfast.skyblockfeatures.events.PacketEvent;
 import mrfast.skyblockfeatures.utils.RenderUtil;
 import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.Utils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
-import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.EntityFishHook;
@@ -22,7 +21,6 @@ import net.minecraft.network.play.server.S2APacketParticles;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -30,7 +28,11 @@ public class FishingHelper {
     boolean reelingIn = false;
     List<Vec3> particles = new ArrayList<Vec3>();
     List<Vec3> fishingParticles = new ArrayList<Vec3>();
+    List<Vec3> dupefishingParticles = new ArrayList<Vec3>();
+
+    boolean clearingSoon = false;
     public static Entity fishingHook = null;
+    public static Vec3 lastClosest = null;
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
         if(geyser != null && skyblockfeatures.config.geyserBoundingBox) {
@@ -45,8 +47,66 @@ public class FishingHelper {
                 new Color(255,85,255); // Magenta
             RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(x-1, y-0.1, z-1, x+1, y-0.09, z+1),color,event.partialTicks);
         }
-        Vec3 prev = null;
+        if(fishingHook != null && !clearingSoon) {
+            Vec3 closestParticle = null;
+            try {
+                for(Vec3 particle : fishingParticles) {
+                    if(particle==null) continue;
+                    if(closestParticle==null) {
+                        boolean chainFish = false;
+                        for(Vec3 particle2 : fishingParticles) {
+                            if(particle==null || particle==null || particle2==particle) continue;
+                            if(particle2.distanceTo(particle)<0.05) {
+                                chainFish = true;
+                            }
+                        }
+                        if(chainFish) closestParticle = particle;
+                    } else {
+                        if(particle.distanceTo(fishingHook.getPositionVector())<closestParticle.distanceTo(fishingHook.getPositionVector())) {
+                            boolean chainFish = false;
+                            for(Vec3 particle2 : fishingParticles) {
+                                if(particle==null || particle==null) continue;
+                                if(particle2 == particle) continue;
+                                if(particle2.distanceTo(particle)<0.05) {
+                                    chainFish = true;
+                                }
+                            }
+                            if(chainFish) closestParticle = particle;
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+            if(closestParticle!=null) {
+                if(lastClosest!=null) {
+                    double x = lastClosest.xCoord;
+                    double z = lastClosest.zCoord;
+                    
+                    double newX = closestParticle.xCoord;
+                    double newZ = closestParticle.zCoord;
+    
+                    double deltaX = newX-x;
+                    double deltaZ = newZ-z;
+    
+                    x+=deltaX/20;
+                    z+=deltaZ/20;
+                    closestParticle = new Vec3(x,closestParticle.yCoord,z);
+                }
+                lastClosest = closestParticle;
+                GlStateManager.disableCull();
+                RenderUtil.draw3DLine(closestParticle, fishingHook.getPositionVector(), 1, new Color(255, 85, 85), event.partialTicks);
+                GlStateManager.enableCull();
 
+                RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(closestParticle.xCoord-0.05, closestParticle.yCoord, closestParticle.zCoord-0.05, closestParticle.xCoord+0.05, closestParticle.yCoord+0.05, closestParticle.zCoord+0.05),new Color(0xFF00AA),event.partialTicks);
+                
+                double widthOfSquare = closestParticle.distanceTo(fishingHook.getPositionVector());
+                Vec3 hook = fishingHook.getPositionVector();
+                Color color = widthOfSquare<0.15?Color.GREEN:Color.RED;
+                RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(hook.xCoord-widthOfSquare, hook.yCoord+0.1, hook.zCoord-widthOfSquare, hook.xCoord+widthOfSquare, hook.yCoord+0.1, hook.zCoord+widthOfSquare),color,event.partialTicks);
+            }
+        }
+        Vec3 prev = null;
         // Diana helper
         if(skyblockfeatures.config.MythologicalHelper) {
             prev = null;
@@ -134,22 +194,34 @@ public class FishingHelper {
                     }
                 }
                 if(hook != null) {
+                    fishingHook = hook;
                     Vec3 pos = new Vec3(packet.getXCoordinate(), packet.getYCoordinate(), packet.getZCoordinate());
-                    if(hook.getDistance(packet.getXCoordinate(), packet.getYCoordinate(), packet.getZCoordinate())<6 && !fishingParticles.contains(pos)) {
+                    if(fishingHook.getDistance(packet.getXCoordinate(), packet.getYCoordinate(), packet.getZCoordinate())<6 && !fishingParticles.contains(pos)) {
                         fishingParticles.add(pos);
                     }
-                    if(hook.getDistance(packet.getXCoordinate(), packet.getYCoordinate(), packet.getZCoordinate())<0.15 && Utils.GetMC().thePlayer.canEntityBeSeen(hook)) {
+                    if(fishingHook.getDistance(packet.getXCoordinate(), packet.getYCoordinate(), packet.getZCoordinate())<0.15 && Utils.GetMC().thePlayer.canEntityBeSeen(fishingHook)) {
                         if(Utils.GetMC().thePlayer.getHeldItem().getItem() instanceof ItemFishingRod) {
                             reelingIn = true;
-                            Utils.SendMessage(ChatFormatting.GREEN+"Reel it in!");
+                            GuiManager.createTitle(ChatFormatting.GREEN+"Reel it in!", 10);
                             Utils.GetMC().thePlayer.playSound("note.pling", 1, 2);
+                            fishingParticles.clear();
+                            fishingHook = null;
+                        } else {
+                            fishingParticles.clear();
+                            fishingHook = null;
                         }
                         Utils.setTimeout(()->{
                             reelingIn = false;
                         }, 500);
                     }
                 } else {
-                    fishingParticles.clear();
+                    clearingSoon = true;
+                    Utils.setTimeout(()->{
+                        fishingParticles.clear();
+                    }, 200);
+                    Utils.setTimeout(()->{
+                        clearingSoon = false;
+                    }, 400);
                 }
             }
         }

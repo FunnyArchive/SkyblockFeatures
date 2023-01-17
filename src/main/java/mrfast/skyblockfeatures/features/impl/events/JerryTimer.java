@@ -11,8 +11,6 @@ import mrfast.skyblockfeatures.core.structure.GuiElement;
 import mrfast.skyblockfeatures.events.SecondPassedEvent;
 import mrfast.skyblockfeatures.utils.Utils;
 import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
-import mrfast.skyblockfeatures.utils.graphics.colors.CommonColors;
-import mrfast.skyblockfeatures.utils.graphics.SmartFontRenderer;
 
 public class JerryTimer {
     public static int seconds = 360;
@@ -65,7 +63,7 @@ public class JerryTimer {
         @Override
         public void demoRender() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            ScreenRenderer.fontRenderer.drawString(display, 0, 0, CommonColors.WHITE, SmartFontRenderer.TextAlignment.LEFT_RIGHT, SmartFontRenderer.TextShadow.NORMAL);
+            mc.fontRendererObj.drawString(display, 0, 0, 0xFFFFFF, true);
         }
 
         @Override

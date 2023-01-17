@@ -14,8 +14,6 @@ import mrfast.skyblockfeatures.core.structure.GuiElement;
 import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.Utils;
 import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
-import mrfast.skyblockfeatures.utils.graphics.SmartFontRenderer;
-import mrfast.skyblockfeatures.utils.graphics.colors.CommonColors;
 
 public class CropCounter {
     private static final Minecraft mc = Minecraft.getMinecraft();
@@ -76,8 +74,8 @@ public class CropCounter {
                     String hoes = "Euclides, Gauss, Pythagorean, Turing, Newton";
                     for(String hoe: hoes.split(", ")) {
                         if(Utils.cleanColour(item.getDisplayName()).contains(hoe)) {
-                            mc.fontRendererObj.drawString(ChatFormatting.RED+"Counter: "+ChatFormatting.YELLOW+count, 0, 0, 0xFFFFFF, true);   
-                            mc.fontRendererObj.drawString(ChatFormatting.RED+"Crops Per Second: "+ChatFormatting.YELLOW+cropsPerSecond, 0, ScreenRenderer.fontRenderer.FONT_HEIGHT, 0xFFFFFF, true);   
+                            mc.fontRendererObj.drawStringWithShadow(ChatFormatting.RED+"Counter: "+ChatFormatting.YELLOW+count, 0, 0, 0xFFFFFF);   
+                            mc.fontRendererObj.drawStringWithShadow(ChatFormatting.RED+"Crops Per Second: "+ChatFormatting.YELLOW+cropsPerSecond, 0, ScreenRenderer.fontRenderer.FONT_HEIGHT, 0xFFFFFF);   
                         }
                     }
                 } catch (Exception e) {
@@ -88,8 +86,8 @@ public class CropCounter {
         @Override
         public void demoRender() {
             if(mc.thePlayer == null) return;
-            ScreenRenderer.fontRenderer.drawString(ChatFormatting.RED+"Counter: "+ChatFormatting.YELLOW+count, 0, 0, CommonColors.WHITE, SmartFontRenderer.TextAlignment.LEFT_RIGHT, SmartFontRenderer.TextShadow.NORMAL);
-            ScreenRenderer.fontRenderer.drawString(ChatFormatting.RED+"Crops Per Second: "+ChatFormatting.YELLOW+cropsPerSecond, 0, ScreenRenderer.fontRenderer.FONT_HEIGHT, CommonColors.WHITE, SmartFontRenderer.TextAlignment.LEFT_RIGHT, SmartFontRenderer.TextShadow.NORMAL);
+            mc.fontRendererObj.drawStringWithShadow(ChatFormatting.RED+"Counter: "+ChatFormatting.YELLOW+"19,302", 0, 0, 0xFFFFFF);   
+            mc.fontRendererObj.drawStringWithShadow(ChatFormatting.RED+"Crops Per Second: "+ChatFormatting.YELLOW+"0", 0, ScreenRenderer.fontRenderer.FONT_HEIGHT, 0xFFFFFF);   
         }
 
         @Override

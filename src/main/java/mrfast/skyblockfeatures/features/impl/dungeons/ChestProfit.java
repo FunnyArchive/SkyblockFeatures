@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import mrfast.skyblockfeatures.skyblockfeatures;
-import mrfast.skyblockfeatures.events.GuiContainerEvent;
+import mrfast.skyblockfeatures.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
 import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.NumberUtil;
@@ -20,8 +20,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class ChestProfit {
 
     @SubscribeEvent
-    public void onGUIDrawnEvent(GuiContainerEvent.TitleDrawnEvent.Post event) {
-        if (event.gui ==null || !skyblockfeatures.config.dungeonChestProfit || !Utils.inSkyblock) return;
+    public void onGUIDrawnEvent(TitleDrawnEvent event) {
+        if (event.gui == null || !skyblockfeatures.config.dungeonChestProfit || !Utils.inSkyblock) return;
         if (event.gui instanceof GuiChest) {
             HashMap<ItemStack,Double> items = new HashMap<ItemStack,Double>();    
             ContainerChest chest = (ContainerChest) ((GuiChest) event.gui).inventorySlots;
@@ -72,7 +72,7 @@ public class ChestProfit {
                     
                     int lineCount = 0;
                     for(String line:lines) {
-                        Utils.GetMC().fontRendererObj.drawString(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
+                        Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
                         lineCount++;
                     }
                 }

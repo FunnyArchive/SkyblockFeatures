@@ -199,15 +199,15 @@ public class ZealotSpawnLocations {
         public void render() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null && (SBInfo.getInstance().location.contains("Dragons Nest") || SBInfo.getInstance().location.contains("Bruiser Hideout"))) {
-                mc.fontRendererObj.drawString(zealotDisplay, 0, 0, 0xFFFFFF, true);
-                mc.fontRendererObj.drawString(bruiserDisplay, 0, (float) (ScreenRenderer.fontRenderer.FONT_HEIGHT+0.1), 0xFFFFFF, true);
+                mc.fontRendererObj.drawStringWithShadow(zealotDisplay, 0, 0, 0xFFFFFF);
+                mc.fontRendererObj.drawStringWithShadow(bruiserDisplay, 0, (float) (ScreenRenderer.fontRenderer.FONT_HEIGHT+0.1), 0xFFFFFF);
             }
         }
         @Override
         public void demoRender() {
             if(mc.thePlayer == null || !Utils.inSkyblock) return;
-            ScreenRenderer.fontRenderer.drawString(zealotDisplay, 0, 0, CommonColors.WHITE, SmartFontRenderer.TextAlignment.LEFT_RIGHT, SmartFontRenderer.TextShadow.NORMAL);
-            ScreenRenderer.fontRenderer.drawString(bruiserDisplay, 0, (float) (ScreenRenderer.fontRenderer.FONT_HEIGHT+0.1), CommonColors.WHITE, SmartFontRenderer.TextAlignment.LEFT_RIGHT, SmartFontRenderer.TextShadow.NORMAL);
+            Utils.GetMC().fontRendererObj.drawStringWithShadow(zealotDisplay, 0, 0, 0xFFFFFF);
+            Utils.GetMC().fontRendererObj.drawStringWithShadow(bruiserDisplay, 0, (float) (ScreenRenderer.fontRenderer.FONT_HEIGHT+0.1), 0xFFFFFF);
         }
 
         @Override

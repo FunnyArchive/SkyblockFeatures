@@ -34,6 +34,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 
 public class Utils {
@@ -123,13 +125,6 @@ public class Utils {
 									  1065000, 1410000, 1900000, 2500000, 3300000, 4300000, 5600000, 7200000, 9200000, 12000000, 15000000,
 									  19000000, 24000000, 30000000, 38000000, 48000000, 60000000, 75000000, 93000000, 116250000};
 
-    public static double getPercentage(int num1, int num2) {
-		if (num2 == 0) return 0D;
-		double result = ((double) num1 * 100D) / (double) num2;
-		result = Math.round(result * 100D) / 100D;
-		return result;
-	}
-
     public static double xpToDungeonsLevel(double xp) {
 		for (int i = 0, xpAdded = 0; i < dungeonsXPPerLevel.length; i++) {
 			xpAdded += dungeonsXPPerLevel[i];
@@ -140,6 +135,12 @@ public class Utils {
 		}
 		return 50D;
 	}
+    
+    public static double randomNumber(int min,int max) {
+        Random rand = new Random();
+        int randomNum = rand.nextInt((max - min) + 1) + min;
+        return randomNum;
+    }
 
     public static void drawText(String text, float x, float y) {
         ScreenRenderer.fontRenderer.drawString(text, x, y, CommonColors.WHITE, SmartFontRenderer.TextAlignment.LEFT_RIGHT, SmartFontRenderer.TextShadow.OUTLINE);
@@ -283,10 +284,30 @@ public class Utils {
     }
 
 
-    public static void SendMessage(String string)
-    {
+    public static void SendMessage(String string) {
         if (Utils.GetMC().ingameGUI != null || Utils.GetMC().thePlayer == null) {
-            Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(ChatFormatting.LIGHT_PURPLE+"[SBF] "+string));
+            Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(ChatFormatting.LIGHT_PURPLE+"[SBF] "+ChatFormatting.RESET+string));
+        }
+    }
+    public static void SendMessage(Integer string) {
+        if (Utils.GetMC().ingameGUI != null || Utils.GetMC().thePlayer == null) {
+            Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(ChatFormatting.LIGHT_PURPLE+"[SBF] "+ChatFormatting.RESET+string));
+        }
+    }
+    public static void SendMessage(Double string) {
+        if (Utils.GetMC().ingameGUI != null || Utils.GetMC().thePlayer == null) {
+            Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(ChatFormatting.LIGHT_PURPLE+"[SBF] "+ChatFormatting.RESET+string));
+        }
+    }
+    public static void SendMessage(IChatComponent msg) {
+        if (Utils.GetMC().ingameGUI != null || Utils.GetMC().thePlayer == null) {
+            ChatComponentText prefix = new ChatComponentText(EnumChatFormatting.LIGHT_PURPLE+"[SBF] "+EnumChatFormatting.RESET);
+            Utils.GetMC().thePlayer.addChatMessage(
+                new ChatComponentText("")
+                .appendSibling(prefix)
+                .appendSibling(msg)
+            );
+            // Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(ChatFormatting.LIGHT_PURPLE+"[SBF] "+ChatFormatting.RESET+msg));
             // MinecraftForge.EVENT_BUS.post(new ClientChatReceivedEvent((byte) 0, new ChatComponentText(string)));
         }
     }
@@ -388,28 +409,22 @@ public class Utils {
 	}
     
 
-    public static void drawLineInGui(int x1, int y1, int x2, int y2,Color color,float width) {
-        ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
-        int guiLeft = (sr.getScaledWidth() - 176) / 2;
-        int guiTop = (sr.getScaledHeight() - 222) / 2;
-        x1 = guiLeft + x1;
-        y1 = guiTop + y1;
-        x2 = guiLeft + x2;
-        y2 = guiTop + y2;
-
+    public static void drawLineInGui(int x1, int y1, int x2, int y2,Color color,float width,double d) {
+        // GlStateManager.color(0x33 / 255f, 0xee / 255f, 0xdd / 255f, 1f);
         GlStateManager.disableLighting();
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableTexture2D();
 		GlStateManager.enableBlend();
 		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        
+        GlStateManager.translate(0, 0, 700);
+
 		Vector2f vec = new Vector2f(x2 - x1, y2 - y1);
 		vec.normalise(vec);
 		Vector2f side = new Vector2f(vec.y, -vec.x);
         
 		GL11.glLineWidth(width);
 		GL11.glEnable(GL11.GL_LINE_SMOOTH);
-        GlStateManager.color(color.getRed(), color.getGreen(), color.getBlue(),(float) 0.3);
+        GlStateManager.color(color.getRed(), color.getGreen(), color.getBlue(),(float) d);
 
 		Tessellator tessellator = Tessellator.getInstance();
 		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
@@ -418,6 +433,7 @@ public class Utils {
         worldrenderer.pos(x1 - side.x + side.x, y1 - side.y + side.y, 0.0D).endVertex();
         worldrenderer.pos(x2 - side.x + side.x, y2 - side.y + side.y, 0.0D).endVertex();
         tessellator.draw();
+        GlStateManager.translate(0, 0, -700);
         GlStateManager.enableTexture2D();
 	}
 
@@ -454,8 +470,4 @@ public class Utils {
 		Gui.drawRect(x, y, x + 16, y + 16, colour);
 		GL11.glTranslated(0, 0, -1);
 	}
-
-    public static void drawLine(float prevX, float prevY, int xDisplayPosition, int yDisplayPosition, Color blue) {
-    }
-
 }

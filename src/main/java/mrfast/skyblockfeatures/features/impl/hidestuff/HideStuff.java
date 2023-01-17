@@ -7,15 +7,15 @@ import mrfast.skyblockfeatures.utils.Utils;
 
 public class HideStuff {
 	@SubscribeEvent
-	void renderHealth(RenderGameOverlayEvent.Pre event) {
+	public void renderHealth(RenderGameOverlayEvent.Pre event) {
 		if(Utils.inSkyblock) {
-			if (event.type.equals(RenderGameOverlayEvent.ElementType.FOOD) && skyblockfeatures.config.hungerbar) {
+			if (event.type == RenderGameOverlayEvent.ElementType.FOOD && skyblockfeatures.config.hungerbar) {
 				event.setCanceled(true);
 			}
-			if (event.type.equals(RenderGameOverlayEvent.ElementType.HEALTH) && skyblockfeatures.config.healthsbar) {
+			if (event.type == RenderGameOverlayEvent.ElementType.HEALTH && skyblockfeatures.config.healthsbar) {
 				event.setCanceled(true);
 			}
-			if (event.type.equals(RenderGameOverlayEvent.ElementType.ARMOR) && skyblockfeatures.config.armorbar) {
+			if (event.type == RenderGameOverlayEvent.ElementType.ARMOR && skyblockfeatures.config.armorbar) {
 				event.setCanceled(true);
 			}
 		}

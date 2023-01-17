@@ -12,6 +12,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
 import mrfast.skyblockfeatures.events.SecondPassedEvent;
+import mrfast.skyblockfeatures.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
 import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.NumberUtil;
@@ -146,7 +147,6 @@ public class AuctionFeatures {
                                     if(profit > 100000) {
                                         // Draw Green Square
                                         Gui.drawRect(x, y, x + 16, y + 16, new Color(85, 255, 85).getRGB());
-                                        Utils.drawLine(x, y, x + 16, y + 16, new Color(255, 85, 85));
                                     }
                                 }
                                 items.put(stack, profit);
@@ -232,7 +232,7 @@ public class AuctionFeatures {
     }
 
     @SubscribeEvent
-    public void onDrawContainerTitle(GuiContainerEvent.TitleDrawnEvent.Post event) {
+    public void onDrawContainerTitle(TitleDrawnEvent event) {
         if (event.gui !=null && event.gui instanceof GuiChest && skyblockfeatures.config.auctionGuis) {
             GuiChest gui = (GuiChest) event.gui;
             ContainerChest chest = (ContainerChest) gui.inventorySlots;
@@ -265,7 +265,7 @@ public class AuctionFeatures {
                                 String resellString = resellProfit>0? ChatFormatting.GREEN+"":ChatFormatting.RED+"";
                                 Boolean Manipulated = false;
                                 if(lowestBin != null && avgBin!=null) {
-                                    if(lowestBin > avgBin+150000 || avgBin > lowestBin+150000) {
+                                    if(lowestBin > avgBin+150000) {
                                         Manipulated = true;
                                     } else if(cost > avgBin+150000) {
                                         Manipulated = true;
@@ -296,18 +296,18 @@ public class AuctionFeatures {
                                 };
                                 int lineCount = 0;
                                 for(String line:lines) {
-                                    Utils.GetMC().fontRendererObj.drawString(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
+                                    Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
                                     lineCount++;
                                 }
                                 if(Manipulated) {
                                     Utils.drawGraySquareWithBorder(180, 9*Utils.GetMC().fontRendererObj.FONT_HEIGHT, 170, 3*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
-                                    Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+""+ChatFormatting.BOLD+"Warning! This items price", 190, 9*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
-                                    Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+""+ChatFormatting.BOLD+"is higher than usual!", 190, 10*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
+                                    Utils.GetMC().fontRendererObj.drawStringWithShadow(ChatFormatting.RED+""+ChatFormatting.BOLD+"Warning! This items price", 190, 9*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
+                                    Utils.GetMC().fontRendererObj.drawStringWithShadow(ChatFormatting.RED+""+ChatFormatting.BOLD+"is higher than usual!", 190, 10*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
                                 }
                                 if(stack.getDisplayName().contains("Minion Skin")) {
                                     Utils.drawGraySquareWithBorder(180, 9*Utils.GetMC().fontRendererObj.FONT_HEIGHT, 170, 3*Utils.GetMC().fontRendererObj.FONT_HEIGHT,3);
-                                    Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+""+ChatFormatting.BOLD+"Warning! Minion skins are", 190, 9*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
-                                    Utils.GetMC().fontRendererObj.drawString(ChatFormatting.RED+""+ChatFormatting.BOLD+"often manipulated!!", 190, 10*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
+                                    Utils.GetMC().fontRendererObj.drawStringWithShadow(ChatFormatting.RED+""+ChatFormatting.BOLD+"Warning! Minion skins are", 190, 9*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
+                                    Utils.GetMC().fontRendererObj.drawStringWithShadow(ChatFormatting.RED+""+ChatFormatting.BOLD+"often manipulated!!", 190, 10*Utils.GetMC().fontRendererObj.FONT_HEIGHT+5, -1);
                                 }
                             }
                         }
@@ -336,7 +336,7 @@ public class AuctionFeatures {
                             };
                             int lineCount = 0;
                             for(String line:lines) {
-                                Utils.GetMC().fontRendererObj.drawString(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
+                                Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
                                 lineCount++;
                             }
                         }
@@ -392,7 +392,7 @@ public class AuctionFeatures {
                 };
                 int lineCount = 0;
                 for(String line:lines) {
-                    Utils.GetMC().fontRendererObj.drawString(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
+                    Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
                     lineCount++;
                 }
             }
@@ -433,7 +433,7 @@ public class AuctionFeatures {
                 };
                 int lineCount = 0;
                 for(String line:lines) {
-                    Utils.GetMC().fontRendererObj.drawString(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
+                    Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 190, lineCount*(Utils.GetMC().fontRendererObj.FONT_HEIGHT+1)+10, -1);
                     lineCount++;
                 }
             }

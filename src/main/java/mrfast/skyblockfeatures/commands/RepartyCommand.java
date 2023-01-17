@@ -2,7 +2,6 @@ package mrfast.skyblockfeatures.commands;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.command.*;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
@@ -49,7 +48,6 @@ public class RepartyCommand extends CommandBase implements ICommand {
         if (args.length > 0 && (args[0].startsWith("fail") || args[0].equals("f"))) {
             partyThread = new Thread(() -> {
                 EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
-                GuiNewChat chat = Minecraft.getMinecraft().ingameGUI.getChatGUI();
 
                 try {
                     skyblockfeatures.sendMessageQueue.add("/p " + String.join(" ", repartyFailList));

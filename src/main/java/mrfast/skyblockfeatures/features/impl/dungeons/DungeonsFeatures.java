@@ -18,8 +18,6 @@ import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.structure.FloatPair;
 import mrfast.skyblockfeatures.core.structure.GuiElement;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
-import mrfast.skyblockfeatures.utils.ItemRarity;
-import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.RenderUtil;
 import mrfast.skyblockfeatures.utils.ScoreboardUtil;
 import mrfast.skyblockfeatures.utils.StringUtils;
@@ -34,7 +32,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.ClickEvent;
@@ -45,6 +42,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemSkull;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
@@ -100,7 +98,7 @@ public class DungeonsFeatures {
 
     String delimiter = EnumChatFormatting.AQUA.toString() + EnumChatFormatting.STRIKETHROUGH.toString() + "" + EnumChatFormatting.BOLD + "--------------------------------------";
     int count = 0;
-    EntityPlayer bloodguy;
+    public static EntityPlayer bloodguy;
     static Map<String,Integer> blessings = new HashMap<String,Integer>();
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
     public void onChatMesaage(ClientChatReceivedEvent event) {
@@ -124,7 +122,12 @@ public class DungeonsFeatures {
             else {
                 blessings.replace(stat1Type, blessings.get(stat1Type), blessings.get(stat1Type)+stat1);
             }
-            int stat2 = Integer.parseInt(text.split(" ")[6]);
+            int stat2 = 0;
+            try {
+                stat2 = Integer.parseInt(text.split(" ")[6]);
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
             String stat2Type = text.split(" ")[7];
             if(blessings.get(stat2Type) == null) blessings.put(stat2Type, stat2);
             else {
@@ -170,40 +173,32 @@ public class DungeonsFeatures {
         }
     }
 
-
-    public Color getColor(Entity entity) {
-        EntityItem ent = (EntityItem) entity;
-        ItemStack item = (ItemStack) ent.getEntityItem();
-        if(ItemUtil.getRarity(item) == ItemRarity.COMMON) {
-            return Color.white;
-        }else if(ItemUtil.getRarity(item) == ItemRarity.UNCOMMON) {
-            return Color.green;
-        }else if(ItemUtil.getRarity(item) == ItemRarity.RARE) {
-            return Color.blue;
-        }else if(ItemUtil.getRarity(item) == ItemRarity.EPIC) {
-            return Color.pink;
-        }else if(ItemUtil.getRarity(item) == ItemRarity.LEGENDARY) {
-            return Color.orange;
-        }else if(ItemUtil.getRarity(item) == ItemRarity.MYTHIC) {
-            return Color.pink;
-        } else {
-            return Color.white;
-        }
-    }
-
     @SubscribeEvent
     public void onDrawSlots(GuiContainerEvent.DrawSlotEvent.Pre event) {
         if (!Utils.inSkyblock) return;
+        if(!event.slot.getHasStack()) return;
+        ItemStack stack = event.slot.getStack();
+        int x = event.slot.xDisplayPosition;
+        int y = event.slot.yDisplayPosition;
+        String n = Utils.cleanColour(stack.getDisplayName());
+        if(skyblockfeatures.config.highlightTrash) {
+            if(!(stack.getItem() instanceof ItemSkull)) {
+                if(n.contains("Dreadlord") || n.contains("Grunt") || n.contains("Rotten") || n.contains("Machine Gun") || n.contains("Skeleton Soldier") || n.contains("Zombie Soldier") || n.contains("Enchanted Bone") || n.contains("Fel Pearl")  || n.contains("Healing VIII")  || n.contains("Super Heavy")  || n.contains("Conjuring") || n.contains("Skeletor") || n.contains("Training")) {
+                    Gui.drawRect(x, y, x + 16, y + 1, new Color(255, 0, 0, 255).getRGB());
+                    Gui.drawRect(x, y, x + 1, y + 16, new Color(255, 0, 0, 255).getRGB());
+                    Gui.drawRect(x+15, y, x+16, y + 16, new Color(255, 0, 0, 255).getRGB());
+                    Gui.drawRect(x, y+15, x + 16, y + 16, new Color(255, 85, 0, 255).getRGB());
+                }
+            }
+        }
+        
         if (!(event.gui instanceof GuiChest)) return;
         GuiChest inventory = (GuiChest) event.gui;
         Container containerChest = inventory.inventorySlots;
         if (!(containerChest instanceof ContainerChest)) return;
         String displayName = ((ContainerChest) containerChest).getLowerChestInventory().getDisplayName().getUnformattedText().trim();
         if(Utils.inDungeons && ((skyblockfeatures.config.spiritLeapNames && displayName.equals("Spirit Leap")))) {
-            if (event.slot.getHasStack() && bloodguy != null) {
-                ItemStack stack = event.slot.getStack();
-                int x = event.slot.xDisplayPosition;
-                int y = event.slot.yDisplayPosition;
+            if (bloodguy != null) {
                 if (stack.getDisplayName().contains(bloodguy.getName())) Gui.drawRect(x, y, x + 16, y + 16, new Color(255, 85, 85, 255).getRGB());
             }
         }

@@ -22,8 +22,6 @@ public class CryptDisplay {
     }
 
     static String display = "Secrets";
-
-
     
     public static class JerryTimerGUI extends GuiElement {
 
@@ -62,7 +60,7 @@ public class CryptDisplay {
             float scale = 2f;
             if (this.getToggled() && Minecraft.getMinecraft().thePlayer != null && mc.theWorld != null) {
                 GlStateManager.scale(scale, scale, 0);
-                ScreenRenderer.fontRenderer.drawString("Crypts: "+crypts, 0, 0, color);
+                Utils.GetMC().fontRendererObj.drawStringWithShadow("Crypts: "+crypts, 0, 0, color);
                 GlStateManager.scale(1/scale, 1/scale, 0);
             }
         }
@@ -73,7 +71,7 @@ public class CryptDisplay {
             int color = 0xeb4034;
             float scale = 2f;
             GlStateManager.scale(scale, scale, 0);
-            ScreenRenderer.fontRenderer.drawString("Crypts: 2", 0, 0, color);
+            Utils.GetMC().fontRendererObj.drawStringWithShadow("Crypts: 2", 0, 0, color);
             GlStateManager.scale(1/scale, 1/scale, 0);
         }
 

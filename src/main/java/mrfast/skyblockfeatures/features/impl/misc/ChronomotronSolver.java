@@ -20,6 +20,7 @@ public class ChronomotronSolver {
     static int lastChronomatronRound = 0;
     static List<String> chronomatronPattern = new ArrayList<>();
     static int chronomatronMouseClicks = 0;
+    static int slotToClick = 0;
 
     @SubscribeEvent
     public void onSlotClick(ChestSlotClickedEvent event) {
@@ -27,9 +28,7 @@ public class ChronomotronSolver {
         if (event.inventoryName.startsWith("Chronomatron (")) {
             IInventory inventory = event.inventory;
             ItemStack item = event.item;
-
             if (item == null) return;
-
             if (inventory.getStackInSlot(49).getDisplayName().startsWith("§7Timer: §a") && (item.getItem() == Item.getItemFromBlock(Blocks.stained_glass) || item.getItem() == Item.getItemFromBlock(Blocks.stained_hardened_clay))) {
                 chronomatronMouseClicks++;
             }
@@ -40,6 +39,7 @@ public class ChronomotronSolver {
     public void onGuiBackground(GuiChestBackgroundDrawnEvent event) {
         if(!skyblockfeatures.config.enchantingSolvers) return;
         if(event.displayName.startsWith("Chronomatron (")) {
+            
             List<Slot> invSlots = event.slots;
             if (invSlots.size() > 48 && invSlots.get(49).getStack() != null) {
                 if (invSlots.get(49).getStack().getDisplayName().startsWith("§7Timer: §a") && invSlots.get(4).getStack() != null) {

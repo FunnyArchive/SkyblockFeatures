@@ -1,19 +1,11 @@
 package mrfast.skyblockfeatures.commands;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import mrfast.skyblockfeatures.skyblockfeatures;
-import mrfast.skyblockfeatures.features.impl.misc.MiscFeatures;
 import mrfast.skyblockfeatures.utils.Utils;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.Entity;
 
 public class jerryCommand extends CommandBase {
 

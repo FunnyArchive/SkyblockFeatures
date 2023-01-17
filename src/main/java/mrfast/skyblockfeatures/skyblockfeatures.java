@@ -36,6 +36,7 @@ import mrfast.skyblockfeatures.features.impl.mining.CommisionsTracker;
 import mrfast.skyblockfeatures.features.impl.mining.HighlightCobblestone;
 import mrfast.skyblockfeatures.features.impl.mining.MetalDetectorSolver;
 import mrfast.skyblockfeatures.features.impl.mining.MiningFeatures;
+import mrfast.skyblockfeatures.features.impl.mining.PathTracer;
 import mrfast.skyblockfeatures.features.impl.misc.*;
 import mrfast.skyblockfeatures.features.impl.overlays.*;
 import mrfast.skyblockfeatures.features.impl.trackers.*;
@@ -45,6 +46,7 @@ import mrfast.skyblockfeatures.utils.CapeUtils;
 import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommand;
@@ -60,6 +62,7 @@ import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -208,12 +211,15 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new MetalDetectorSolver());
         MinecraftForge.EVENT_BUS.register(new ChronomotronSolver());
         MinecraftForge.EVENT_BUS.register(new UltrasequencerSolver());
-
+        MinecraftForge.EVENT_BUS.register(new TradingOverlay());
+        MinecraftForge.EVENT_BUS.register(new MiscOverlays());
+        MinecraftForge.EVENT_BUS.register(new TrevorHelper());
+        MinecraftForge.EVENT_BUS.register(new PathTracer());
 
         // Solvers
         MinecraftForge.EVENT_BUS.register(new BlazeSolver());
         MinecraftForge.EVENT_BUS.register(new ThreeWeirdosSolver());
-        // MinecraftForge.EVENT_BUS.register(new ScoreCalculation());
+        MinecraftForge.EVENT_BUS.register(new ScoreCalculation());
     }
 
     @Mod.EventHandler
@@ -258,6 +264,8 @@ public class skyblockfeatures {
         if (!cch.getCommands().containsKey("skills")) cch.registerCommand(new SkillsCommand());
 
         if (!cch.getCommands().containsKey("sidebar")) cch.registerCommand(new sidebarCommand());
+
+        if (!cch.getCommands().containsKey("pathtracer")) cch.registerCommand(new PathTracerCommand());
 
         if (!cch.getCommands().containsKey("fakePlayer")) cch.registerCommand(new FakePlayerCommand());
 

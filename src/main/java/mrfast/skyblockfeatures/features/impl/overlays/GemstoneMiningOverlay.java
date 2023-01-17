@@ -107,7 +107,7 @@ public class GemstoneMiningOverlay {
                 };
                 int lineCount = 0;
                 for(String line:lines) {
-                    ScreenRenderer.fontRenderer.drawString(line, 0, lineCount*(mc.fontRendererObj.FONT_HEIGHT),CommonColors.WHITE, SmartFontRenderer.TextAlignment.LEFT_RIGHT, SmartFontRenderer.TextShadow.NORMAL);
+                    Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 0, lineCount*(mc.fontRendererObj.FONT_HEIGHT),0xFFFFFF);
                     lineCount++;
                 }
             } catch (Exception e) {
@@ -125,7 +125,7 @@ public class GemstoneMiningOverlay {
             };
             int lineCount = 0;
             for(String line:lines) {
-                ScreenRenderer.fontRenderer.drawString(line, 0, lineCount*(mc.fontRendererObj.FONT_HEIGHT),CommonColors.WHITE, SmartFontRenderer.TextAlignment.LEFT_RIGHT, SmartFontRenderer.TextShadow.NORMAL);
+                Utils.GetMC().fontRendererObj.drawStringWithShadow(line, 0, lineCount*(mc.fontRendererObj.FONT_HEIGHT),0xFFFFFF);
                 lineCount++;
             }
         }

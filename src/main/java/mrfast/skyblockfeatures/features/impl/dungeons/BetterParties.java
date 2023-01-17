@@ -4,8 +4,12 @@ import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-
+import mrfast.skyblockfeatures.skyblockfeatures;
+import mrfast.skyblockfeatures.events.GuiContainerEvent.TitleDrawnEvent;
+import mrfast.skyblockfeatures.features.impl.ItemFeatures.HideGlass;
+import mrfast.skyblockfeatures.utils.ItemUtil;
+import mrfast.skyblockfeatures.utils.StringUtils;
+import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -23,12 +27,6 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import mrfast.skyblockfeatures.skyblockfeatures;
-import mrfast.skyblockfeatures.events.GuiContainerEvent;
-import mrfast.skyblockfeatures.features.impl.ItemFeatures.HideGlass;
-import mrfast.skyblockfeatures.utils.ItemUtil;
-import mrfast.skyblockfeatures.utils.StringUtils;
-import mrfast.skyblockfeatures.utils.Utils;
 
 
 public class BetterParties {
@@ -76,7 +74,7 @@ public class BetterParties {
     }
 
     @SubscribeEvent
-    public void onDrawContainerTitle(GuiContainerEvent.TitleDrawnEvent.Post event) {
+    public void onDrawContainerTitle(TitleDrawnEvent event) {
         if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest) || event.gui == null) return;
         if(!skyblockfeatures.config.betterpartys) return;
         GuiChest chest = (GuiChest) Minecraft.getMinecraft().currentScreen;

@@ -41,19 +41,10 @@ public abstract class MixinGuiContainer extends GuiScreen {
         }
     }
 
-    @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/inventory/GuiContainer;drawGuiContainerForegroundLayer(II)V", ordinal = 0, shift = At.Shift.BEFORE))
-    private void titleDrawn(int mouseX, int mouseY, float partialTicks,CallbackInfo ci) {
-        try {
-            MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.TitleDrawnEvent.Pre(that, inventorySlots, mouseX, mouseY, partialTicks));
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-    }
-
     @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/inventory/GuiContainer;drawGuiContainerForegroundLayer(II)V", ordinal = 0, shift = At.Shift.AFTER))
     private void titlePostDrawn(int mouseX, int mouseY, float partialTicks,CallbackInfo ci) {
         try {
-            MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.TitleDrawnEvent.Post(that, inventorySlots, mouseX, mouseY, partialTicks));
+            MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.TitleDrawnEvent(that, inventorySlots, mouseX, mouseY, partialTicks));
         } catch (Throwable e) {
             
         }

@@ -6,9 +6,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import com.google.common.eventbus.Subscribe;
-
-import mrfast.skyblockfeatures.events.SecondPassedEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 

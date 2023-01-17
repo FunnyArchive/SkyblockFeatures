@@ -1,5 +1,9 @@
 package mrfast.skyblockfeatures.features.impl.overlays;
 
+import java.awt.Color;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,25 +13,17 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonPrimitive;
 
-import java.awt.Color;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-
+import mrfast.skyblockfeatures.skyblockfeatures;
+import mrfast.skyblockfeatures.core.DataFetcher;
+import mrfast.skyblockfeatures.utils.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import mrfast.skyblockfeatures.skyblockfeatures;
-import mrfast.skyblockfeatures.core.DataFetcher;
-import mrfast.skyblockfeatures.utils.RenderUtil;
 
 public class FairySoulWaypoints {
 

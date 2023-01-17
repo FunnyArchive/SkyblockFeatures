@@ -4,9 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Map;
 import java.util.Scanner;
 
 import org.apache.http.HttpEntity;
@@ -83,8 +83,8 @@ public class APIUtil {
                 }
             }
         } catch (IOException | URISyntaxException ex) {
-            player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "An error has occured. See logs for more details."));
-            ex.printStackTrace();
+            player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "An error has occured."));
+            // ex.printStackTrace();
         }
 
         return new JsonObject();
@@ -120,55 +120,56 @@ public class APIUtil {
                 // player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Request failed. HTTP Error Code: " + response.getStatusLine().getStatusCode()));
             }
         } catch (IOException | URISyntaxException ex) {
-            player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "An error has occured. See logs for more details."));
-            ex.printStackTrace();
+            player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "An error has occured."));
+            // ex.printStackTrace();
         }
         return new JsonArray();
     }
 
     public static JsonObject getResponse(String urlString) {
-		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        return getJSONResponse(urlString);
+		// EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 		
-		try {
-			URL url = new URL(urlString);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("GET");
+		// try {
+		// 	URL url = new URL(urlString);
+		// 	HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		// 	conn.setRequestMethod("GET");
 			
-			if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-				BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-				String input;
-				StringBuilder response = new StringBuilder();
+		// 	if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+		// 		BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		// 		String input;
+		// 		StringBuilder response = new StringBuilder();
 				
-				while ((input = in.readLine()) != null) {
-					response.append(input);
-				}
-				in.close();
+		// 		while ((input = in.readLine()) != null) {
+		// 			response.append(input);
+		// 		}
+		// 		in.close();
 				
-				Gson gson = new Gson();
+		// 		Gson gson = new Gson();
 
-				return gson.fromJson(response.toString(), JsonObject.class);
-			} else {
-				if (urlString.startsWith("https://api.hypixel.net/")) {
-					InputStream errorStream = conn.getErrorStream();
-					try (Scanner scanner = new Scanner(errorStream)) {
-						scanner.useDelimiter("\\Z");
-						String error = scanner.next();
+		// 		return gson.fromJson(response.toString(), JsonObject.class);
+		// 	} else {
+		// 		if (urlString.startsWith("https://api.hypixel.net/")) {
+		// 			InputStream errorStream = conn.getErrorStream();
+		// 			try (Scanner scanner = new Scanner(errorStream)) {
+		// 				scanner.useDelimiter("\\Z");
+		// 				String error = scanner.next();
 						
-						Gson gson = new Gson();
-						return gson.fromJson(error, JsonObject.class);
-					}
-				} else if (urlString.startsWith("https://api.mojang.com/users/profiles/minecraft/") && conn.getResponseCode() == 204) {
-					player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Failed with reason: Player does not exist."));
-				} else {
-					// player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Request failed. HTTP Error Code: " + conn.getResponseCode()));
-				}
-			}
-		} catch (IOException ex) {
-			player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "An error has occured. See logs for more details."));
-			ex.printStackTrace();
-		}
+		// 				Gson gson = new Gson();
+		// 				return gson.fromJson(error, JsonObject.class);
+		// 			}
+		// 		} else if (urlString.startsWith("https://api.mojang.com/users/profiles/minecraft/") && conn.getResponseCode() == 204) {
+		// 			player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Failed with reason: Player does not exist."));
+		// 		} else {
+		// 			// player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Request failed. HTTP Error Code: " + conn.getResponseCode()));
+		// 		}
+		// 	}
+		// } catch (IOException ex) {
+		// 	player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "An error has occured. See logs for more details."));
+		// 	ex.printStackTrace();
+		// }
 
-		return new JsonObject();
+		// return new JsonObject();
 	}
 
     public static String getUUID(String username) {
@@ -188,40 +189,35 @@ public class APIUtil {
         }
       }
 
-    public static String getLatestProfileID(String UUID, String key) {
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-
+    public static String getLatestProfileID(String uuid, String key) {
         // Get profiles
         System.out.println("Fetching profiles...");
-
-        JsonObject profilesResponse = getJSONResponse("https://api.hypixel.net/skyblock/profiles?uuid=" + UUID + "&key=" + key);
-        if (!profilesResponse.get("success").getAsBoolean()) {
-            String reason = profilesResponse.get("cause").getAsString();
-            player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Failed with reason: " + reason));
+        JsonObject profilesResponse = getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/"+uuid);
+        if (profilesResponse.has("error")) {
+            String reason = profilesResponse.get("error").getAsString();
+            Utils.SendMessage(EnumChatFormatting.RED + "Failed with reason: " + reason);
             return null;
         }
-        if (profilesResponse.get("profiles").isJsonNull()) {
-            player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "This player doesn't appear to have played SkyBlock."));
+        if(!profilesResponse.has("profiles")) {
+            Utils.SendMessage(EnumChatFormatting.RED + "This player doesn't appear to have played SkyBlock.");
             return null;
         }
 
-        // Loop through profiles to find latest
         System.out.println("Looping through profiles...");
         String latestProfile = "";
-        JsonArray profilesArray = profilesResponse.get("profiles").getAsJsonArray();
-
-        for (JsonElement profile : profilesArray) {
-            JsonObject profileJSON = profile.getAsJsonObject();
+        JsonObject profilesArray = profilesResponse.get("profiles").getAsJsonObject();
+        for (Map.Entry<String,JsonElement> profile : profilesArray.entrySet()) {
+            System.out.println("Fetching profile: "+profile.getKey());
+            JsonObject profileJSON = profile.getValue().getAsJsonObject();
             boolean selectedProfile = false;
-            if (profileJSON.has("selected")) {
-                selectedProfile = profileJSON.get("selected").getAsBoolean();
+            if (profileJSON.has("current")) {
+                selectedProfile = profileJSON.get("current").getAsBoolean();
             }
 
             if (selectedProfile) {
-                latestProfile = profileJSON.get("profile_id").getAsString();
+                latestProfile = profile.getKey();
             }
         }
-
         return latestProfile;
     }
 }
