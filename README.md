@@ -13,10 +13,6 @@
     <a href="./LICENSE" target="_blank">
         <img src="https://img.shields.io/github/license/MrFast-js/SkyblockFeatures?color=informational" alt="license">
     </a>
-    <!-- contributors -->
-    <a href="https://github.com/MrFast-js/SkyblockFeatures/graphs/contributors" target="_blank">
-        <img src="https://img.shields.io/github/contributors/MrFast-js/SkyblockFeatures?color=informational&logo=GitHub" alt="contributors">
-    </a>
     <!-- discord -->
     <a href="https://discord.gg/UVXCPDAmJK" target="_blank">
         <img src="https://img.shields.io/discord/1004750886985277583?label=discord&color=informational&logo=Discord&logoColor=FFFFFF" alt="discord">
