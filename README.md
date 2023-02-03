@@ -85,6 +85,7 @@ For Beta Releases, Suggestions, and Support join the discord! https://discord.gg
 - Minion Profit Overlay (Coins Per Hour, Cooldown, ect)
 - Helpful Auction Guis (for flipping, selling, and buying)
 - Highlight Auction Flips
+- Better Party finder
 - Show Extra Profile Info (Shows networth, skill avg and discord when looking at someones profile)
 
 #### Helpers:
@@ -106,6 +107,7 @@ For Beta Releases, Suggestions, and Support join the discord! https://discord.gg
 - Average BIN Price
 - Estimated Item Price
 - Item Price Paid
+- BIN Flip Profit (When in AH)
 
 #### Cool Commands:
 - /acc \<name\> (*Allows you see another players accessory bag*)
