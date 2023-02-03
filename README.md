@@ -82,7 +82,7 @@
 - Ad Blocker (Hides people advertising in chat)
 
 #### Guis:
-- Minion Profit Overlay (Coins Per Hour, Cooldown, ect)
+- Minion Profit Overlay (Coins Per Hour, Cooldown,Last collected, etc.)
 - Helpful Auction Guis (for flipping, selling, and buying)
 - Highlight Auction Flips
 - Better Party finder
