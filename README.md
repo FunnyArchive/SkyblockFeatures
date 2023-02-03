@@ -36,7 +36,7 @@ For Beta Releases, Suggestions, and Support join the discord! https://discord.gg
 - Download mod from [releases](https://github.com/MrFast-js/SkyblockFeatures/releases/latest) tab
 - Put mod into mods folder and start up game
 - Type '/api new' into chat to set a new api key
-- Type '/sf' for help
+- Type '/sbf' for help
 
 <h1 align="center">Top Feature List</h1>
 
@@ -52,8 +52,9 @@ For Beta Releases, Suggestions, and Support join the discord! https://discord.gg
 #### Dungeons:
 - Dungeon Blocks
 - Crypt Display
+- Score Estimate
 - Highlight Dungeon Bats
-- Dungeon Nametags
+- Better Dungeon Nametags
 - Dungeon Teammate Glowing
 - Dungeon Map with Player Heads And Names
 - Dungeon Chest Profit
@@ -69,7 +70,7 @@ For Beta Releases, Suggestions, and Support join the discord! https://discord.gg
 
 #### Mining:
 - Commissions Tracker
-- Crystal Hollows Map
+- Crystal Hollows Map (Maps out explored caves)
 
 #### Visual:
 - Small Items
@@ -87,7 +88,7 @@ For Beta Releases, Suggestions, and Support join the discord! https://discord.gg
 - Show Extra Profile Info (Shows networth, skill avg and discord when looking at someones profile)
 
 #### Helpers:
-- Auto Auction Flipping Bot (like TFM/COFL)
+- Bin Flipper (like TFM/COFL)
 - Show Gift Compass Waypoints
 - Fairy Soul Helper
 - Fishing Helper
@@ -95,14 +96,16 @@ For Beta Releases, Suggestions, and Support join the discord! https://discord.gg
 - Endernode Highlighter
 - Highlight Zealots Spawn Locations
 - 1.12 Crop Hitbox
-- Lowest BIN Price
-- Average BIN Price
-- Helpful Auction Guis (for flipping, selling, and buying)
 - Highlight Auction Flips
-- Compact Chat
 - Ad Blocker (Hides people advertising in chat)
 - Highlight Glowing Mushrooms
 - And Much More!
+
+### Item Price Info
+- Lowest BIN Price
+- Average BIN Price
+- Estimated Item Price
+- Item Price Paid
 
 #### Cool Commands:
 - /acc \<name\> (*Allows you see another players accessory bag*)
@@ -114,7 +117,7 @@ For Beta Releases, Suggestions, and Support join the discord! https://discord.gg
 - /bank \<name\> (*Displays another players current purse/bank balance*)
 - /dungeons \<name\> (*Shows another players dungeon stats*)
 - /shrug \<msg\> (*Sends a message followed by a "¯\\_(ツ)_/¯"*)
-- /networth \<name\> (*Shows you a players networth*) *Provided by skyleamoe API*
+- /networth \<name\> (*Shows you a players networth*) *Provided by [Skycrypt](https://sky.shiiyu.moe/) API*
 
 ## License
 
