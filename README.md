@@ -64,6 +64,8 @@ For Beta Releases, Suggestions, and Support join the discord! https://discord.gg
 - Endernode Tracker
 - Glacial Cave Treasure Tracker
 - Commissions Tracker
+- Powder Mining Tracker
+- Ghost Loot Tracker
 
 #### Mining:
 - Commissions Tracker
