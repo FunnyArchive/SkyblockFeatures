@@ -98,7 +98,7 @@
 - Highlight Glowing Mushrooms
 - And Much More!
 
-### Item Price Info
+#### Item Price Info
 - Lowest BIN Price
 - Average BIN Price
 - Estimated Item Price
