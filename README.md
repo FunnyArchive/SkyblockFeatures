@@ -36,7 +36,7 @@
 - Download mod from [releases](https://github.com/MrFast-js/SkyblockFeatures/releases/latest) tab
 - Put mod into mods folder and start up game
 - Type '/api new' into chat to set a new api key
-- Type '/sbf' for help
+- Type '/sbf' for config
 
 <h1 align="center">Top Feature List</h1>
 
