@@ -11,6 +11,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 import org.lwjgl.util.vector.Vector2f;
@@ -105,6 +106,7 @@ public class Utils {
     }
 
     public static String capitalizeString(String string) {
+        string = cleanColour(string);
 		String[] words = string.split("_");
 		
 		for (int i = 0; i < words.length; i++) {
@@ -172,6 +174,25 @@ public class Utils {
         Minecraft.getMinecraft().fontRendererObj.drawString(text, x, y, 0xFFFFFF, false);
     }
 
+    public static String msToDuration(long value) {
+        long currentTime = System.currentTimeMillis();
+        long age = currentTime - value;
+        String ageString = DurationFormatUtils.formatDuration(age, "d") + "d";
+        if ("0d".equals(ageString)) {
+            ageString = DurationFormatUtils.formatDuration(age, "H") + "h";
+            if ("0h".equals(ageString)) {
+                ageString = DurationFormatUtils.formatDuration(age, "m") + "m";
+                if ("0m".equals(ageString)) {
+                    ageString = DurationFormatUtils.formatDuration(age, "s") + "s";
+                    if ("0s".equals(ageString)) {
+                        ageString = age + "ms";
+                    }
+                }
+            }
+        }
+        return ageString;
+    }
+    
     public static String secondsToTime(int seconds) {
         String time = "";
         int sec = seconds % 60;

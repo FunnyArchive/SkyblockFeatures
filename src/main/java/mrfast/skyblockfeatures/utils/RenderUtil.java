@@ -21,6 +21,8 @@ import net.minecraft.util.Vec3;
 
 public class RenderUtil {
     public static void drawOutlinedFilledBoundingBox(AxisAlignedBB aabb, Color color, float partialTicks) {
+        aabb = aabb.offset(-0.001, -0.001, 0);
+        aabb = aabb.expand(0.002, 0.002, 0.001);
         GlStateManager.enableBlend();
         GlStateManager.disableLighting();
         GlStateManager.enableCull();
@@ -323,9 +325,21 @@ public class RenderUtil {
 
     public static void drawLines(List<Vec3> solution, Color color, float f, float partialTicks, boolean b) {
         for(int i=0;i<solution.size();i++) {
-            if(i!=solution.size()-1) draw3DLine(solution.get(i), solution.get(i+1), 3, color, partialTicks);
+            if(i!=solution.size()-1) {
+                draw3DLine(solution.get(i), solution.get(i+1), 3, color, partialTicks);
+            }
         }
     }
-
-
+    // For drawing pathfinder lines
+    public static void drawEveryOtherLines(List<Vec3> solution, Color color, float f, float partialTicks, boolean b) {
+        for(int i=0;i<solution.size();i++) {
+            if(i%2==0)continue;
+            if(i!=solution.size()-1) {
+                draw3DLine(solution.get(i), solution.get(i+2), 3, color, partialTicks);
+                Vec3 p=solution.get(i);
+                AxisAlignedBB box = new AxisAlignedBB(p.xCoord-0.1,p.yCoord-0.1,p.zCoord-0.1,p.xCoord+0.1,p.yCoord+0.1,p.zCoord+0.1);
+                drawOutlinedFilledBoundingBox(box, color, partialTicks);
+            }
+        }
+    }
 }

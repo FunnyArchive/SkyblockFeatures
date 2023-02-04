@@ -15,11 +15,13 @@ import mrfast.skyblockfeatures.events.GuiContainerEvent;
 import mrfast.skyblockfeatures.events.PacketEvent;
 import mrfast.skyblockfeatures.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.skyblockfeatures.utils.APIUtil;
+import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.NumberUtil;
 import mrfast.skyblockfeatures.utils.RenderUtil;
 import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockAir;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.entity.Entity;
@@ -27,6 +29,8 @@ import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ContainerChest;
@@ -34,9 +38,11 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.S2APacketParticles;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderBlockOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -60,7 +66,17 @@ public class MiscFeatures {
     @SubscribeEvent
     public void onCheckRender(CheckRenderEntityEvent event) {
         if (!Utils.inSkyblock) return;
-        // mc.thePlayer.rayTrace(mc.playerController.getBlockReachDistance(), event.partialTicks);
+        if(skyblockfeatures.config.hideArrows && event.entity instanceof EntityArrow) {
+            event.setCanceled(true);
+        }
+        if(skyblockfeatures.config.hidePlayersNearNPC) {
+            for(Entity entity: Utils.GetMC().theWorld.loadedEntityList) {
+                if(Utils.isNPC(entity) && event.entity instanceof EntityPlayer && entity.getDistanceToEntity(event.entity)<3 && entity!=event.entity) {
+                    event.setCanceled(true);
+                }
+            }
+        }
+
         if (event.entity instanceof EntityItem) {
             EntityItem entity = (EntityItem) event.entity;
             if (skyblockfeatures.config.hideJerryRune) {
@@ -116,6 +132,7 @@ public class MiscFeatures {
     @SubscribeEvent
     public void onTick(ClientTickEvent event) {
         if(Utils.GetMC().theWorld==null) return;
+        
         tick++;
         for(Entity entity:Utils.GetMC().theWorld.loadedEntityList) {
             if(entity instanceof EntityTNTPrimed && !tntExistTimes.containsKey(entity)) {
@@ -133,6 +150,51 @@ public class MiscFeatures {
 
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
+        try {
+            if(Utils.GetMC().thePlayer.getHeldItem()!=null && skyblockfeatures.config.teleportDestination) {
+                ItemStack item = Utils.GetMC().thePlayer.getHeldItem();
+                String id = ItemUtil.getSkyBlockItemID(item);
+                if(id!=null)
+                if(id.contains("ASPECT_OF_THE_END") || id.contains("ASPECT_OF_THE_VOID")) {
+                    Double distance = 8.0;
+                    Double etherDistance = 8.0;
+                    Boolean hasEtherwarp = false;
+                    for(String line:ItemUtil.getItemLore(item)) {
+                        line = Utils.cleanColour(line);
+                        if(line.contains("Teleport")) {
+                            try {
+                                distance = Double.parseDouble(line.replaceAll("[^0-9]", ""));
+                            } catch (Exception e) {
+                                // TODO: handle exception
+                            }
+                        }
+                        if(line.contains("up to")) {
+                            try {
+                                etherDistance = Double.parseDouble(line.replaceAll("[^0-9]", ""));
+                            } catch (Exception e) {
+                                // TODO: handle exception
+                            }
+                        }
+                        if(line.contains("Ether")) {
+                            hasEtherwarp = true;
+                        }
+                    }
+                    MovingObjectPosition lookingBlock = Utils.GetMC().thePlayer.rayTrace(distance, event.partialTicks);
+                    if(hasEtherwarp && Utils.GetMC().thePlayer.isSneaking())  {
+                        lookingBlock = Utils.GetMC().thePlayer.rayTrace(etherDistance, event.partialTicks);
+                    }
+                    AxisAlignedBB box = new AxisAlignedBB(lookingBlock.getBlockPos(), lookingBlock.getBlockPos().add(1, 1, 1));
+    
+                    if(!(Utils.GetMC().theWorld.getBlockState(lookingBlock.getBlockPos()).getBlock() instanceof BlockAir)) {
+                        RenderUtil.drawOutlinedFilledBoundingBox(box, new Color(0x324ca8), event.partialTicks);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        
+        if(skyblockfeatures.config.tntTimer)
         for(EntityTNTPrimed tnt:tntExistTimes.keySet()) {
             if(tnt.isDead) {
                 tntExistTimes.remove(tnt);
@@ -194,6 +256,9 @@ public class MiscFeatures {
             if(!gotNetworth && !tryingNetworth) {
                 tryingNetworth = true;
                 new Thread(() -> {
+                    try {
+                        
+                    
                     String key = skyblockfeatures.config.apiKey;
                     if (key.equals("")) return;
                     
@@ -211,15 +276,19 @@ public class MiscFeatures {
                     JsonObject profileResponse = APIUtil.getJSONResponse(profileURL);
                     try {
                         profileResponse = profileResponse.get("profiles").getAsJsonObject();
-                        networth = profileResponse.get(latestProfile).getAsJsonObject().get("data").getAsJsonObject().get("networth").getAsJsonObject().get("networth").getAsDouble();
-                        senitherWeight = profileResponse.get(latestProfile).getAsJsonObject().get("data").getAsJsonObject().get("weight").getAsJsonObject().get("senither").getAsJsonObject().get("overall").getAsDouble();
-                        averageSkill = Math.floor(profileResponse.get(latestProfile).getAsJsonObject().get("data").getAsJsonObject().get("average_level").getAsDouble());
-                        JsonObject social = profileResponse.get(latestProfile).getAsJsonObject().get("data").getAsJsonObject().get("social").getAsJsonObject();
+                        JsonObject a = profileResponse.get(latestProfile).getAsJsonObject().get("data").getAsJsonObject();
+                        networth = a.getAsJsonObject().get("networth").getAsJsonObject().get("networth").getAsDouble();
+                        senitherWeight = a.getAsJsonObject().get("weight").getAsJsonObject().get("senither").getAsJsonObject().get("overall").getAsDouble();
+                        averageSkill = Math.floor(a.getAsJsonObject().get("average_level").getAsDouble());
+                        JsonObject social = a.getAsJsonObject().get("social").getAsJsonObject();
                         if(social.has("DISCORD")) discord=social.get("DISCORD").getAsString();
                         else discord="None";
                         gotNetworth = true;
                     } catch (Exception e) {
+                        e.printStackTrace();
                         apiOff = true;
+                    }} catch (Exception e) {
+                        // TODO: handle exception
                     }
                 }).start();
             }
@@ -246,4 +315,5 @@ public class MiscFeatures {
             }
         }
     }
+
 }

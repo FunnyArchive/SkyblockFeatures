@@ -6,7 +6,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,6 +17,8 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import gg.essential.api.EssentialAPI;
+import gg.essential.api.utils.GuiUtil;
+import gg.essential.vigilance.gui.SettingsGui;
 import mrfast.skyblockfeatures.commands.*;
 import mrfast.skyblockfeatures.core.Config;
 import mrfast.skyblockfeatures.core.DataFetcher;
@@ -25,28 +30,25 @@ import mrfast.skyblockfeatures.events.SecondPassedEvent;
 import mrfast.skyblockfeatures.features.impl.ItemFeatures.HideGlass;
 import mrfast.skyblockfeatures.features.impl.bar.*;
 import mrfast.skyblockfeatures.features.impl.dungeons.*;
-import mrfast.skyblockfeatures.features.impl.dungeons.solvers.BlazeSolver;
-import mrfast.skyblockfeatures.features.impl.dungeons.solvers.LividFinder;
-import mrfast.skyblockfeatures.features.impl.dungeons.solvers.ThreeWeirdosSolver;
-import mrfast.skyblockfeatures.features.impl.events.*;
+import mrfast.skyblockfeatures.features.impl.dungeons.solvers.*;
+import mrfast.skyblockfeatures.features.impl.events.JerryTimer;
+import mrfast.skyblockfeatures.features.impl.events.MayorJerry;
 import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
 import mrfast.skyblockfeatures.features.impl.handlers.KeyShortcuts;
 import mrfast.skyblockfeatures.features.impl.hidestuff.HideStuff;
-import mrfast.skyblockfeatures.features.impl.mining.CommisionsTracker;
-import mrfast.skyblockfeatures.features.impl.mining.HighlightCobblestone;
-import mrfast.skyblockfeatures.features.impl.mining.MetalDetectorSolver;
-import mrfast.skyblockfeatures.features.impl.mining.MiningFeatures;
-import mrfast.skyblockfeatures.features.impl.mining.PathTracer;
+import mrfast.skyblockfeatures.features.impl.mining.*;
 import mrfast.skyblockfeatures.features.impl.misc.*;
 import mrfast.skyblockfeatures.features.impl.overlays.*;
+import mrfast.skyblockfeatures.features.impl.render.DynamicFullbright;
 import mrfast.skyblockfeatures.features.impl.trackers.*;
+import mrfast.skyblockfeatures.gui.TestGui;
 import mrfast.skyblockfeatures.listeners.ChatListener;
 import mrfast.skyblockfeatures.mixins.AccessorCommandHandler;
 import mrfast.skyblockfeatures.utils.CapeUtils;
 import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommand;
@@ -62,9 +64,9 @@ import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Loader;
@@ -76,11 +78,11 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-@Mod(modid = skyblockfeatures.MODID, name = skyblockfeatures.MOD_NAME, version = skyblockfeatures.VERSION, acceptedMinecraftVersions = "[1.8.9]", clientSideOnly = true)
+@Mod(modid = skyblockfeatures.MODID, name = skyblockfeatures.MOD_NAME, version = "1.2.4", acceptedMinecraftVersions = "[1.8.9]", clientSideOnly = true)
 public class skyblockfeatures {
     public static final String MODID = "skyblockfeatures";
     public static final String MOD_NAME = "skyblockfeatures";
-    public static final String VERSION = "1.1.7";
+    public static String VERSION = "Loading";
     public static final Minecraft mc = Minecraft.getMinecraft();
 
     public static Config config = new Config();
@@ -96,7 +98,6 @@ public class skyblockfeatures {
 
     public static File jarFile = null;
     private static long lastChatMessage = 0;
-    // private static FriendManager m_FriendManager = new FriendManager();
 
     @Mod.Instance(MODID)
     public static skyblockfeatures INSTANCE;
@@ -186,7 +187,6 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new DefenceDisplay());
         MinecraftForge.EVENT_BUS.register(new HideStuff());
         MinecraftForge.EVENT_BUS.register(new ActionBarListener());
-        // MinecraftForge.EVENT_BUS.register(new CompactChat());
         MinecraftForge.EVENT_BUS.register(new BetterParties());
         MinecraftForge.EVENT_BUS.register(new CommisionsTracker());
         MinecraftForge.EVENT_BUS.register(new FairySoulWaypoints());
@@ -215,11 +215,35 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new MiscOverlays());
         MinecraftForge.EVENT_BUS.register(new TrevorHelper());
         MinecraftForge.EVENT_BUS.register(new PathTracer());
+        MinecraftForge.EVENT_BUS.register(new GhostTracker());
+        MinecraftForge.EVENT_BUS.register(new CreeperSolver());
+        MinecraftForge.EVENT_BUS.register(new PowderTracker());
+        MinecraftForge.EVENT_BUS.register(new DwarvenMap());
+        MinecraftForge.EVENT_BUS.register(new GrandmaWolfTimer());
+        MinecraftForge.EVENT_BUS.register(new RelicFinderWaypoints());
+        MinecraftForge.EVENT_BUS.register(new DynamicFullbright());
+        // MinecraftForge.EVENT_BUS.register(new Pathfinder());
 
         // Solvers
         MinecraftForge.EVENT_BUS.register(new BlazeSolver());
         MinecraftForge.EVENT_BUS.register(new ThreeWeirdosSolver());
         MinecraftForge.EVENT_BUS.register(new ScoreCalculation());
+
+        // Checks mod folder for version of Skyblock Features your using
+        for(String modName:listFilesUsingJavaIO(Minecraft.getMinecraft().mcDataDir.getAbsolutePath()+"/mods")) {
+            if(modName.contains("Skyblock-Features")) {
+                // Filters out the mod name to just the version
+                VERSION = modName.substring(0, modName.length()-4).replaceAll("Skyblock-Features-", "");
+                break;
+            }
+        }
+    }
+    // List files in a directory (Used only for the mods folder)
+    public Set<String> listFilesUsingJavaIO(String dir) {
+        return Stream.of(new File(dir).listFiles())
+          .filter(file -> !file.isDirectory())
+          .map(File::getName)
+          .collect(Collectors.toSet());
     }
 
     @Mod.EventHandler
@@ -257,8 +281,6 @@ public class skyblockfeatures {
 
         if (!cch.getCommands().containsKey("key")) cch.registerCommand(new GetkeyCommand());
 
-        if (!cch.getCommands().containsKey("debug")) cch.registerCommand(new DebugCommand());
-
         if (!cch.getCommands().containsKey("dungeons")) cch.registerCommand(new DungeonsCommand());
 
         if (!cch.getCommands().containsKey("skills")) cch.registerCommand(new SkillsCommand());
@@ -292,6 +314,7 @@ public class skyblockfeatures {
     public static boolean auctionPricesLoaded = false;
     public static boolean smallItems = false;
     public boolean start = true;
+
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         skyblockfeatures.config.autoAuctionFlipMargin = skyblockfeatures.config.autoAuctionFlipMargin.replaceAll("[^0-9]", "");
@@ -311,7 +334,7 @@ public class skyblockfeatures {
                 skyblockfeatures.config.armZ = -60;
             }
             smallItems = skyblockfeatures.config.smallItems;
-            }
+        }
         if (mc.thePlayer != null && sendMessageQueue.size() > 0 && System.currentTimeMillis() - lastChatMessage > 200) {
             String msg = sendMessageQueue.pollFirst();
             if (msg != null) {
@@ -340,7 +363,7 @@ public class skyblockfeatures {
             lastChatMessage = System.currentTimeMillis();
         }
     }
-    
+    GuiScreen lastGui = null;
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event)
     {

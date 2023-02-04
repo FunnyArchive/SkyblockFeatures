@@ -24,6 +24,7 @@ public class UltrasequencerSolver {
     static int lastUltraSequencerClicked = 0;
     static HashMap<Slot,ItemStack> answers = new HashMap<>();
     static int clickIndex = 1;
+    
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.START) return;
@@ -40,7 +41,7 @@ public class UltrasequencerSolver {
                     answers.clear();
                     for (int i = 9; i <= 44; i++) {
                         if (invSlots.get(i) == null || invSlots.get(i).getStack() == null) continue;
-                        String itemName = StringUtils.stripControlCodes(invSlots.get(i).getStack().getDisplayName());
+                        String itemName = Utils.cleanColour(invSlots.get(i).getStack().getDisplayName());
                         if (itemName.matches("\\d+")) {
                             int number = Integer.parseInt(itemName);
                             clickInOrderSlots[number - 1] = invSlots.get(i);

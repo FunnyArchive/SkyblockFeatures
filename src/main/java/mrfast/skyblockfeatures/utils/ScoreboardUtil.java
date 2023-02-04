@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class ScoreboardUtil {
 
     public static String cleanSB(String scoreboard) {
-        char[] nvString = StringUtils.stripControlCodes(scoreboard).toCharArray();
+        char[] nvString = Utils.cleanColour(scoreboard).toCharArray();
         StringBuilder cleaned = new StringBuilder();
 
         for (char c : nvString) {

@@ -64,7 +64,7 @@ public class BlazeSolver {
 
             for (Entity entity : entities) {
                 if (entity.getName().contains("Blaze") && entity.getName().contains("/")) {
-                    String blazeName = StringUtils.stripControlCodes(entity.getName());
+                    String blazeName = Utils.cleanColour(entity.getName());
                     try {
                         int health = Integer.parseInt(blazeName.substring(blazeName.indexOf("/") + 1, blazeName.length() - 1));
                         blazes.add(new Blaze(entity, health));

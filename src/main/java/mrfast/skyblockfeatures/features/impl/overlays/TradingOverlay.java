@@ -88,11 +88,11 @@ public class TradingOverlay {
                         value = AuctionData.lowestBINs.get(id)+starValue+enchantValue;
                     }
                     if(selfSlots.contains(slotId)) {
-                        totalSelf+=value;
+                        totalSelf+=value*inv.getStackInSlot(slotId).stackSize;
                         selfItemsAndValues.put(inv.getStackInSlot(slotId).getDisplayName(), value);
                     }
                     if(otherSlots.contains(slotId)) {
-                        totalOther+=value;
+                        totalOther+=value*inv.getStackInSlot(slotId).stackSize;
                         otherItemsAndValues.put(inv.getStackInSlot(slotId).getDisplayName(), value);
                     }
                 }

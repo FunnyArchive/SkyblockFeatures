@@ -6,11 +6,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Map;
 import java.util.Scanner;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.methods.HttpGet;
@@ -21,8 +21,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
-import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,12 +36,29 @@ import net.minecraft.util.EnumChatFormatting;
  */
 public class APIUtil {
 
-    public static CloseableHttpClient client = HttpClients.custom().setUserAgent("skyblockfeatures/" + skyblockfeatures.VERSION).addInterceptorFirst((HttpRequestInterceptor) (request, context) -> {
-        if (!request.containsHeader("Pragma")) request.addHeader("Pragma", "no-cache");
-        if (!request.containsHeader("Cache-Control")) request.addHeader("Cache-Control", "no-cache");
-    }).build();
-
+    public static CloseableHttpClient client = HttpClients.custom().setUserAgent("Mozilla/5.0").build();
+    public static JsonObject readJsonFromUrl(String sURL) {
+        try {
+            // Connect to the URL using java's native library
+            Utils.SendMessage(sURL);
+            URL url = new URL(sURL);
+            URLConnection request = url.openConnection();
+            request.connect();
+            Utils.SendMessage("Connection");
+            // Convert to a JSON object to print data
+            JsonParser jp = new JsonParser(); //from gson
+            JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent())); //Convert the input stream to a json element
+            Utils.SendMessage(root.getAsString());
+            return root.getAsJsonObject();   
+        } catch (Exception e) {
+            e.printStackTrace();
+            // TODO: handle exception
+        }
+        return new JsonObject();
+    }
+    
     public static JsonObject getJSONResponse(String urlString) {
+        client = HttpClients.custom().setUserAgent("Mozilla/5.0").build();
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         try {
             HttpGet request = new HttpGet(new URL(urlString).toURI());
@@ -50,7 +67,6 @@ public class APIUtil {
             HttpResponse response = client.execute(request);
 
             HttpEntity entity = response.getEntity();
-
             if (response.getStatusLine().getStatusCode() == 200) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(entity.getContent()));
                 String input;
@@ -62,9 +78,9 @@ public class APIUtil {
                 in.close();
 
                 Gson gson = new Gson();
-
                 return gson.fromJson(r.toString(), JsonObject.class);
             } else {
+
                 if (urlString.startsWith("https://api.hypixel.net/") || urlString.equals(AuctionData.dataURL)) {
                     InputStream errorStream = entity.getContent();
                     try (Scanner scanner = new Scanner(errorStream)) {
@@ -82,11 +98,10 @@ public class APIUtil {
                     // player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Request failed. HTTP Error Code: " + response.getStatusLine().getStatusCode()));
                 }
             }
-        } catch (IOException | URISyntaxException ex) {
+        } catch (Exception ex) {
             player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "An error has occured."));
-            // ex.printStackTrace();
+            ex.printStackTrace();
         }
-
         return new JsonObject();
     }
 
@@ -173,8 +188,13 @@ public class APIUtil {
 	}
 
     public static String getUUID(String username) {
-        JsonObject uuidResponse = getJSONResponse("https://api.mojang.com/users/profiles/minecraft/" + username);
-        return uuidResponse.get("id").getAsString();
+        try {
+            JsonObject uuidResponse = getJSONResponse("https://api.mojang.com/users/profiles/minecraft/" + username);
+            return uuidResponse.get("id").getAsString();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return null;
     }
     private static Gson gson = new Gson();
     public static String getName(String uuid) {
@@ -190,7 +210,6 @@ public class APIUtil {
       }
 
     public static String getLatestProfileID(String uuid, String key) {
-        // Get profiles
         System.out.println("Fetching profiles...");
         JsonObject profilesResponse = getJSONResponse("https://sky.shiiyu.moe/api/v2/profile/"+uuid);
         if (profilesResponse.has("error")) {
@@ -198,10 +217,12 @@ public class APIUtil {
             Utils.SendMessage(EnumChatFormatting.RED + "Failed with reason: " + reason);
             return null;
         }
+
         if(!profilesResponse.has("profiles")) {
-            Utils.SendMessage(EnumChatFormatting.RED + "This player doesn't appear to have played SkyBlock.");
+            // Utils.SendMessage(EnumChatFormatting.RED + "This player doesn't appear to have played SkyBlock.");
             return null;
         }
+
 
         System.out.println("Looping through profiles...");
         String latestProfile = "";

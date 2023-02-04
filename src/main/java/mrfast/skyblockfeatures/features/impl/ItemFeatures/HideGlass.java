@@ -3,26 +3,34 @@ package mrfast.skyblockfeatures.features.impl.ItemFeatures;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.lwjgl.input.Keyboard;
+
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.commands.TerminalCommand;
+import mrfast.skyblockfeatures.commands.getNbtCommand;
+import mrfast.skyblockfeatures.core.Config;
 import mrfast.skyblockfeatures.events.ChestSlotClickedEvent;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
 import mrfast.skyblockfeatures.events.GuiContainerEvent.TitleDrawnEvent;
+import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiChest;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -82,6 +90,28 @@ public class HideGlass {
                 }
             }
         }
+        if(Utils.inSkyblock && skyblockfeatures.config.showSkyblockID) {
+            for(int i = 0; i < event.toolTip.size(); i++) {
+                String line = Utils.cleanColour(event.toolTip.get(i));
+                if(line.contains("minecraft:")) {
+                    event.toolTip.add(i+1,ChatFormatting.DARK_GRAY+"ID: "+ItemUtil.getSkyBlockItemID(event.itemStack));
+                    if(Utils.GetMC().thePlayer.getName().equals("Skyblock_Lobby")) {
+                        if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)&&Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
+                            NBTTagCompound tag = event.itemStack.getTagCompound();
+                            if(tag!=null) {
+                                event.toolTip.add(i+1,ChatFormatting.DARK_GRAY+"DATA: "+getNbtCommand.prettyPrintNBT(tag));
+                            }
+                        } else if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
+                            NBTTagCompound tag = ItemUtil.getExtraAttributes(event.itemStack);
+                            if(tag!=null) {
+                                event.toolTip.add(i+1,ChatFormatting.DARK_GRAY+"DATA: "+getNbtCommand.prettyPrintNBT(tag));
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+        }
 
         if(Utils.inSkyblock && isEmptyGlassPane(event.itemStack)) {
             event.toolTip.clear();
@@ -134,6 +164,7 @@ public class HideGlass {
                         if(TerminalCommand.start == 0) {
                             TerminalCommand.start = System.currentTimeMillis();
                         }
+                    
                         TerminalCommand.mazeIndex++;
                     }
                 }
@@ -158,4 +189,25 @@ public class HideGlass {
         }
     }
 
+    // Debug Mode to see all the slots ids
+    @SubscribeEvent
+    public void onDrawSlots(GuiContainerEvent.DrawSlotEvent.Pre event) {
+        if (event.gui instanceof GuiChest ) {
+            GuiChest gui = (GuiChest) event.gui;
+            ContainerChest chest = (ContainerChest) gui.inventorySlots;
+            if(Utils.GetMC().thePlayer.getName().equals("Skyblock_Lobby")) {
+                if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)&&Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
+                    for(int i=0;i<chest.inventorySlots.size();i++) {
+                        
+                        int x = chest.inventorySlots.get(i).xDisplayPosition;
+                        int y = chest.inventorySlots.get(i).yDisplayPosition;
+                        GlStateManager.pushMatrix();
+                        GlStateManager.translate(0, 0, 700);
+                        Utils.drawTextWithStyle3(ChatFormatting.GREEN+""+i+"", x+6, y+6);
+                        GlStateManager.popMatrix();
+                    }
+                }
+            }
+        }
+    }
 }

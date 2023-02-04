@@ -45,7 +45,7 @@ public abstract class MixinGuiContainer extends GuiScreen {
     private void titlePostDrawn(int mouseX, int mouseY, float partialTicks,CallbackInfo ci) {
         try {
             MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.TitleDrawnEvent(that, inventorySlots, mouseX, mouseY, partialTicks));
-        } catch (Throwable e) {
+        } catch (Exception e) {
             
         }
     }
@@ -80,6 +80,7 @@ public abstract class MixinGuiContainer extends GuiScreen {
 			}
 		}
         try {
+            if(slot!=null)
             if (MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.SlotClickEvent(that, inventorySlots, slot, slotId, clickedButton, clickType))) ci.cancel();
         } catch (Throwable e) {
             // e.printStackTrace();

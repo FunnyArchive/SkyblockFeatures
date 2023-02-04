@@ -147,7 +147,7 @@ public class SBInfo {
                 Score score = scores.get(i);
                 ScorePlayerTeam scoreplayerteam1 = scoreboard.getPlayersTeam(score.getPlayerName());
                 String line = ScorePlayerTeam.formatPlayerName(scoreplayerteam1, score.getPlayerName());
-                line = StringUtils.stripControlCodes(line);
+                line = Utils.cleanColour(line);
                 lines.add(line);
             }
             for(NetworkPlayerInfo info : Minecraft.getMinecraft().thePlayer.sendQueue.getPlayerInfoMap()) {
@@ -159,11 +159,11 @@ public class SBInfo {
             
 
             if (lines.size() >= 5) {
-                date = StringUtils.stripControlCodes(lines.get(2)).trim();
+                date = Utils.cleanColour(lines.get(2)).trim();
                 //§74:40am
                 Matcher matcher = timePattern.matcher(lines.get(3));
                 if (matcher.find()) {
-                    time = StringUtils.stripControlCodes(matcher.group()).trim();
+                    time = Utils.cleanColour(matcher.group()).trim();
                     try {
                         String timeSpace = time.replace("am", " am").replace("pm", " pm");
                         SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm a");
@@ -171,7 +171,7 @@ public class SBInfo {
                     } catch (ParseException e) {
                     }
                 }
-                location = StringUtils.stripControlCodes(lines.get(4)).replaceAll("[^A-Za-z0-9() ]", "").trim();
+                location = Utils.cleanColour(lines.get(4)).replaceAll("[^A-Za-z0-9() ]", "").trim();
             }
             objective = null;
 

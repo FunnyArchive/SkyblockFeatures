@@ -47,7 +47,7 @@ public class ThreeWeirdosSolver {
             for (String solution : riddleSolutions) {
                 if (message.contains(solution)) {
                     String npcName = message.split(" ")[1].replace(":","");
-                    Utils.SendMessage(EnumChatFormatting.GOLD+""+ EnumChatFormatting.BOLD+"The rewards in " + StringUtils.stripControlCodes(npcName)+"'s Chest");
+                    Utils.SendMessage(EnumChatFormatting.GOLD+""+ EnumChatFormatting.BOLD+"The rewards in " + Utils.cleanColour(npcName)+"'s Chest");
                     if (riddleChest == null) {
                         for (Entity entity : mc.theWorld.loadedEntityList) {
                             if (entity == null || !entity.hasCustomName()) continue;

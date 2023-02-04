@@ -77,8 +77,8 @@ public class DungeonsCommand extends CommandBase {
 			String profileURL = "https://api.hypixel.net/skyblock/profile?profile=" + latestProfile + "&key=" + key;
 			System.out.println("Fetching profile...");
 			JsonObject profileResponse = APIUtil.getResponse(profileURL);
-			if(profileResponse.has("error")) {
-				String reason = profileResponse.get("error").getAsString();
+			if(profileResponse.has("cause")) {
+				String reason = profileResponse.get("cause").getAsString();
 				player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Failed with reason: " + reason));
 				return;
 			}
@@ -86,7 +86,7 @@ public class DungeonsCommand extends CommandBase {
 			String playerURL = "https://api.hypixel.net/player?uuid=" + uuid + "&key=" + key;
 			System.out.println("Fetching player data...");
 			JsonObject playerResponse = APIUtil.getResponse(playerURL);
-			if(playerResponse.has("error")){
+			if(playerResponse.has("cause")){
 				player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "This player has not played on Hypixel."));
 			}
 			

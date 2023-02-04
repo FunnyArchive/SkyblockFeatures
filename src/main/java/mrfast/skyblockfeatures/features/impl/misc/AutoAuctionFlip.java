@@ -35,6 +35,7 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
@@ -226,11 +227,10 @@ public class AutoAuctionFlip {
                         Float margin = Float.parseFloat(skyblockfeatures.config.autoAuctionFlipMargin);
                         Float minVolume = Float.parseFloat(skyblockfeatures.config.autoAuctionFlipMinVolume);
                         Float minPercent = Float.parseFloat(skyblockfeatures.config.autoAuctionFlipMinPercent);
-                        JsonObject auctionData = AuctionData.getItemAuctionInfo(id);
                         if(lowestBinPrice==null||avgBinPrice==null) continue;
                         int volume = 5;
+                        JsonObject auctionData = AuctionData.getItemAuctionInfo(id);
                         if(auctionData!=null) volume = auctionData.get("sales").getAsInt();
-                        
                         String auctionId = itemData.get("uuid").toString().replaceAll("\"","");
                         Double enchantValue = 0d;
                         Double starValue = starValue(name);
@@ -256,7 +256,6 @@ public class AutoAuctionFlip {
 
                         double percentage = Math.floor(((valueOfTheItem/binPrice)-1)*100);
                         String[] lore = itemData.get("item_lore").getAsString().split("Â");
-                        // Utils.SendMessage("Checking Item: "+name);
                         auctionsFilteredThrough++;
                         // Filters
                         if(skyblockfeatures.config.autoAuctionFilterOutPets && id.contains("PET")) {
@@ -329,7 +328,6 @@ public class AutoAuctionFlip {
                         }
                     } catch (java.io.IOException e) {
                         e.printStackTrace();
-                        // Utils.SendMessage("ERROR ON AUCTION FILTERING");
                         // TODO: handle exception
                     }
                 }
@@ -343,7 +341,6 @@ public class AutoAuctionFlip {
             reversed.add(auctionFlips.get(auctionFlips.size()-i-1));
         }
         auctionFlips = reversed;
-        // Utils.SendMessage("Auctions reveresed");
     }
 
     private static final Minecraft mc = Minecraft.getMinecraft();

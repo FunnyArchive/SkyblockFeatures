@@ -5,10 +5,12 @@ import java.util.Locale;
 import java.util.Objects;
 
 import com.google.common.collect.Lists;
+import com.mojang.realmsclient.gui.ChatFormatting;
 
 import gg.essential.api.utils.GuiUtil;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.gui.LocationEditGui;
+import mrfast.skyblockfeatures.gui.TestGui;
 import mrfast.skyblockfeatures.utils.APIUtil;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -49,11 +51,16 @@ public class configCommand extends CommandBase {
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         EntityPlayerSP player = (EntityPlayerSP) sender;
         if (args.length == 0) {
-            GuiUtil.open(Objects.requireNonNull(skyblockfeatures.config.gui()));
+            // GuiUtil.open(Objects.requireNonNull(skyblockfeatures.config.gui()));
+            GuiUtil.open(new TestGui(true));
             return;
         }
         String subcommand = args[0].toLowerCase(Locale.ENGLISH);
+        
         switch (subcommand) {
+            case "version":
+                Utils.SendMessage(ChatFormatting.YELLOW+"Your using Skyblock Features v"+skyblockfeatures.VERSION);
+                break;
             case "setkey":
                 if (args.length == 1) {
                     player.addChatMessage(new ChatComponentText("§c§l[ERROR] §8» §cPlease provide your Hypixel API key!"));
@@ -72,7 +79,8 @@ public class configCommand extends CommandBase {
                 }).start();
                 break;
             case "config":
-                GuiUtil.open(Objects.requireNonNull(skyblockfeatures.config.gui()));
+                // GuiUtil.open(Objects.requireNonNull(skyblockfeatures.config.gui()));
+                GuiUtil.open(new TestGui(true));
                 break;
             case "help":
                 player.addChatMessage(new ChatComponentText("§9➜ Skyblock Features Commands and Info" + "\n" +

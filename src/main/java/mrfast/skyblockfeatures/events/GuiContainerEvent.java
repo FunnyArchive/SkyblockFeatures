@@ -83,7 +83,6 @@ public abstract class GuiContainerEvent extends Event {
 
     @Cancelable
     public static class SlotClickEvent extends GuiContainerEvent {
-
         public Slot slot;
         public int slotId, clickedButton, clickType;
         public SlotClickEvent(GuiContainer gui, Container container, Slot slot, int slotId, int clickedButton, int clickType) {

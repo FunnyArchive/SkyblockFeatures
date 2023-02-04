@@ -13,7 +13,9 @@ import mrfast.skyblockfeatures.utils.Utils;
 @Mixin(Gui.class)
 public abstract class MixinGui {
     @Inject(method = "drawGradientRect", at = @At(value = "HEAD"), cancellable = true)
-    private void connect(int a, int b, int c, int d, int e, int f, CallbackInfo ci) {
-        if(skyblockfeatures.config.hideWhiteSquare && Utils.GetMC().theWorld != null) ci.cancel();
+    private void connect(int left, int top, int right, int bottom, int startColor, int endColor, CallbackInfo ci) {
+        if(skyblockfeatures.config.hideWhiteSquare && Utils.GetMC().theWorld != null && startColor==-2130706433) {
+            ci.cancel();
+        }
     }
 }

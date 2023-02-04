@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
@@ -69,7 +71,7 @@ public class InventoryCommand extends CommandBase {
 			// Check key
 			String key = skyblockfeatures.config.apiKey;
 			if (key.equals("")) {
-				player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "API key not set. Use /setkey."));
+				Utils.SendMessage(EnumChatFormatting.RED + "API key not set. Use /setkey.");
 			}
 			
 			// Get UUID for Hypixel API requests
@@ -82,7 +84,7 @@ public class InventoryCommand extends CommandBase {
 				username = arg1[0];
 				uuid = APIUtil.getUUID(username);
 			}
-			player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Checking inventory of " + EnumChatFormatting.DARK_GREEN + username));
+			Utils.SendMessage(EnumChatFormatting.GREEN + "Checking inventory of " + EnumChatFormatting.DARK_GREEN + username);
 			
 			// Find stats of latest profile
 			String latestProfile = APIUtil.getLatestProfileID(uuid, key);
@@ -91,18 +93,10 @@ public class InventoryCommand extends CommandBase {
 			String profileURL = "https://api.hypixel.net/skyblock/profile?profile=" + latestProfile + "&key=" + key;
 			System.out.println("Fetching profile...");
 			JsonObject profileResponse = APIUtil.getResponse(profileURL);
-			if (!profileResponse.get("success").getAsBoolean()) {
+			if(profileResponse.has("cause")) {
 				String reason = profileResponse.get("cause").getAsString();
-				player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Failed with reason: " + reason));
+				Utils.SendMessage(EnumChatFormatting.RED + "Failed with reason: " + reason);
 				return;
-			}
-
-			String playerURL = "https://api.hypixel.net/player?uuid=" + uuid + "&key=" + key;
-			System.out.println("Fetching player data...");
-			JsonObject playerResponse = APIUtil.getResponse(playerURL);
-			if(!playerResponse.get("success").getAsBoolean()){
-				String reason = profileResponse.get("cause").getAsString();
-				player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Failed with reason: " + reason));
 			}
 			
 			for(int i = 0; i < 54; i++) {

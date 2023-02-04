@@ -10,8 +10,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import com.google.common.base.Objects;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import gg.essential.api.utils.GuiUtil;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -24,7 +26,9 @@ import net.minecraft.nbt.NBTTagByteArray;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
+import mrfast.skyblockfeatures.gui.TestGui;
 import mrfast.skyblockfeatures.utils.ColorCode;
 import mrfast.skyblockfeatures.utils.Utils;
 
@@ -81,8 +85,32 @@ public class getNbtCommand extends CommandBase {
                 stringBuilder.append(System.lineSeparator()).append(System.lineSeparator());
             }
         }
+        List<TileEntity> loadedTileEntitiesCopy = new LinkedList<>(Utils.GetMC().theWorld.loadedTileEntityList);
+        ListIterator<TileEntity> loadedTileEntitiesCopyIterator;
 
-        copyStringToClipboard(stringBuilder.toString(), ColorCode.GREEN + "Entity data was copied to clipboard!");
+        // We only care about mobs.
+        loadedTileEntitiesCopy.removeIf(entity -> player.getPosition().distanceSq(entity.getPos()) > ENTITY_COPY_RADIUS*2);
+
+        loadedTileEntitiesCopyIterator = loadedTileEntitiesCopy.listIterator();
+        stringBuilder.append("------------------------------ Tile Entitys ------------------------------\n");
+        // Copy the NBT data from the loaded entities.
+        while (loadedTileEntitiesCopyIterator.hasNext()) {
+            TileEntity entity = loadedTileEntitiesCopyIterator.next();
+            NBTTagCompound entityData = new NBTTagCompound();
+
+            stringBuilder.append("Class: ").append(entity.getClass().getSimpleName()).append(System.lineSeparator());
+
+            stringBuilder.append("NBT Data:").append(System.lineSeparator());
+            entity.writeToNBT(entityData);
+            stringBuilder.append(prettyPrintNBT(entityData));
+
+            // Add spacing if necessary.
+            if (loadedTileEntitiesCopyIterator.hasNext()) {
+                stringBuilder.append(System.lineSeparator()).append(System.lineSeparator());
+            }
+        }
+
+        copyStringToClipboard(stringBuilder.toString(), ChatFormatting.GREEN + "Entity data was copied to clipboard!");
     }
 
     public static void copyStringToClipboard(String string, String successMessage) {

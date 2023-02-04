@@ -8,7 +8,6 @@ import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.skyblockfeatures.features.impl.ItemFeatures.HideGlass;
 import mrfast.skyblockfeatures.utils.ItemUtil;
-import mrfast.skyblockfeatures.utils.StringUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -62,6 +61,7 @@ public class BetterParties {
     @SubscribeEvent
     public void onTooltip(ItemTooltipEvent event) {
         if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest)) return;
+        if(!skyblockfeatures.config.betterpartys) return;
 
         GuiChest chest = (GuiChest) Minecraft.getMinecraft().currentScreen;
         ContainerChest cont = (ContainerChest) chest.inventorySlots;
@@ -70,7 +70,9 @@ public class BetterParties {
         if(!HideGlass.isEmptyGlassPane(event.itemStack) && event.itemStack.getItem() instanceof ItemSkull && event.itemStack.getDisplayName().contains("'s Party")) {
             hoverItemStack = event.itemStack;
         }
-        if("Party Finder".equals(name)) event.toolTip.clear();;
+        if("Party Finder".equals(name) && event.itemStack.getItem() instanceof ItemSkull) {
+            event.toolTip.clear();
+        }
     }
 
     @SubscribeEvent
@@ -140,7 +142,7 @@ public class BetterParties {
                     String str = lore.getStringTagAt(n);
                     if (str.startsWith("§7Dungeon Level Required: §b")) cataLvReq = Integer.parseInt(str.substring(28));
                     if (str.startsWith("§7Class Level Required: §b")) classLvReq = Integer.parseInt(str.substring(26));
-                    if (str.startsWith("§7§7Note:")) note = StringUtils.stripControlCodes(str.substring(10));
+                    if (str.startsWith("§7§7Note:")) note = Utils.cleanColour(str.substring(10));
                     if (str.startsWith("§cRequires")) Req = true;
                 }
 

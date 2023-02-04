@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityBat;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -56,5 +57,13 @@ public abstract class MixinRender<T extends Entity> {
             }
         }
     }
-
+    @Inject(method="renderLivingLabel",at=@At("HEAD"), cancellable = true)
+    public void renderLivingLabel(T entityIn, String str, double x, double y, double z, int maxDistance, CallbackInfo ci) {
+        if(!Utils.isNPC(entityIn) && entityIn instanceof EntityPlayer && skyblockfeatures.config.hidePlayerNametags) {
+            ci.cancel();
+        }
+        else if(skyblockfeatures.config.hideAllNametags) {
+            ci.cancel();
+        }
+    }
 }

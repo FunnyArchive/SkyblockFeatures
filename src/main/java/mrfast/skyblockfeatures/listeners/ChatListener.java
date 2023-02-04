@@ -19,7 +19,6 @@ import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.commands.RepartyCommand;
 import mrfast.skyblockfeatures.utils.APIUtil;
 import mrfast.skyblockfeatures.utils.ItemUtil;
-import mrfast.skyblockfeatures.utils.StringUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 
 import java.io.ByteArrayInputStream;
@@ -63,13 +62,13 @@ public class ChatListener {
     public void onChat(ClientChatReceivedEvent event) {
         if (!Utils.isOnHypixel()) return;
         String delimiter1 = EnumChatFormatting.RED.toString() + EnumChatFormatting.STRIKETHROUGH.toString() + "" + EnumChatFormatting.BOLD + "---------------------------";
-        String unformatted = StringUtils.stripControlCodes(event.message.getUnformattedText());
+        String unformatted = Utils.cleanColour(event.message.getUnformattedText());
         if (unformatted.startsWith("Your new API key is ")) {
             String apiKey = event.message.getSiblings().get(0).getChatStyle().getChatClickEvent().getValue();
             skyblockfeatures.config.apiKey = apiKey;
             skyblockfeatures.config.markDirty();
             skyblockfeatures.config.writeData();
-            mc.thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "skyblockfeatures updated your set Hypixel API key to " + EnumChatFormatting.DARK_GREEN + apiKey));
+            Utils.SendMessage(EnumChatFormatting.GREEN + "Updated your set Hypixel API key to " + EnumChatFormatting.DARK_GREEN + apiKey);
         }
 
         if (unformatted.startsWith("Party Finder")) {
@@ -79,7 +78,7 @@ public class ChatListener {
                     // Check key
                     String key = skyblockfeatures.config.apiKey;
                     if (key.equals("")) {
-                        mc.thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "API key not set. Use /setkey."));
+                        Utils.SendMessage(EnumChatFormatting.RED + "API key not set. Use /setkey.");
                     }
                     
                     // Get UUID for Hypixel API requests
@@ -254,7 +253,8 @@ public class ChatListener {
                             .appendText("\n")
                             .appendSibling(nameComponent)
                             .appendText(ChatFormatting.GREEN+"☠ Cata Level: "+ChatFormatting.YELLOW+catacombs+"\n")
-                            .appendText(ChatFormatting.GREEN+" Total Secrets Found: "+ChatFormatting.YELLOW+secrets+"\n\n")
+                            .appendText(ChatFormatting.GREEN+" Total Secrets Found: "+ChatFormatting.YELLOW+secrets+"\n")
+                            .appendText(ChatFormatting.GREEN+" Average Secrets: "+ChatFormatting.YELLOW+((secrets/totalRuns))+"\n\n")
                             .appendSibling(helmetComponent)
                             .appendSibling(chestComponent)
                             .appendSibling(legComponent)

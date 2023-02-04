@@ -2,7 +2,6 @@ package mrfast.skyblockfeatures.features.impl.misc;
 
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.events.PacketEvent;
-import mrfast.skyblockfeatures.utils.StringUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -24,13 +23,14 @@ public class SpamHider {
         if (!(event.packet instanceof S02PacketChat)) return;
         S02PacketChat packet = (S02PacketChat) event.packet;
         if (packet.getType() == 2) return;
-        String unformatted = StringUtils.stripControlCodes(packet.getChatComponent().getUnformattedText());
+        String unformatted = Utils.cleanColour(packet.getChatComponent().getUnformattedText());
 
         if (!Utils.inSkyblock) return;
         
         try {
             if (unformatted.contains("[Auction]") || unformatted.contains("claimed") || unformatted.contains("Bid of") || unformatted.contains("created a") || unformatted.contains("Auction started")) return;
-            if (unformatted.toLowerCase().contains("cheap") || unformatted.toLowerCase().contains("selling") || unformatted.toLowerCase().contains("buying") || unformatted.toLowerCase().contains("visit") || unformatted.toLowerCase().contains("ah") || unformatted.toLowerCase().contains("auction")) {
+            String u = unformatted.toLowerCase();
+            if (u.contains("cheap")||u.contains("/visit")||u.contains("lowballing")||u.contains("selling")||u.contains("buying")||u.contains("visit")||u.contains("ah")||u.contains("auction")) {
                 if (skyblockfeatures.config.hideAdvertisments) {
                     cancelChatPacket(event, false);
                 }

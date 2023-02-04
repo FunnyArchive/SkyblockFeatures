@@ -21,10 +21,6 @@ public class ItemUtil {
     public static final int NBT_LIST = 9;
     public static final int NBT_COMPOUND = 10;
 
-
-
-    
-
     /**
      * Returns the display name of a given item
      * @author Mojang
@@ -67,6 +63,24 @@ public class ItemUtil {
         }
 
         return extraAttributes.getString("id");
+    }
+
+
+    public static String getItemUUID(ItemStack item) {
+        if (item == null) {
+            return null;
+        }
+
+        NBTTagCompound extraAttributes = getExtraAttributes(item);
+        if (extraAttributes == null) {
+            return null;
+        }
+
+        if (!extraAttributes.hasKey("uuid", ItemUtil.NBT_STRING)) {
+            return null;
+        }
+
+        return extraAttributes.getString("uuid");
     }
 
     /**
@@ -169,7 +183,7 @@ public class ItemUtil {
 
     public static boolean hasRightClickAbility(ItemStack itemStack) {
         for (String line : ItemUtil.getItemLore(itemStack)) {
-            String stripped = StringUtils.stripControlCodes(line);
+            String stripped = Utils.cleanColour(line);
             if (stripped.startsWith("Item Ability:") && stripped.endsWith("RIGHT CLICK")) return true;
         }
         return false;

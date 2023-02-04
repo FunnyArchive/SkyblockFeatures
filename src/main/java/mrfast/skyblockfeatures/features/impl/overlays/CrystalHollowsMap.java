@@ -18,7 +18,7 @@ import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.world.WorldEvent;
@@ -61,10 +61,20 @@ public class CrystalHollowsMap {
             if(ticks%4==0) {
                 Vector2d vector = new Vector2d((Utils.GetMC().thePlayer.posX-202)/4.9,(Utils.GetMC().thePlayer.posZ-202)/4.9);
                 if(!playerBreadcrumbs.contains(vector)) {
-                    playerBreadcrumbs.add(vector);
+                    if(playerBreadcrumbs.size()>1) {
+                        Vector2d p1 = playerBreadcrumbs.get(playerBreadcrumbs.size()-1);
+                        Vector2d p2 = vector;
+                        double distance = Math.sqrt(Math.pow(Math.abs(p1.y-p2.y),2)+Math.pow(Math.abs(p1.x-p2.x),2));
+                        if(distance<20) {
+                            playerBreadcrumbs.add(vector);
+                        } 
+                    } else {
+                        playerBreadcrumbs.add(vector);
+                    }
                 }
-                for(EntityPlayer entity:Utils.GetMC().theWorld.playerEntities) {
-                    if(entity.getDisplayName().getUnformattedText().contains("Corleone") && !locations.containsKey("§5Corleone")) {
+                for(Entity entity:Utils.GetMC().theWorld.loadedEntityList) {
+                    if(!entity.hasCustomName()) continue;
+                    if(entity.getCustomNameTag().contains("Corleone") && !locations.containsKey("§5Corleone") && Utils.GetMC().thePlayer.canEntityBeSeen(entity)) {
                         locations.put("§5Corleone",entity.getPosition().up(2));
                     }
                 }

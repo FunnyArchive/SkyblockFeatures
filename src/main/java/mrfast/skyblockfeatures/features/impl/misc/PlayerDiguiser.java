@@ -31,7 +31,6 @@ public class PlayerDiguiser {
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
         try {
-            if (!Utils.inSkyblock || Utils.GetMC().thePlayer!=null) return;
             if(skyblockfeatures.config.playerDiguiser) {
                 for(Entity entity:tracker.keySet()) Utils.GetMC().theWorld.removeEntityFromWorld(tracker.get(entity).getEntityId());
                 tracker.clear();
@@ -133,6 +132,9 @@ public class PlayerDiguiser {
                     scoreplayerteam.setNameTagVisibility(EnumVisible.NEVER);
                 }
                 if(!Utils.isNPC(original)) {
+                    if(skyblockfeatures.config.hidePlayerNametags) {
+                        continue;
+                    }
                     if(skyblockfeatures.config.DisguisePlayersAs==4) {
                         RenderUtil.draw3DStringWithShadow(original.getPositionVector().add(new Vec3(0,2.6,0)), "Jerry", 0xFFFFFF, event.partialTicks);
                         RenderUtil.draw3DStringWithShadow(original.getPositionVector().add(new Vec3(0,2.3,0)), ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"CLICK", 0xFFFFFF, event.partialTicks);

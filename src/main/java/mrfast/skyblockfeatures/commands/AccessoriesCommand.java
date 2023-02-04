@@ -70,14 +70,14 @@ public class AccessoriesCommand extends CommandBase {
 			// Check key
 			String key = skyblockfeatures.config.apiKey;
 			if (key.equals("")) {
-				player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "API key not set. Use /setkey."));
+				Utils.SendMessage(EnumChatFormatting.RED + "API key not set. Use /setkey.");
 			}
 			
 			// Get UUID for Hypixel API requests
 			String username;
 			String uuid;
 			username = arg1[0] != null?arg1[0]:Utils.GetMC().thePlayer.getName();
-			player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Checking Accessory Bag of " + EnumChatFormatting.DARK_GREEN + username));
+			Utils.SendMessage(EnumChatFormatting.GREEN + "Checking Accessory Bag of " + EnumChatFormatting.DARK_GREEN + username);
 			uuid = APIUtil.getUUID(username);
 			
 			// Find stats of latest profile
@@ -87,18 +87,10 @@ public class AccessoriesCommand extends CommandBase {
 			String profileURL = "https://api.hypixel.net/skyblock/profile?profile=" + latestProfile + "&key=" + key;
 			System.out.println("Fetching profile...");
 			JsonObject profileResponse = APIUtil.getResponse(profileURL);
-			if (!profileResponse.get("success").getAsBoolean()) {
-				String reason = profileResponse.get("cause").getAsString();
-				player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Failed with reason: " + reason));
+			System.out.println(profileResponse.toString()+"    "+profileURL);
+			if(profileResponse.toString().equals("{}")) {
+				Utils.SendMessage(EnumChatFormatting.RED + "Hypixel API is having problems!");
 				return;
-			}
-
-			String playerURL = "https://api.hypixel.net/player?uuid=" + uuid + "&key=" + key;
-			System.out.println("Fetching player data...");
-			JsonObject playerResponse = APIUtil.getResponse(playerURL);
-			if(!playerResponse.get("success").getAsBoolean()){
-				String reason = profileResponse.get("cause").getAsString();
-				player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Failed with reason: " + reason));
 			}
 			
 			for(int i = 0; i < 54; i++) {
@@ -109,16 +101,15 @@ public class AccessoriesCommand extends CommandBase {
 				String inventoryBase64 = profileResponse.get("profile").getAsJsonObject().get("members").getAsJsonObject().get(uuid).getAsJsonObject().get("talisman_bag").getAsJsonObject().get("data").getAsString();
 				Inventory items = new Inventory(inventoryBase64);
 				List<ItemStack> a = decodeItem(items);
-				for(ItemStack item: a) if(item == null) a.remove(item);
 				int index = 0;
 				for(ItemStack item: a) {
+					if(item==null) continue;
 					if(index<53) {
 						TargetInventory.setInventorySlotContents(index, item);
 						index++;
 					}
 				}
 			}
-
 			GuiUtil.open(Objects.requireNonNull(new GuiChest(Utils.GetMC().thePlayer.inventory, TargetInventory)));
 		}).start();
 	}

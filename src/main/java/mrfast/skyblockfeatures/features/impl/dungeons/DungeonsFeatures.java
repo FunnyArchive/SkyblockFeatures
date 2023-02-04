@@ -18,9 +18,9 @@ import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.structure.FloatPair;
 import mrfast.skyblockfeatures.core.structure.GuiElement;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
+import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.RenderUtil;
 import mrfast.skyblockfeatures.utils.ScoreboardUtil;
-import mrfast.skyblockfeatures.utils.StringUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
 import net.minecraft.client.Minecraft;
@@ -42,7 +42,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemSkull;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
@@ -180,15 +179,15 @@ public class DungeonsFeatures {
         ItemStack stack = event.slot.getStack();
         int x = event.slot.xDisplayPosition;
         int y = event.slot.yDisplayPosition;
-        String n = Utils.cleanColour(stack.getDisplayName());
-        if(skyblockfeatures.config.highlightTrash) {
-            if(!(stack.getItem() instanceof ItemSkull)) {
-                if(n.contains("Dreadlord") || n.contains("Grunt") || n.contains("Rotten") || n.contains("Machine Gun") || n.contains("Skeleton Soldier") || n.contains("Zombie Soldier") || n.contains("Enchanted Bone") || n.contains("Fel Pearl")  || n.contains("Healing VIII")  || n.contains("Super Heavy")  || n.contains("Conjuring") || n.contains("Skeletor") || n.contains("Training")) {
-                    Gui.drawRect(x, y, x + 16, y + 1, new Color(255, 0, 0, 255).getRGB());
-                    Gui.drawRect(x, y, x + 1, y + 16, new Color(255, 0, 0, 255).getRGB());
-                    Gui.drawRect(x+15, y, x+16, y + 16, new Color(255, 0, 0, 255).getRGB());
-                    Gui.drawRect(x, y+15, x + 16, y + 16, new Color(255, 85, 0, 255).getRGB());
-                }
+        String n = ItemUtil.getSkyBlockItemID(stack);
+        String i = Utils.cleanColour(stack.getDisplayName());
+
+        if(skyblockfeatures.config.highlightTrash && n!=null && i!=null) {
+            if(n.equals("CRYPT_DREADLORD_SWORD")||n.equals("MACHINE_GUN_BOW")||i.contains("Healing VIII")||n.equals("DUNGEON_LORE_PAPER")||n.equals("ENCHANTED_BONE")||n.equals("CRYPT_BOW")||n.contains("ZOMBIE_SOLDIER")||n.contains("SKELETON_SOLDIER")||n.contains("SKELETON_MASTER")||n.contains("SUPER_HEAVY")||n.contains("INFLATABLE_JERRY")||n.contains("DUNGEON_TRAP")||n.contains("SKELETOR")||n.contains("PREMIUM_FLESH")||n.contains("TRAINING")||n.contains("CONJURING_SWORD")||n.contains("FEL_PEARL")||n.contains("ZOMBIE_KNIGHT")||n.contains("ENCHANTED_ROTTEN_FLESH")) {
+                Gui.drawRect(x, y, x + 16, y + 1, new Color(255, 0, 0, 255).getRGB());
+                Gui.drawRect(x, y, x + 1, y + 16, new Color(255, 0, 0, 255).getRGB());
+                Gui.drawRect(x+15, y, x+16, y + 16, new Color(255, 0, 0, 255).getRGB());
+                Gui.drawRect(x, y+15, x + 16, y + 16, new Color(255, 85, 0, 255).getRGB());
             }
         }
         
@@ -241,7 +240,7 @@ public class DungeonsFeatures {
                                     y += 20;
                                 }
 
-                                Matcher matcher = playerPattern.matcher(StringUtils.stripControlCodes(item.getDisplayName()));
+                                Matcher matcher = playerPattern.matcher(Utils.cleanColour(item.getDisplayName()));
                                 if (!matcher.find()) continue;
                                 String name = matcher.group(1);
                                 if (name.equals("Unknown")) continue;

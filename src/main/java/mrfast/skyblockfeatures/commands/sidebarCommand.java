@@ -55,7 +55,7 @@ public class sidebarCommand extends CommandBase {
             output += count+": "+line+"\n";
         }
         GuiScreen.setClipboardString(output);
-        Utils.GetMC().thePlayer.addChatMessage(new ChatComponentText(ChatFormatting.GREEN+"Scoreboards copied to clipboard"));
+        Utils.SendMessage(ChatFormatting.GREEN+"Scoreboards copied to clipboard");
 	}
 
     public static <T> T getRandomElement(T[] arr){

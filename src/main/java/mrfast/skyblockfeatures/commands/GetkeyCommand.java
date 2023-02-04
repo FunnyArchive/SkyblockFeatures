@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import mrfast.skyblockfeatures.skyblockfeatures;
+import mrfast.skyblockfeatures.utils.Utils;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -35,17 +36,15 @@ public class GetkeyCommand extends CommandBase {
 
 	@Override
 	public void processCommand(ICommandSender arg0, String[] arg1) throws CommandException {
-	    EntityPlayer player = (EntityPlayer)arg0;
 	    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 	    StringSelection stringSelection = new StringSelection(skyblockfeatures.config.apiKey);
 	    
 	    if (skyblockfeatures.config.apiKey.equals("")) {
-	      player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "API key not set. Set your API key using /setkey."));
+			Utils.SendMessage(EnumChatFormatting.RED + "API key not set. Set your API key using /setkey.");
 	    }
 	    
 	    clipboard.setContents(stringSelection, null);
-		player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Your set API key is " + EnumChatFormatting.DARK_GREEN + skyblockfeatures.config.apiKey + "\n" +
-													EnumChatFormatting.GREEN + " Your set API key has been copied to the clipboard."));
+		Utils.SendMessage(EnumChatFormatting.GREEN + "Your set API key is " + EnumChatFormatting.DARK_GREEN + skyblockfeatures.config.apiKey + "\n" +EnumChatFormatting.GREEN + " Your set API key has been copied to the clipboard.");
 
 	}
 

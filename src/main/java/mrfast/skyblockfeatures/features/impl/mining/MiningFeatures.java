@@ -14,7 +14,6 @@ import mrfast.skyblockfeatures.events.PacketEvent;
 import mrfast.skyblockfeatures.utils.RenderUtil;
 import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.ScoreboardUtil;
-import mrfast.skyblockfeatures.utils.StringUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -45,7 +44,7 @@ public class MiningFeatures {
     public void onChat(ClientChatReceivedEvent event) {
         if (!Utils.inSkyblock || event.type == 2) return;
 
-        String unformatted = StringUtils.stripControlCodes(event.message.getUnformattedText());
+        String unformatted = Utils.cleanColour(event.message.getUnformattedText());
         if(skyblockfeatures.config.treasureChestSolver && unformatted.contains("uncovered a treasure chest!")) {
             treasureChest = null;
             particles.clear();
@@ -104,7 +103,7 @@ public class MiningFeatures {
         }
         if(skyblockfeatures.config.highlightEnderNodes && skyblockfeatures.locationString.contains("The End")) {
             try {
-                GlStateManager.disableDepth();
+                if(skyblockfeatures.config.highlightEnderNodesWalls) GlStateManager.disableDepth();
                 List<Vec3> drawnPositions = new ArrayList<Vec3>();
 
                 for(Vec3 packet:enderParticles) {
@@ -121,7 +120,7 @@ public class MiningFeatures {
                         }
                         if(dupe) continue;
                     }
-
+                    
                     if((x-Math.floor(x))==0.25) {
                         RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(x-0.25, y-0.5, z-0.5, Math.floor(x)-1, Math.floor(y)+1, Math.floor(z)+1), Color.magenta, event.partialTicks);
                         drawnPositions.add(packet);
@@ -151,8 +150,10 @@ public class MiningFeatures {
             if(!skyblockfeatures.config.treasureChestSolver || !SBInfo.getInstance().getLocation().equals("crystal_hollows")) return;
             Block block = Minecraft.getMinecraft().theWorld.getBlockState(new BlockPos(treasureChest)).getBlock();
             if(treasureChest != null) {
-                Vec3 stringPos = new Vec3(treasureChest.getX()+0.5, treasureChest.getY()+1.25, treasureChest.getZ()+0.5);
+                Vec3 stringPos = new Vec3(treasureChest.getX()+0.5, treasureChest.getY()+1.1, treasureChest.getZ()+0.5);
+                GlStateManager.disableDepth();
                 RenderUtil.draw3DString(stringPos, ChatFormatting.AQUA+""+progress+" / 5", 0xFFFFFF, event.partialTicks);
+                GlStateManager.enableDepth();
                 // RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(treasureChest, treasureChest.add(1, 1, 1)), Color.green, event.partialTicks);
             }
             for(Vec3 packet:particles) {
@@ -203,17 +204,12 @@ public class MiningFeatures {
             Vec3 pos = new Vec3(packet.getXCoordinate(),packet.getYCoordinate(),packet.getZCoordinate());
             boolean dupe = false;
             for(Vec3 part:particles) {
-                if(pos.distanceTo(part)<0.1) {
+                if(pos.distanceTo(part)<0.05) {
                     dupe = true;
                 }
-                if(part.distanceTo(pos) > 0.0) {
+                if(part.distanceTo(pos) > 0.05) {
                     particles.clear();
                     break;
-                }
-            }
-            for(Vec3 particle:particles) {
-                if(pos.distanceTo(particle)<0.1) {
-                    
                 }
             }
             
@@ -232,14 +228,15 @@ public class MiningFeatures {
         }
         if(event.packet instanceof S29PacketSoundEffect && skyblockfeatures.config.treasureChestSolver) {
             S29PacketSoundEffect packet = (S29PacketSoundEffect) event.packet;
-            // For some reason "random.orb" isnt equal to "random.orb"
             if(packet.getSoundName().contains("orb")) {
                 if(packet.getVolume() == 1 && packet.getPitch() == 1) {
                     progress++;
+                    // particles.clear();
                 }
             }
             if(packet.getSoundName().contains("villager") && packet.getSoundName().contains("no")) {
                 progress=0;
+                // particles.clear();
             }
         }
     }

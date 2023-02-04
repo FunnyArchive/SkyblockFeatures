@@ -8,7 +8,6 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.GuiManager;
-import mrfast.skyblockfeatures.utils.StringUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 
 import java.util.regex.Matcher;
@@ -23,7 +22,7 @@ public class MayorJerry {
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
     public void onChat(ClientChatReceivedEvent event) {
         if (!Utils.inSkyblock) return;
-        String unformatted = StringUtils.stripControlCodes(event.message.getUnformattedText());
+        String unformatted = Utils.cleanColour(event.message.getUnformattedText());
         if (skyblockfeatures.config.hiddenJerryAlert && unformatted.contains("☺") && unformatted.contains("Jerry") && !unformatted.contains("Jerry Box")) {
             Matcher matcher = jerryType.matcher(event.message.getFormattedText());
             if (matcher.find()) {

@@ -8,7 +8,6 @@ import mrfast.skyblockfeatures.events.GuiContainerEvent.TitleDrawnEvent;
 import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
 import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.NumberUtil;
-import mrfast.skyblockfeatures.utils.StringUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.renderer.GlStateManager;
@@ -32,7 +31,7 @@ public class ChestProfit {
                 ItemStack openChest = inv.getStackInSlot(31);
                 if (openChest != null && openChest.getDisplayName().equals("§aOpen Reward Chest")) {
                     for (String unclean : ItemUtil.getItemLore(openChest)) {
-                        String line = StringUtils.stripControlCodes(unclean);
+                        String line = Utils.cleanColour(unclean);
                         if (line.contains("FREE")) {
                             price = 0;
                             break;

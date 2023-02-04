@@ -35,7 +35,7 @@ public class FavoritePets {
     public static HashSet<String> favoritePets = new HashSet<>();
     @SubscribeEvent
 	void onKeyDown(GuiScreenEvent.KeyboardInputEvent.Pre event) {
-		if (event.gui instanceof GuiChest && Keyboard.isKeyDown(skyblockfeatures.favoritePetKeybind.getKeyCode())) {
+		if (event.gui instanceof GuiChest && Keyboard.isKeyDown(skyblockfeatures.favoritePetKeybind.getKeyCode()) && skyblockfeatures.config.FavoritePets) {
             GuiChest gui = (GuiChest) event.gui;
             ContainerChest chest = (ContainerChest) gui.inventorySlots;
             IInventory inv = chest.getLowerChestInventory();
@@ -59,7 +59,7 @@ public class FavoritePets {
 
     @SubscribeEvent
     public void onDrawSlot(GuiContainerEvent.DrawSlotEvent.Pre event) {
-        if (event.gui instanceof GuiChest) {
+        if (event.gui instanceof GuiChest && skyblockfeatures.config.FavoritePets) {
             GuiChest gui = (GuiChest) event.gui;
             ContainerChest chest = (ContainerChest) gui.inventorySlots;
             IInventory inv = chest.getLowerChestInventory();

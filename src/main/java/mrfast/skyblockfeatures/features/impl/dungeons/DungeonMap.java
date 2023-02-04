@@ -12,8 +12,6 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.structure.FloatPair;
 import mrfast.skyblockfeatures.core.structure.GuiElement;
-import mrfast.skyblockfeatures.utils.FontUtils;
-import mrfast.skyblockfeatures.utils.StringUtils;
 import mrfast.skyblockfeatures.utils.TabListUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
@@ -167,7 +165,7 @@ public class DungeonMap {
 				shortName = ChatFormatting.RED+shortName;
 			}
 		}
-		ScreenRenderer.fontRenderer.drawString(shortName,(float) (((x-2)-(FontUtils.getStringWidth(shortName)/3))*1.33), (float) ((z-13)*1.33),CommonColors.WHITE, SmartFontRenderer.TextAlignment.LEFT_RIGHT, SmartFontRenderer.TextShadow.NORMAL);
+		ScreenRenderer.fontRenderer.drawString(shortName,(float) (((x-2)-(Utils.GetMC().fontRendererObj.getStringWidth(shortName)/3))*1.33), (float) ((z-13)*1.33),CommonColors.WHITE, SmartFontRenderer.TextAlignment.LEFT_RIGHT, SmartFontRenderer.TextShadow.NORMAL);
 		GlStateManager.popMatrix();
 		GlStateManager.pushMatrix();
 		Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
@@ -213,7 +211,7 @@ public class DungeonMap {
 			// for(int i=0;i<intArray.length;i++) {
 			// 	NetworkPlayerInfo player = tablist.get(intArray[i]);
 			// 	if(player.getDisplayName().getUnformattedText().split(" ").length > 1) {
-			// 		String name = StringUtils.stripControlCodes(player.getDisplayName().getUnformattedText().split(" ")[1]);
+			// 		String name = Utils.cleanColour(player.getDisplayName().getUnformattedText().split(" ")[1]);
 			// 		System.out.println("icon-"+i+" "+name);
 			// 	}
 			// }
@@ -223,7 +221,7 @@ public class DungeonMap {
 				NetworkPlayerInfo player = tablist.get(intArray[i]);
 				// Find out whos dead
 				if(player.getDisplayName().getUnformattedText().split(" ").length > 1 && player.getDisplayName().getUnformattedText().contains("(DEAD)")) {
-					String name = StringUtils.stripControlCodes(player.getDisplayName().getUnformattedText().split(" ")[1]);
+					String name = Utils.cleanColour(player.getDisplayName().getUnformattedText().split(" ")[1]);
 					if(name != null && dungeonTeammates.containsKey("icon-"+i)) {	
 						playerSkins.clear();
 						playerNames.clear();
@@ -235,7 +233,7 @@ public class DungeonMap {
 		for(int i=0;i<intArray.length;i++) {
 			NetworkPlayerInfo player = tablist.get(intArray[i]);
 			if(player.getDisplayName().getUnformattedText().split(" ").length > 1) {
-				String name = StringUtils.stripControlCodes(player.getDisplayName().getUnformattedText().split(" ")[1]);
+				String name = Utils.cleanColour(player.getDisplayName().getUnformattedText().split(" ")[1]);
 				if(name != null && !dungeonTeammates.containsKey("icon-"+i) && !player.getDisplayName().getUnformattedText().contains("(DEAD)")) {	
 					dungeonTeammates.put("icon-"+i,player);
 					System.out.println(name+" is icon-"+i);

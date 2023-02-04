@@ -44,6 +44,12 @@ public class IceTreasureTracker {
         try {
             seconds = 0;
             hidden = true;
+            iceTreasuresMined = 0;
+            redGift = 0;
+            whiteGift = 0;
+            greenGift = 0;
+            talisman = 0;
+            fragment = 0;
         } catch(Exception e) {
 
         }

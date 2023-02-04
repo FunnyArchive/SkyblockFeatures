@@ -7,7 +7,6 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.world.World;
@@ -52,8 +51,6 @@ public class ScoreCalculation {
             EntityPlayerSP player = mc.thePlayer;
             World world = mc.theWorld;
             if (this.getToggled() && Utils.inDungeons && player != null && world != null) {
-                ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
-
                 int deaths = 0;
                 int missingPuzzles = 0;
                 int failedPuzzles = 0;

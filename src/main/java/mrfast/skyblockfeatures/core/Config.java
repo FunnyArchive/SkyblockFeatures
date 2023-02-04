@@ -118,6 +118,15 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Creeper Solver",
+            description = "Highlights the lanterns to shoot in Creeper puzzle.",
+            category = "§1§rDungeons",
+            subcategory = "Solvers"
+    )
+    public boolean creeperSolver = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "3 Weirdos Solver",
             description = "Highlights the correct chest to open.",
             category = "§1§rDungeons",
@@ -156,8 +165,8 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Highlight Gifts",
             description = "Highlights with a yellow box of where gifts are at the Jerry's workshop.",
-            category = "General",
-	    subcategory = "Rendering"
+            category = "Render",
+	    subcategory = "Highlights"
     )
     public boolean presentWaypoints = false;
 
@@ -165,7 +174,7 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Glacial Cave Ice Treasure Detector",
             description = "Highlights ice treasures in the wall when inside the Glacial Cave",
-            category = "Mining",
+            category = "Render",
 	    subcategory = "Glacial Cave"
     )
     public boolean icecaveHighlight = false;
@@ -190,6 +199,15 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Day Tracker",
+            description = "Tracks the day in the Crystal Hollows",
+            category = "Mining",
+	    subcategory = "Trackers"
+    )
+    public boolean dayTracker = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Highlight Ender Nodes",
             description = "Highlights the sparkly blocks in the end",
             category = "Mining",
@@ -199,9 +217,18 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "Glacial Cave Ice Treasure Detector Through Walls",
-            description = "§cWarning Use At Own Risk",
+            name = "Highlight Through the walls",
+            description = "Makes the Ender Node Highlight go through walls. §cWarning Use At Own Risk",
             category = "Mining",
+	    subcategory = "End Island"
+    )
+    public boolean highlightEnderNodesWalls = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Detector Through Walls",
+            description = "§cWarning Use At Own Risk",
+            category = "Render",
 	    subcategory = "Glacial Cave"
     )
     public boolean icecaveHighlightWalls = false;
@@ -214,15 +241,6 @@ public class Config extends Vigilant {
             subcategory = "Miscellaneous"
     )
     public boolean dungeonChestProfit = false;
-
-    @Property(
-            type = PropertyType.SWITCH,
-            name = "Health Bar",
-            description = "health bar thing",
-            category = "General",
-            subcategory = "Health & Mana Bars"
-    )
-    public boolean healthbar = false;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -283,7 +301,7 @@ public class Config extends Vigilant {
             name = "Secrets Display",
             description = "Moveable Secrets display",
             category = "§1§rDungeons",
-            subcategory = "Health & Mana Bars"
+            subcategory = "Miscellaneous"
     )
     public boolean SecretsDisplay = false;
 
@@ -327,15 +345,24 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Fairy Soul Helper",
             description = "Highlights nearby fairy souls using waypoints",
-            category = "Miscellaneous",
-            subcategory = "Quality of Life"
+            category = "Helpers",
+            subcategory = "General"
     )
     public boolean fairy = false;
+    
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Relic Helper",
+        description = "Highlights relics in the §cSpider's Den§r using waypoints",
+        category = "Helpers",
+        subcategory = "General"
+    )
+    public boolean spiderRelicHelper = false;
 
     @Property(
             type = PropertyType.SWITCH,
             name = "Show Missing Accessories",
-            description = "Shows a list of what talismans your missing when in you accessory bag",
+            description = "Shows a list of what talismans your missing when in your accessory bag",
             category = "Miscellaneous",
             subcategory = "Quality of Life"
     )
@@ -379,6 +406,83 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Hide Player Nametags",
+            description = "Stops player's nametags from renderering",
+            category = "Render",
+            subcategory = "Hide Things"
+    )
+    public boolean hidePlayerNametags = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Normal Fullbright",
+            description = "Normal classic full bright everywhere",
+            category = "Render",
+            subcategory = "Fullbright"
+    )
+    public boolean fullbright = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Dynamic Fullbright",
+            description = "Turns on Fullbright in §aCrystal Hollows§r,§aYour Island§r,§aDungeons",
+            category = "Render",
+            subcategory = "Fullbright"
+    )
+    public boolean DynamicFullbright = false;
+
+    @Property(
+            type = PropertyType.SLIDER,
+            name = "Dynamic Fullbright Disabled Value",
+            description = "Value of brightness to set when in the certain locations",
+            category = "Render",
+            subcategory = "Fullbright",
+            max = 100,
+            min = 1
+    )
+    public int DynamicFullbrightDisabled = 100;
+
+    @Property(
+            type = PropertyType.SLIDER,
+            name = "Dynamic Fullbright Enabled Value",
+            description = "Value of brightness to set when everywhere else",
+            category = "Render",
+            subcategory = "Fullbright",
+            max = 100,
+            min = 1
+    )
+    public int DynamicFullbrightElsewhere = 1;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Hide All Nametags",
+            description = "Stops all nametags from renderering",
+            category = "Render",
+            subcategory = "Hide Things"
+    )
+    public boolean hideAllNametags = false;
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Hide players near NPC's",
+        description = "Bye bye players",
+        category = "Render",
+        subcategory = "Hide Things"
+    )
+    public boolean hidePlayersNearNPC = false;
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Hide Arrows",
+        description = "Stops arrows from being rendered.",
+        category = "Render",
+        subcategory = "Hide Things"
+    )
+    public boolean hideArrows = false;
+
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Fishing Helper",
             description = "Display a message when you need to pull the fish up.",
             category = "Miscellaneous",
@@ -389,7 +493,7 @@ public class Config extends Vigilant {
     @Property(
             type = PropertyType.SWITCH,
             name = "Display Tree Capitator Cooldown",
-            description = "Display a message when you need to pull the fish up.",
+            description = "Displays the cooldown for the treecapitator",
             category = "Miscellaneous",
             subcategory = "Quality of Life"
     )
@@ -455,7 +559,7 @@ public class Config extends Vigilant {
             name = "Mythological Helper",
             description = "Draw an extended line of where the Mythological burrow could be",
             category = "§1§rEvents",
-            subcategory = "Mythological Event"
+            subcategory = "Diana"
     )
     public boolean MythologicalHelper = false;
 
@@ -472,8 +576,8 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Trevor The Trapper Helper",
             description = "Shows the biome and location of the hunted mob",
-            category = "§1§rFarming",
-            subcategory = "Quality of Life"
+            category = "Helpers",
+            subcategory = "General"
     )
     public boolean trevorHelper = false;
 
@@ -499,19 +603,19 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Hide Far Entitys in hub",
             description = "",
-            category = "Miscellaneous",
-            subcategory = "Quality of Life"
+            category = "Render",
+            subcategory = "Hide Things"
     )
     public boolean HideFarEntity = false;
 
-//     @Property(
-//             type = PropertyType.SWITCH,
-//             name = "Damage Tint",
-//             description = "Makes your screen get more red the lower in health you are",
-//             category = "Miscellaneous",
-//             subcategory = "Quality of Life"
-//     )
-//     public boolean damagetint = false;
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Damage Tint",
+            description = "Makes your screen get more red the lower in health you are",
+            category = "Miscellaneous",
+            subcategory = "Quality of Life"
+    )
+    public boolean damagetint = false;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -633,6 +737,24 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Ghost Tracker",
+            description = "Tracks the loot gained from killing Ghosts",
+            category = "Mining",
+            subcategory = "Trackers"
+    )
+    public boolean ghostTracker = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Powder Mining Tracker",
+            description = "Tracks the stats from mining gemstones like Coins per hour",
+            category = "Mining",
+            subcategory = "Trackers"
+    )
+    public boolean PowderTracker = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Commissions Tracker",
             description = "Tracks your progress on commissions",
             category = "Mining",
@@ -660,6 +782,15 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Dwarven Mines Map",
+            description = "Show a map of the dwarven map",
+            category = "Mining",
+            subcategory = "Quality of Life"
+    )
+    public boolean dwarvenMinesMap = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Puzzler Solver",
             description = "Shows which block to mine for Puzzler.",
             category = "Mining",
@@ -681,9 +812,27 @@ public class Config extends Vigilant {
             name = "Show NPC Sell Price",
             description = "Shows the NPC Sell Price on certain items.",
             category = "Miscellaneous",
-            subcategory = "Items"
+            subcategory = "Item Price Info"
     )
     public boolean showNPCSellPrice = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Show Skyblock Item ID",
+            description = "Shows an items skyblock ID in the lore.",
+            category = "Miscellaneous",
+            subcategory = "Items"
+    )
+    public boolean showSkyblockID = false;
+    
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "TNT Timer",
+            description = "Shows the time till tnt exploads",
+            category = "Miscellaneous",
+            subcategory = "Items"
+    )
+    public boolean tntTimer = false;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -693,6 +842,15 @@ public class Config extends Vigilant {
             subcategory = "Items"
     )
     public boolean egg = false;
+
+     @Property(
+            type = PropertyType.SWITCH,
+            name = "Show teleport overlay",
+            description = "Highlights the block that your teleporting to with Aspect of the End or Aspect of the Void",
+            category = "Miscellaneous",
+            subcategory = "Items"
+    )
+    public boolean teleportDestination = false;
 
     @Property(
         type = PropertyType.SELECTOR,
@@ -735,7 +893,7 @@ public class Config extends Vigilant {
     @Property(
             type = PropertyType.SWITCH,
             name = "Show Zealot Spawn Areas & Spawn Timer",
-            description = "Draws a square around the areas that zealots spawn in the end & shows a timer on screen of when the zealots will spawn. (this includes bruisers)",
+            description = "Draws a square around the areas that zealots spawn & shows a timer on screen of when zealots will spawn. (this includes bruisers)",
             category = "§1§rFarming",
             subcategory = "Quality of Life"
     )
@@ -781,8 +939,8 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Hide Fire on Entities",
             description = "Prevents the game from rendering fire on burning entities.",
-            category = "Miscellaneous",
-            subcategory = "Quality of Life"
+            category = "Render",
+            subcategory = "Hide Things"
     )
     public boolean hideEntityFire = false;
 
@@ -790,8 +948,8 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Hide Jerry Rune",
             description = "Prevents the game from rendering the items spawned by the Jerry rune.",
-            category = "Miscellaneous",
-            subcategory = "Quality of Life"
+            category = "Render",
+            subcategory = "Hide Things"
     )
     public boolean hideJerryRune = false;
 
@@ -799,8 +957,8 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Hide Lightning",
             description = "Prevents all lightning from rendering.",
-            category = "Miscellaneous",
-            subcategory = "Quality of Life"
+            category = "Render",
+            subcategory = "Hide Things"
     )
     public boolean hideLightning = false;
 
@@ -808,8 +966,8 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Hide Mob Death Particles",
             description = "Hides the smoke particles created when mobs die.",
-            category = "Miscellaneous",
-            subcategory = "Quality of Life"
+            category = "Render",
+            subcategory = "Hide Things"
     )
     public boolean hideDeathParticles = false;
 
@@ -817,8 +975,8 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Hide Geyser Particles",
             description = "Hides the annoying particles in the §6Blazing Volcano.",
-            category = "Miscellaneous",
-            subcategory = "Quality of Life"
+            category = "Render",
+            subcategory = "Hide Things"
     )
     public boolean hideGeyserParticles = false;
 
@@ -826,8 +984,8 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Highlight Geyser Box",
             description = "Creates a box of where the geyser area is in the §6Blazing Volcano",
-            category = "Miscellaneous",
-            subcategory = "Quality of Life"
+            category = "Render",
+            subcategory = "Highlights"
     )
     public boolean geyserBoundingBox = false;
 
@@ -835,8 +993,8 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "No Fire",
             description = "Removes first-person fire overlay when you are burning.",
-            category = "Miscellaneous",
-            subcategory = "Quality of Life"
+            category = "Render",
+            subcategory = "Hide Things"
     )
     public boolean noFire = false;
 
@@ -854,16 +1012,34 @@ public class Config extends Vigilant {
             name = "Show Lowest BIN Price",
             description = "Shows the lowest Buy It Now price for various items in Skyblock.",
             category = "Miscellaneous",
-            subcategory = "Auction Utilities"
+            subcategory = "Item Price Info"
     )
     public boolean showLowestBINPrice = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Show Price Paid",
+            description = "Shows the price you bought an item for.",
+            category = "Miscellaneous",
+            subcategory = "Item Price Info"
+    )
+    public boolean showPricePaid = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Show Bazaar Price",
+            description = "Shows the bazaar price for various items in Skyblock.",
+            category = "Miscellaneous",
+            subcategory = "Item Price Info"
+    )
+    public boolean showBazaarPrice = false;
 
     @Property(
             type = PropertyType.SWITCH,
             name = "Show Sales Per Day",
             description = "Shows the sales per day for various items in Skyblock.",
             category = "Miscellaneous",
-            subcategory = "Auction Utilities"
+            subcategory = "Item Price Info"
     )
     public boolean showSalesPerDay = false;
 
@@ -872,7 +1048,7 @@ public class Config extends Vigilant {
             name = "Show Estimated Price",
             description = "Shows the estimated price for various items in Skyblock. Calculates using things like enchants and stars",
             category = "Miscellaneous",
-            subcategory = "Auction Utilities"
+            subcategory = "Item Price Info"
     )
     public boolean showEstimatedPrice = false;
 
@@ -881,7 +1057,7 @@ public class Config extends Vigilant {
             name = "Show Average BIN Price",
             description = "Shows the average Buy It Now price for various items in Skyblock.",
             category = "Miscellaneous",
-            subcategory = "Auction Utilities"
+            subcategory = "Item Price Info"
     )
     public boolean showAvgLowestBINPrice = false;
 
@@ -890,9 +1066,18 @@ public class Config extends Vigilant {
             name = "Helpful Auction Guis",
             description = "Shows the extra information about your own and others auctions.",
             category = "Miscellaneous",
-            subcategory = "Auction Utilities"
+            subcategory = "Auction Utils"
     )
     public boolean auctionGuis = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "Condense Item Price Info",
+            description = "Only shows the things like Average BIN, Lowest BIN, Sales/Day when the Shift key is held",
+            category = "Miscellaneous",
+            subcategory = "Item Price Info"
+    )
+    public boolean showPriceInfoOnShift = false;
 
     @Property(
             type = PropertyType.SWITCH,
@@ -915,18 +1100,27 @@ public class Config extends Vigilant {
     @Property(
             type = PropertyType.SWITCH,
             name = "Highlight Auctions For Flipping",
-            description = "Highlights items that have 100,000 profit or more.",
+            description = "Highlights auctions that have 100,000 profit or more.",
             category = "Miscellaneous",
-            subcategory = "Auction Utilities"
+            subcategory = "Auction Utils"
     )
     public boolean highlightAuctionProfit = false;
 
     @Property(
             type = PropertyType.SWITCH,
-            name = "Auction Flipper",
-            description = "Shows you auctions that have a flip value of more than your margin.\n§cDo not put 100% trust in the mod, it can and probably will make mistakes.",
-            category = "§1§rAuction Flipper",
-            subcategory = "Settings"
+            name = "Highlight Losing Auctions Red",
+            description = "Highlights auctions that you arent winning",
+            category = "Miscellaneous",
+            subcategory = "Auction Utils"
+    )
+    public boolean highlightlosingAuction = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
+            name = "BIN Flipper",
+            description = "Shows you BIN that have a flip value of more than your margin.\n§cDo not put 100% trust in the mod, it can and probably will make mistakes.",
+            category = "§1§rBIN Flipper",
+            subcategory = "BIN Flipper Settings"
     )
     public boolean autoAuctionFlip = false;
 
@@ -934,8 +1128,8 @@ public class Config extends Vigilant {
             type = PropertyType.TEXT,
             name = "Profit Margin",
             description = "The minimum amount of profit for an auction to be shown to you. §3(Numbers Only)",
-            category = "§1§rAuction Flipper",
-            subcategory = "Settings"
+            category = "§1§rBIN Flipper",
+            subcategory = "BIN Flipper Settings"
     )
     public String autoAuctionFlipMargin = "100000";
     
@@ -943,8 +1137,8 @@ public class Config extends Vigilant {
             type = PropertyType.TEXT,
             name = "Minimum Volume",
             description = "The minimum amount of sales per day for an auction to be shown to you. §3(Numbers Only)",
-            category = "§1§rAuction Flipper",
-            subcategory = "Settings"
+            category = "§1§rBIN Flipper",
+            subcategory = "BIN Flipper Settings"
     )
     public String autoAuctionFlipMinVolume = "10";
  
@@ -952,8 +1146,8 @@ public class Config extends Vigilant {
             type = PropertyType.TEXT,
             name = "Minimum Flip Percent",
             description = "The minimum percent of profit from an auction to be shown to you. §3(Numbers Only)",
-            category = "§1§rAuction Flipper",
-            subcategory = "Settings"
+            category = "§1§rBIN Flipper",
+            subcategory = "BIN Flipper Settings"
     )
     public String autoAuctionFlipMinPercent = "0";
 
@@ -961,8 +1155,8 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Make Purse Max Amount",
             description = "Make the amount of money you can spend on an auction equal to your purse.",
-            category = "§1§rAuction Flipper",
-            subcategory = "Settings"
+            category = "§1§rBIN Flipper",
+            subcategory = "BIN Flipper Settings"
     )
     public boolean autoAuctionFlipSetPurse = false;
     
@@ -970,8 +1164,8 @@ public class Config extends Vigilant {
         type = PropertyType.SWITCH,
         name = "Change Item Estimation",
         description = "Include stars and enchants into item value estimation.",
-        category = "§1§rAuction Flipper",
-        subcategory = "Settings"
+        category = "§1§rBIN Flipper",
+        subcategory = "BIN Flipper Settings"
     )
     public boolean autoFlipAddEnchAndStar = false;
 
@@ -979,8 +1173,8 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Refresh Countdown",
             description = "Show the countdown till refreshing.",
-            category = "§1§rAuction Flipper",
-            subcategory = "Settings"
+            category = "§1§rBIN Flipper",
+            subcategory = "BIN Flipper Settings"
     )
     public boolean autoAuctionFlipCounter = false;
 
@@ -988,8 +1182,8 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Auto Open",
             description = "Opens up the bid menu for the item with the highest profit. \n§cThis is slower than holding down key",
-            category = "§1§rAuction Flipper",
-            subcategory = "Settings"
+            category = "§1§rBIN Flipper",
+            subcategory = "BIN Flipper Settings"
     )
     public boolean autoAuctionFlipOpen = false;
 
@@ -997,8 +1191,8 @@ public class Config extends Vigilant {
             type = PropertyType.SWITCH,
             name = "Easy Auction Buying",
             description = "By spam clicking you will auto buy the item from bin auction view that opens with Auto Auction Flip.",
-            category = "§1§rAuction Flipper",
-            subcategory = "Settings"
+            category = "§1§rBIN Flipper",
+            subcategory = "BIN Flipper Settings"
     )
     public boolean autoAuctionFlipEasyBuy = false;
 
@@ -1008,8 +1202,8 @@ public class Config extends Vigilant {
             type = PropertyType.CHECKBOX,
             name = "Filter Out Pets",
             description = "Filters out pets from Auto Flipper",
-            category = "§1§rAuction Flipper",
-            subcategory = "§1§rFilter"
+            category = "§1§rBIN Flipper",
+            subcategory = "§1§rBIN Flipper Filter"
     )
     public boolean autoAuctionFilterOutPets = false;
 
@@ -1017,8 +1211,8 @@ public class Config extends Vigilant {
             type = PropertyType.CHECKBOX,
             name = "Filter Out Skins",
             description = "Filters out minion skins, armor skins, and pet skins from Auto Flipper",
-            category = "§1§rAuction Flipper",
-            subcategory = "§1§rFilter"
+            category = "§1§rBIN Flipper",
+            subcategory = "§1§rBIN Flipper Filter"
     )
     public boolean autoAuctionFilterOutSkins = false;
 
@@ -1026,8 +1220,8 @@ public class Config extends Vigilant {
             type = PropertyType.CHECKBOX,
             name = "Filter Out Furniture",
             description = "Filters out furniture from Auto Flipper",
-            category = "§1§rAuction Flipper",
-            subcategory = "§1§rFilter"
+            category = "§1§rBIN Flipper",
+            subcategory = "§1§rBIN Flipper Filter"
     )
     public boolean autoAuctionFilterOutFurniture = false;
 
@@ -1035,8 +1229,8 @@ public class Config extends Vigilant {
             type = PropertyType.CHECKBOX,
             name = "Filter Out Dyes",
             description = "Filters out dyes from Auto Flipper",
-            category = "§1§rAuction Flipper",
-            subcategory = "§1§rFilter"
+            category = "§1§rBIN Flipper",
+            subcategory = "§1§rBIN Flipper Filter"
     )
     public boolean autoAuctionFilterOutDyes = false;
 
@@ -1044,17 +1238,17 @@ public class Config extends Vigilant {
             type = PropertyType.CHECKBOX,
             name = "Filter Out Runes",
             description = "Filters out runes from Auto Flipper",
-            category = "§1§rAuction Flipper",
-            subcategory = "§1§rFilter"
+            category = "§1§rBIN Flipper",
+            subcategory = "§1§rBIN Flipper Filter"
     )
     public boolean autoAuctionFilterOutRunes = false;
 
     @Property(
             type = PropertyType.PARAGRAPH,
             name = "Blacklist",
-            description = "Filters out any items who's name contain something from the blacklist. Seperate each entry with a §a;§r.\n§aExample: 'perfect;bonemerang;zombie soldier'",
-            category = "§1§rAuction Flipper",
-            subcategory = "§1§rFilter"
+            description = "Filters out any blacklisted items. Seperate with §a;§r.\n§aExample: 'bonemerang;stick'",
+            category = "§1§rBIN Flipper",
+            subcategory = "§1§rBIN Flipper Filter"
     )
     public String autoAuctionBlacklist = "";
 
@@ -1069,10 +1263,19 @@ public class Config extends Vigilant {
 
     @Property(
             type = PropertyType.SWITCH,
+            name = "Granda Wolf Pet Combo Timer",
+            description = "Shows time until your combo expires on the Grandma Wolf Pet",
+            category = "Pets",
+            subcategory = "Quality of Life"
+    )
+    public boolean GrandmaWolfTimer = false;
+
+    @Property(
+            type = PropertyType.SWITCH,
             name = "Hide Fishing Hooks",
             description = "Hides fishing hooks from other players",
-            category = "Miscellaneous",
-            subcategory = "Quality of Life"
+            category = "Render",
+            subcategory = "Hide Things"
     )
     public boolean hideFishingHooks = false;
 
@@ -1088,9 +1291,9 @@ public class Config extends Vigilant {
      @Property(
             type = PropertyType.SWITCH,
             name = "Ad Blocker",
-            description = "Hides auction advertisments in chat",
-            category = "Spam",
-            subcategory = "Miscellaneous"
+            description = "Hides auction/lowballing advertisments in chat",
+            category = "General",
+            subcategory = "Other"
     )
     public boolean hideAdvertisments = false;
 
@@ -1099,7 +1302,7 @@ public class Config extends Vigilant {
             name = "Small Items",
             description = "Makes the items you hold smaller",
             category = "General",
-            subcategory = "Item Postion"
+            subcategory = "Other"
     )
     public boolean smallItems = false;
 
@@ -1132,9 +1335,69 @@ public class Config extends Vigilant {
             hidden = true
     )
     public int armZ = 0;
+    
+    @Property(
+            type = PropertyType.SLIDER,
+            name = "gMaWolf5Second",
+            description = "",
+            category = "General",
+            subcategory = "Item Fov",
+            hidden = true
+    )
+    public int gMaWolf5Second = 0;
 
+    @Property(
+            type = PropertyType.SLIDER,
+            name = "gMaWolf10Second",
+            description = "",
+            category = "General",
+            subcategory = "Item Fov",
+            hidden = true
+    )
+    public int gMaWolf10Second = 0;
+
+    @Property(
+            type = PropertyType.SLIDER,
+            name = "gMaWolf15Second",
+            description = "",
+            category = "General",
+            subcategory = "Item Fov",
+            hidden = true
+    )
+    public int gMaWolf15Second = 0;
+
+    @Property(
+            type = PropertyType.SLIDER,
+            name = "gMaWolf20Second",
+            description = "",
+            category = "General",
+            subcategory = "Item Fov",
+            hidden = true
+    )
+    public int gMaWolf20Second = 0;
+
+    @Property(
+            type = PropertyType.SLIDER,
+            name = "gMaWolf25Second",
+            description = "",
+            category = "General",
+            subcategory = "Item Fov",
+            hidden = true
+    )
+    public int gMaWolf25Second = 0;
+
+    @Property(
+            type = PropertyType.SLIDER,
+            name = "gMaWolf30Second",
+            description = "",
+            category = "General",
+            subcategory = "Item Fov",
+            hidden = true
+    )
+    public int gMaWolf30Second = 0;
+    public static File file = new File("./config/skyblockfeatures/config.toml");
     public Config() {
-        super(new File("./config/skyblockfeatures/config.toml"));
+        super(file);
         initialize();
     }
 }

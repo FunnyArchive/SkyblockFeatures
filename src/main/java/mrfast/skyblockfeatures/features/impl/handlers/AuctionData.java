@@ -4,6 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import gg.essential.api.gui.EssentialGUI;
+import gg.essential.vigilance.VigilanceConfig;
+import gg.essential.vigilance.gui.VigilancePalette;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -85,23 +89,20 @@ public class AuctionData {
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.START || !Utils.inSkyblock) return;
-        
         if (reloadTimer.getTime() >= 90000 || !reloadTimer.isStarted()) {
             if(reloadTimer.getTime() >= 90000) reloadTimer.reset();
             else reloadTimer.start();
-            if (skyblockfeatures.config.showLowestBINPrice || skyblockfeatures.config.dungeonChestProfit  || skyblockfeatures.config.minionOverlay || skyblockfeatures.config.auctionGuis) {
-                new Thread(() -> {
-                    JsonObject data = APIUtil.getJSONResponse(dataURL);
-                    for (Map.Entry<String, JsonElement> items : data.entrySet()) {
-                        lowestBINs.put(items.getKey(), Math.floor(items.getValue().getAsDouble()));
+            new Thread(() -> {
+                JsonObject data = APIUtil.getJSONResponse(dataURL);
+                for (Map.Entry<String, JsonElement> items : data.entrySet()) {
+                    lowestBINs.put(items.getKey(), Math.floor(items.getValue().getAsDouble()));
+                }
+                AuctionUtil.getMyApiGZIPAsync("https://moulberry.codes/auction_averages_lbin/1day.json.gz", (jsonObject) -> {
+                    for (Map.Entry<String, JsonElement> items : jsonObject.entrySet()) {
+                        averageLowestBINs.put(items.getKey(), Math.floor(items.getValue().getAsDouble()));
                     }
-                    AuctionUtil.getMyApiGZIPAsync("https://moulberry.codes/auction_averages_lbin/1day.json.gz", (jsonObject) -> {
-                        for (Map.Entry<String, JsonElement> items : jsonObject.entrySet()) {
-                            averageLowestBINs.put(items.getKey(), Math.floor(items.getValue().getAsDouble()));
-                        }
-                    }, ()->{});
-                }, "skyblockfeatures-FetchAuctionData").start();
-            }
+                }, ()->{});
+            }, "skyblockfeatures-FetchAuctionData").start();
             if (skyblockfeatures.config.auctionGuis || skyblockfeatures.config.autoAuctionFlip) {
                 new Thread(() -> {
                     AuctionUtil.getMyApiGZIPAsync("https://moulberry.codes/auction_averages/3day.json.gz", (jsonObject) -> {
@@ -109,7 +110,7 @@ public class AuctionData {
                     }, ()->{});
                 }, "skyblockfeatures-FetchAuctionStuff").start();
             }
-            if (bazaarPrices.size() == 0 && (skyblockfeatures.config.showLowestBINPrice || skyblockfeatures.config.minionOverlay || skyblockfeatures.config.dungeonChestProfit || skyblockfeatures.config.auctionGuis) && skyblockfeatures.config.apiKey.length()>1) {
+            if (bazaarPrices.size() == 0 && skyblockfeatures.config.apiKey.length()>1) {
                 new Thread(() -> {
                     JsonObject data = APIUtil.getJSONResponse("https://api.hypixel.net/skyblock/bazaar?key="+skyblockfeatures.config.apiKey);
                     JsonObject products = data.get("products").getAsJsonObject();

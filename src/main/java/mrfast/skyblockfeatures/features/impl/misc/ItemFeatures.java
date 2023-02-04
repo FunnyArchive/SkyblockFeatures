@@ -2,6 +2,8 @@ package mrfast.skyblockfeatures.features.impl.misc;
 
 import java.util.HashMap;
 
+import org.lwjgl.input.Keyboard;
+
 import com.google.gson.JsonObject;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
@@ -29,9 +31,36 @@ public class ItemFeatures {
         ItemStack item = event.itemStack;
         NBTTagCompound extraAttr = ItemUtil.getExtraAttributes(item);
         String itemId = ItemUtil.getSkyBlockItemID(extraAttr);
-
-        
+        String itemUUID = ItemUtil.getItemUUID(item);
         if (itemId != null) {
+            if (skyblockfeatures.config.egg) {
+                NBTTagCompound extraAttributes = ItemUtil.getExtraAttributes(item);
+
+                if (extraAttributes != null) {
+                    if (extraAttributes.hasKey("blocks_walked")) {
+                        int walked = extraAttributes.getInteger("blocks_walked");
+                        event.toolTip.add("§e" + NumberUtil.nf.format(walked)+" blocks walked");
+                    }
+                }
+            }
+            if(AuctionFeatures.items.containsKey(item) && skyblockfeatures.config.showPricePaid) {
+                long price = Math.round(AuctionFeatures.items.get(item));
+                String color = price>0?ChatFormatting.GREEN+"":ChatFormatting.RED+"";
+                event.toolTip.add("§6BIN Flip Profit: "+color+NumberUtil.nf.format(price));
+            }
+        }
+        if (itemId != null) {
+            if(skyblockfeatures.config.showPriceInfoOnShift) {
+                if(!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                    event.toolTip.add("§e§l[SHIFT To Reveal Info]");
+                    return;
+                }
+            }
+            if(itemUUID != null) {
+                if(AuctionFeatures.pricePaidMap.containsKey(itemUUID)) {
+                    event.toolTip.add("§6Price Paid: §d" + NumberUtil.nf.format(AuctionFeatures.pricePaidMap.get(itemUUID)));
+                }
+            }
             if (skyblockfeatures.config.showLowestBINPrice) {
                 String auctionIdentifier = AuctionData.getIdentifier(item);
                 if (auctionIdentifier != null && item!=null) {
@@ -49,7 +78,7 @@ public class ItemFeatures {
 
                     if (skyblockfeatures.config.showEstimatedPrice && valuePer!=null) {
                         Double total = Math.floor(valuePer+starValue+enchantValue) * item.stackSize;
-                        event.toolTip.add("§6Estimated Price: §b" + NumberUtil.nf.format(total));
+                        event.toolTip.add("§6Estimated Price: §d" + NumberUtil.nf.format(total));
                     }
 
                     if (skyblockfeatures.config.showLowestBINPrice && valuePer!=null) {
@@ -58,31 +87,20 @@ public class ItemFeatures {
                     }
                     
                     valuePer = AuctionData.bazaarPrices.get(auctionIdentifier);
-                    if (valuePer != null) {
+                    if (skyblockfeatures.config.showBazaarPrice && valuePer != null) {
                         String total = NumberUtil.nf.format(valuePer * item.stackSize);
-                        event.toolTip.add("§6Lowest Bazaar Price: §b" + total + (item.stackSize > 1 ? " §7(" + NumberUtil.nf.format(Math.round(valuePer)) + " each§7)" : ""));
+                        event.toolTip.add("§6Lowest Bazaar Price: §9" + total + (item.stackSize > 1 ? " §7(" + NumberUtil.nf.format(Math.round(valuePer)) + " each§7)" : ""));
                     }
 
                     Double avgValuePer = AuctionData.averageLowestBINs.get(auctionIdentifier);
                     if (skyblockfeatures.config.showAvgLowestBINPrice && avgValuePer!=null) {
                         String total = NumberUtil.nf.format(avgValuePer * item.stackSize);
-                        event.toolTip.add("§6Average BIN Price: §b" + total + (item.stackSize > 1 ? " §7(" + NumberUtil.nf.format(Math.round(avgValuePer)) + " each§7)" : ""));
+                        event.toolTip.add("§6Average BIN Price: §3" + total + (item.stackSize > 1 ? " §7(" + NumberUtil.nf.format(Math.round(avgValuePer)) + " each§7)" : ""));
                     }
 
                     JsonObject auctionData = AuctionData.getItemAuctionInfo(auctionIdentifier);
                     if (skyblockfeatures.config.showSalesPerDay && auctionData!=null) {
-                        event.toolTip.add("§6Sales Per Day: §b" + NumberUtil.nf.format(auctionData.get("sales").getAsInt()));
-                    }
-                }
-            }
-
-            if (skyblockfeatures.config.egg) {
-                NBTTagCompound extraAttributes = ItemUtil.getExtraAttributes(item);
-
-                if (extraAttributes != null) {
-                    if (extraAttributes.hasKey("blocks_walked")) {
-                        int walked = extraAttributes.getInteger("blocks_walked");
-                        event.toolTip.add("§e" + NumberUtil.nf.format(walked)+" blocks walked");
+                        event.toolTip.add("§6Sales Per Day: §e" + NumberUtil.nf.format(auctionData.get("sales").getAsInt()));
                     }
                 }
             }
@@ -90,11 +108,6 @@ public class ItemFeatures {
             if (skyblockfeatures.config.showNPCSellPrice && item!=null) {
                 Double valuePer = sellPrices.get(itemId);
                 if (valuePer != null) event.toolTip.add("§6NPC Value: §b" + NumberUtil.nf.format(valuePer * item.stackSize) + (item.stackSize > 1 ? " §7(" + NumberUtil.nf.format(valuePer) + " each§7)" : ""));
-            }
-            if(AuctionFeatures.items.containsKey(item)) {
-                long price = Math.round(AuctionFeatures.items.get(item));
-                String color = price>0?ChatFormatting.GREEN+"":ChatFormatting.RED+"";
-                event.toolTip.add("§6BIN Flip Profit: "+color+NumberUtil.nf.format(price));
             }
         }
     }

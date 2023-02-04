@@ -19,6 +19,7 @@
     "MixinEntityBlaze",
     "MixinGuiConnecting",
     "MixinBlockNetherWart",
+    "MixinGuiEditSign",
     "MixinBlockCrops",
     "MixinEntityLivingBase",
     "MixinEntityPlayerSP",

@@ -10,6 +10,7 @@ import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.entity.Entity;
 
 @Mixin(RenderPlayer.class)
 public abstract class MixinRenderPlayer extends MixinRendererLivingEntity {

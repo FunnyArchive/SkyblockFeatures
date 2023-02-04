@@ -33,6 +33,12 @@ public class EnderNodeTracker {
         try {
             seconds = 0;
             hidden = true;
+            enderNodesMined = 0;
+            nests = 0;
+            eendstone = 0;
+            eobsidian = 0;
+            grand = 0;
+            titanic = 0;
         } catch(Exception e) {
 
         }

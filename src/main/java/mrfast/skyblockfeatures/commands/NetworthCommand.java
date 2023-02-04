@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Locale;
 
 import com.google.gson.JsonObject;
+import com.mojang.realmsclient.gui.ChatFormatting;
 
 public class NetworthCommand extends CommandBase {
 
@@ -70,13 +71,13 @@ public class NetworthCommand extends CommandBase {
 				username = arg1[0];
 				uuid = APIUtil.getUUID(username);
 			}
-			player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Checking networth of " + EnumChatFormatting.DARK_GREEN + username));
+			player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Checking networth of " + EnumChatFormatting.DARK_GREEN + username+ChatFormatting.AQUA+" (Skycrypt API)"));
 			
 			// Find stats of latest profile
 			String latestProfile = APIUtil.getLatestProfileID(uuid, key);
 			if (latestProfile == null) return;
 			
-			String profileURL = "https://sky.shiiyu.moe/api/v2/profile/"+username;
+			String profileURL = "https://sky.shiiyu.moe/api/v2/profile/"+uuid;
 			System.out.println("Fetching profile... "+profileURL);
 			JsonObject profileResponse = APIUtil.getJSONResponse(profileURL);
 			if (profileResponse.has("error")) {
@@ -92,24 +93,92 @@ public class NetworthCommand extends CommandBase {
 			JsonObject types = networthJson.get("types").getAsJsonObject();
 			System.out.println("Got networth player data");
 			NumberFormat nf = NumberFormat.getIntegerInstance(Locale.US);
-			
+			double purse = networthJson.get("purse").getAsDouble();
+			double Bank = networthJson.get("bank").getAsDouble();
+			double Sacks = types.get("sacks").getAsJsonObject().get("total").getAsDouble();
+			double Armor = types.get("armor").getAsJsonObject().get("total").getAsDouble();
+			double Equipment = types.get("equipment").getAsJsonObject().get("total").getAsDouble();
+			double Wardrobe = types.get("wardrobe").getAsJsonObject().get("total").getAsDouble();
+			double Inventory = types.get("inventory").getAsJsonObject().get("total").getAsDouble();
+			double enderchest = types.get("enderchest").getAsJsonObject().get("total").getAsDouble();
+			double accessories = types.get("accessories").getAsJsonObject().get("total").getAsDouble();
+			double personal_vault = types.get("personal_vault").getAsJsonObject().get("total").getAsDouble();
+			double storage = types.get("storage").getAsJsonObject().get("total").getAsDouble();
+			double pets = types.get("pets").getAsJsonObject().get("total").getAsDouble();
+			double total = networthJson.get("networth").getAsDouble();
+
 			player.addChatMessage(new ChatComponentText(EnumChatFormatting.AQUA.toString()+EnumChatFormatting.STRIKETHROUGH.toString() + "" + EnumChatFormatting.BOLD + "-------------------\n" +
 														EnumChatFormatting.AQUA + " " + username + "'s Networth:\n" +
-														EnumChatFormatting.GREEN + " Purse: " + EnumChatFormatting.GOLD + nf.format(networthJson.get("purse").getAsDouble()) + "\n" +
-														EnumChatFormatting.GREEN + " Bank: " + EnumChatFormatting.GOLD + nf.format(networthJson.get("bank").getAsDouble()) + "\n" +
-														EnumChatFormatting.GREEN + " Sacks: " + EnumChatFormatting.GOLD + nf.format(types.get("sacks").getAsJsonObject().get("total").getAsDouble()) + "\n" +
-														EnumChatFormatting.GREEN + " Armor: " + EnumChatFormatting.GOLD + nf.format(types.get("armor").getAsJsonObject().get("total").getAsDouble()) + "\n" +
-														EnumChatFormatting.GREEN + " Equipment: " + EnumChatFormatting.GOLD + nf.format(types.get("equipment").getAsJsonObject().get("total").getAsDouble()) + "\n" +
-														EnumChatFormatting.GREEN + " Wardrobe: " + EnumChatFormatting.GOLD + nf.format(types.get("wardrobe").getAsJsonObject().get("total").getAsDouble()) + "\n" +
-														EnumChatFormatting.GREEN + " Inventory: " + EnumChatFormatting.GOLD + nf.format(types.get("inventory").getAsJsonObject().get("total").getAsDouble()) + "\n" +
-														EnumChatFormatting.GREEN + " Enderchest: " + EnumChatFormatting.GOLD + nf.format(types.get("enderchest").getAsJsonObject().get("total").getAsDouble()) + "\n" +
-														EnumChatFormatting.GREEN + " Accessories: " + EnumChatFormatting.GOLD + nf.format(types.get("accessories").getAsJsonObject().get("total").getAsDouble()) + "\n" +
-														EnumChatFormatting.GREEN + " Vault: " + EnumChatFormatting.GOLD + nf.format(types.get("personal_vault").getAsJsonObject().get("total").getAsDouble()) + "\n" +
-														EnumChatFormatting.GREEN + " Storage: " + EnumChatFormatting.GOLD + nf.format(types.get("storage").getAsJsonObject().get("total").getAsDouble()) + "\n" +
-														EnumChatFormatting.GREEN + " Pets: " + EnumChatFormatting.GOLD + nf.format(types.get("pets").getAsJsonObject().get("total").getAsDouble()) + "\n" +
-														EnumChatFormatting.GREEN + " Total Networth: " + EnumChatFormatting.GOLD + nf.format(networthJson.get("networth").getAsDouble()) + "\n" +
+														EnumChatFormatting.GREEN + " Purse: " + EnumChatFormatting.GOLD + nf.format(purse) +percentOf(purse,total)+ "\n" +
+														EnumChatFormatting.GREEN + " Bank: " + EnumChatFormatting.GOLD + nf.format(Bank) +percentOf(Bank,total)+ "\n" +
+														EnumChatFormatting.GREEN + " Sacks: " + EnumChatFormatting.GOLD + nf.format(Sacks) +percentOf(Sacks,total)+ "\n" +
+														EnumChatFormatting.GREEN + " Armor: " + EnumChatFormatting.GOLD + nf.format(Armor) +percentOf(Armor,total)+ "\n" +
+														EnumChatFormatting.GREEN + " Equipment: " + EnumChatFormatting.GOLD + nf.format(Equipment) +percentOf(Equipment,total)+ "\n" +
+														EnumChatFormatting.GREEN + " Wardrobe: " + EnumChatFormatting.GOLD + nf.format(Wardrobe) +percentOf(Wardrobe,total)+ "\n" +
+														EnumChatFormatting.GREEN + " Inventory: " + EnumChatFormatting.GOLD + nf.format(Inventory) +percentOf(Inventory,total)+ "\n" +
+														EnumChatFormatting.GREEN + " Enderchest: " + EnumChatFormatting.GOLD + nf.format(enderchest) +percentOf(enderchest,total)+ "\n" +
+														EnumChatFormatting.GREEN + " Accessories: " + EnumChatFormatting.GOLD + nf.format(accessories) +percentOf(accessories,total)+ "\n" +
+														EnumChatFormatting.GREEN + " Vault: " + EnumChatFormatting.GOLD + nf.format(personal_vault) +percentOf(personal_vault,total)+ "\n" +
+														EnumChatFormatting.GREEN + " Storage: " + EnumChatFormatting.GOLD + nf.format(storage) +percentOf(storage,total)+ "\n" +
+														EnumChatFormatting.GREEN + " Pets: " + EnumChatFormatting.GOLD + nf.format(pets) +percentOf(pets,total)+ "\n" +
+														EnumChatFormatting.GREEN + " Total Networth: " + EnumChatFormatting.GOLD + nf.format(total) + "\n" +
 														EnumChatFormatting.AQUA.toString()+EnumChatFormatting.STRIKETHROUGH.toString() + " " + EnumChatFormatting.BOLD + "-------------------"));
 		}).start();
 	}
 
+	public String percentOf(Double num,Double OutOf) {
+		double lowPercent = num/OutOf;
+		double percent = Math.floor(lowPercent*10000)/100;
+		return ChatFormatting.GRAY+" ("+percent+"%)";
+	}
+	/*
+	String profileURL = "https://soopy.dev/api/v2/player_skyblock/"+uuid+"?networth=true";
+	System.out.println("Fetching profile... "+profileURL);
+	JsonObject profileResponse = APIUtil.getJSONResponse(profileURL);
+	if (profileResponse.has("error")) {
+		String reason = profileResponse.get("error").getAsString();
+		player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Failed with reason: " + reason));
+		return;
+	}
+	System.out.println(profileResponse);
+	String latestProfile = profileResponse.get("data").getAsJsonObject().get("stats").getAsJsonObject().get("currentProfileId").getAsString();
+	
+	System.out.println("Player Data ");
+	JsonObject playerJson = profileResponse.get("data").getAsJsonObject().get("profiles").getAsJsonObject().get(latestProfile).getAsJsonObject().get("members").getAsJsonObject().get(uuid).getAsJsonObject();
+	JsonObject networthJson = playerJson.get("skyhelperNetworth").getAsJsonObject();
+	JsonObject catagories = networthJson.get("categories").getAsJsonObject();
+	System.out.println("Got networth player data");
+	NumberFormat nf = NumberFormat.getIntegerInstance(Locale.US);
+	double coins = catagories.get("coins").getAsDouble();
+	double Armor = catagories.get("armor").getAsDouble();
+	double Equipment = catagories.get("equipment").getAsDouble();
+	double Wardrobe = catagories.get("wardrobe").getAsDouble();
+	double Inventory = catagories.get("inventory").getAsDouble();
+	double enderchest = catagories.get("enderchest").getAsDouble();
+	double accessories = catagories.get("accessories").getAsDouble();
+	double personal_vault = catagories.get("personal_vault").getAsDouble();
+	double storage = catagories.get("storage").getAsDouble();
+	double Sacks = catagories.get("sacks").getAsDouble();
+	double essence = catagories.get("essence").getAsDouble();
+	double pets = catagories.get("pets").getAsDouble();
+
+	double total = networthJson.get("total").getAsDouble();
+
+	player.addChatMessage(new ChatComponentText(EnumChatFormatting.AQUA.toString()+EnumChatFormatting.STRIKETHROUGH.toString() + "" + EnumChatFormatting.BOLD + "-------------------\n" +
+												EnumChatFormatting.AQUA + " " + username + "'s Networth:\n" +
+												EnumChatFormatting.GREEN + " Coins: " + EnumChatFormatting.GOLD + nf.format(coins) +percentOf(coins,total)+ "\n" +
+												EnumChatFormatting.GREEN + " Sacks: " + EnumChatFormatting.GOLD + nf.format(Sacks) +percentOf(Sacks,total)+ "\n" +
+												EnumChatFormatting.GREEN + " Armor: " + EnumChatFormatting.GOLD + nf.format(Armor) +percentOf(Armor,total)+ "\n" +
+												EnumChatFormatting.GREEN + " Equipment: " + EnumChatFormatting.GOLD + nf.format(Equipment) +percentOf(Equipment,total)+ "\n" +
+												EnumChatFormatting.GREEN + " Wardrobe: " + EnumChatFormatting.GOLD + nf.format(Wardrobe) +percentOf(Wardrobe,total)+ "\n" +
+												EnumChatFormatting.GREEN + " Inventory: " + EnumChatFormatting.GOLD + nf.format(Inventory) +percentOf(Inventory,total)+ "\n" +
+												EnumChatFormatting.GREEN + " Enderchest: " + EnumChatFormatting.GOLD + nf.format(enderchest) +percentOf(enderchest,total)+ "\n" +
+												EnumChatFormatting.GREEN + " Accessories: " + EnumChatFormatting.GOLD + nf.format(accessories) +percentOf(accessories,total)+ "\n" +
+												EnumChatFormatting.GREEN + " Essence: " + EnumChatFormatting.GOLD + nf.format(essence) +percentOf(essence,total)+ "\n" +
+												EnumChatFormatting.GREEN + " Vault: " + EnumChatFormatting.GOLD + nf.format(personal_vault) +percentOf(personal_vault,total)+ "\n" +
+												EnumChatFormatting.GREEN + " Storage: " + EnumChatFormatting.GOLD + nf.format(storage) +percentOf(storage,total)+ "\n" +
+												EnumChatFormatting.GREEN + " Pets: " + EnumChatFormatting.GOLD + nf.format(pets) +percentOf(pets,total)+ "\n" +
+												EnumChatFormatting.GREEN + " Total Networth: " + EnumChatFormatting.GOLD + nf.format(total) + "\n" +
+												EnumChatFormatting.AQUA.toString()+EnumChatFormatting.STRIKETHROUGH.toString() + " " + EnumChatFormatting.BOLD + "-------------------"));
+	*/
 }

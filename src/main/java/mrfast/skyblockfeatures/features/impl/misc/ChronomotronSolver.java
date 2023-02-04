@@ -6,6 +6,7 @@ import java.util.List;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.events.ChestSlotClickedEvent;
 import mrfast.skyblockfeatures.events.GuiChestBackgroundDrawnEvent;
+import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -44,7 +45,7 @@ public class ChronomotronSolver {
             if (invSlots.size() > 48 && invSlots.get(49).getStack() != null) {
                 if (invSlots.get(49).getStack().getDisplayName().startsWith("§7Timer: §a") && invSlots.get(4).getStack() != null) {
                     int round = invSlots.get(4).getStack().stackSize;
-                    int timerSeconds = Integer.parseInt(StringUtils.stripControlCodes(invSlots.get(49).getStack().getDisplayName()).replaceAll("[^\\d]", ""));
+                    int timerSeconds = Integer.parseInt(Utils.cleanColour(invSlots.get(49).getStack().getDisplayName()).replaceAll("[^\\d]", ""));
                     if (round != lastChronomatronRound && timerSeconds == round + 2) {
                         lastChronomatronRound = round;
                         for (int i = 10; i <= 43; i++) {
