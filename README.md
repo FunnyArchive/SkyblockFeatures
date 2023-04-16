@@ -45,7 +45,7 @@
 - Puzzler Solver
 - Chronomotron & Ultrasequencer Solver
 
-#### Dungeons:
+<details><summary>### Dungeons</summary>
 - Dungeon Blocks
 - Crypt Display
 - Score Estimate
@@ -54,6 +54,8 @@
 - Dungeon Teammate Glowing
 - Dungeon Map with Player Heads And Names
 - Dungeon Chest Profit
+- Highlight Doors
+</details>
 
 #### Trackers: 
 - Automaton Loot/Profit Tracker
@@ -82,6 +84,7 @@
 - Helpful Auction Guis (for flipping, selling, and buying)
 - Highlight Auction Flips
 - Better Party finder
+- Custom Config Gui
 - Show Extra Profile Info (Shows networth, skill avg and discord when looking at someones profile)
 
 #### Helpers:
@@ -115,6 +118,7 @@
 - /bank \<name\> (*Displays another players current purse/bank balance*)
 - /dungeons \<name\> (*Shows another players dungeon stats*)
 - /shrug \<msg\> (*Sends a message followed by a "¯\\_(ツ)_/¯"*)
+- /flips \<name\> (*Shows a players auction flipping info*) *Provided by [Cofl](https://sky.coflnet.com/)*
 - /networth \<name\> (*Shows you a players networth*) *Provided by [Skycrypt](https://sky.shiiyu.moe/) API*
 
 ## License
