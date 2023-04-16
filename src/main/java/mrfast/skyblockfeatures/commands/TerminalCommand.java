@@ -1,6 +1,8 @@
 package mrfast.skyblockfeatures.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -44,10 +46,15 @@ public class TerminalCommand extends CommandBase {
 		28, 37, 38, 39, 40
 	};
 	public static double mazeIndex = 1;
+	public static double orderNumber = 1;
+	// Color Key
+	// gray 15
+	// red 14
+	// green 5
 	@Override
 	public void processCommand(ICommandSender arg0, String[] arg1) throws CommandException {
 		start = 0;
-		double termId = Utils.randomNumber(1,2);
+		double termId = Utils.randomNumber(1,3);
 		if(termId==1) {
 			InventoryBasic Terminal = new InventoryBasic(ChatFormatting.GREEN+"✯ Correct Panes", true, 45);
 			clicked.clear();
@@ -65,6 +72,7 @@ public class TerminalCommand extends CommandBase {
 
 			GuiUtil.open(Objects.requireNonNull(new GuiChest(Utils.GetMC().thePlayer.inventory, Terminal)));
 		} else if(termId==2) {
+			mazeIndex = 1;
 			InventoryBasic Terminal = new InventoryBasic(ChatFormatting.GREEN+"✯ Solve Maze", true, 54);
 			clicked.clear();
 			for(int i = 0; i < 54; i++) {
@@ -78,6 +86,30 @@ public class TerminalCommand extends CommandBase {
 
 			for(int slot : mazeSlots) {
 				Terminal.setInventorySlotContents(slot, new ItemStack(Blocks.stained_glass_pane, 1, 0).setStackDisplayName(ChatFormatting.RESET+""));
+			}
+
+			GuiUtil.open(Objects.requireNonNull(new GuiChest(Utils.GetMC().thePlayer.inventory, Terminal)));
+		} else if(termId==3) {
+			TerminalCommand.orderNumber = 1;
+			InventoryBasic Terminal = new InventoryBasic(ChatFormatting.GREEN+"✯ Click in order", true, 36);
+			for(int i = 0; i < 36; i++) {
+				Terminal.setInventorySlotContents(i, new ItemStack(Blocks.stained_glass_pane, 1, 15).setStackDisplayName(ChatFormatting.RESET+""));
+			}
+			List<Integer> numbers = Arrays.asList(1,2,3,4,5,6,7,8,9,10,11,12,13,14);
+			Collections.shuffle(numbers);
+			int index = 0;
+			
+			// Top Row
+			for(int i=10;i<17;i++) {
+				int randNum = numbers.get(index);
+				Terminal.setInventorySlotContents(i, new ItemStack(Blocks.stained_glass_pane, randNum, 14).setStackDisplayName(ChatFormatting.GREEN+""+randNum));
+				index++;
+			}
+			// Bottom Row
+			for(int i=19;i<26;i++) {
+				int randNum = numbers.get(index);
+				Terminal.setInventorySlotContents(i, new ItemStack(Blocks.stained_glass_pane, randNum, 14).setStackDisplayName(ChatFormatting.GREEN+""+randNum));
+				index++;
 			}
 
 			GuiUtil.open(Objects.requireNonNull(new GuiChest(Utils.GetMC().thePlayer.inventory, Terminal)));

@@ -24,6 +24,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiChest;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityItem;
@@ -44,6 +45,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.RenderBlockOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -131,7 +133,7 @@ public class MiscFeatures {
     int tick = 0;
     @SubscribeEvent
     public void onTick(ClientTickEvent event) {
-        if(Utils.GetMC().theWorld==null) return;
+        if(Utils.GetMC().theWorld==null || !skyblockfeatures.config.tntTimer) return;
         
         tick++;
         for(Entity entity:Utils.GetMC().theWorld.loadedEntityList) {
@@ -147,9 +149,8 @@ public class MiscFeatures {
             }
         }
     }
-
     @SubscribeEvent
-    public void onRender(RenderWorldLastEvent event) {
+    public void RenderBlockOverlayEvent(DrawBlockHighlightEvent event) {
         try {
             if(Utils.GetMC().thePlayer.getHeldItem()!=null && skyblockfeatures.config.teleportDestination) {
                 ItemStack item = Utils.GetMC().thePlayer.getHeldItem();
@@ -193,17 +194,21 @@ public class MiscFeatures {
         } catch (Exception e) {
             // TODO: handle exception
         }
-        
-        if(skyblockfeatures.config.tntTimer)
-        for(EntityTNTPrimed tnt:tntExistTimes.keySet()) {
-            if(tnt.isDead) {
-                tntExistTimes.remove(tnt);
-                return;
+    }
+
+    @SubscribeEvent
+    public void onRender(RenderWorldLastEvent event) {
+        if(skyblockfeatures.config.tntTimer) {
+            for(EntityTNTPrimed tnt:tntExistTimes.keySet()) {
+                if(tnt.isDead) {
+                    tntExistTimes.remove(tnt);
+                    return;
+                }
+                if(tntExistTimes.get(tnt)==0) {
+                    return;
+                }
+                RenderUtil.draw3DStringWithShadow(tnt.getPositionVector().addVector(0, 1.5, 0), ChatFormatting.GREEN+""+tntExistTimes.get(tnt).toString(), 0xFFFFFF, event.partialTicks);
             }
-            if(tntExistTimes.get(tnt)==0) {
-                return;
-            }
-            RenderUtil.draw3DStringWithShadow(tnt.getPositionVector().addVector(0, 1.5, 0), ChatFormatting.GREEN+""+tntExistTimes.get(tnt).toString(), 0xFFFFFF, event.partialTicks);
         }
         if(SBInfo.getInstance().location.contains("Glowing") && skyblockfeatures.config.highlightMushrooms) {
             try {

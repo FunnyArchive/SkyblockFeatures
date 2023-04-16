@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -23,6 +24,8 @@ import mrfast.skyblockfeatures.utils.RenderUtil;
 import mrfast.skyblockfeatures.utils.ScoreboardUtil;
 import mrfast.skyblockfeatures.utils.Utils;
 import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
+import net.minecraft.block.BlockOre;
+import net.minecraft.block.BlockSkull;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -43,6 +46,11 @@ import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntitySkull;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -73,9 +81,36 @@ public class DungeonsFeatures {
 
     @SubscribeEvent
     public void onRender3D(RenderWorldLastEvent event) {
-        for(Entity entity:mc.theWorld.loadedEntityList) {
-            if(entity instanceof EntityBat && skyblockfeatures.config.highlightBats && Utils.inDungeons && !entity.isInvisible()) {
-                RenderUtil.drawOutlinedFilledBoundingBox(entity.getEntityBoundingBox(),Color.GREEN,event.partialTicks);
+        if(!Utils.inDungeons) return;
+        if(skyblockfeatures.config.highlightBats) {
+            for(Entity entity:mc.theWorld.loadedEntityList) {
+                if(entity instanceof EntityBat && !entity.isInvisible()) {
+                    RenderUtil.drawOutlinedFilledBoundingBox(entity.getEntityBoundingBox(),Color.GREEN,event.partialTicks);
+                }
+            }
+        }
+        if (mc.theWorld != null && skyblockfeatures.config.highlightDoors) {
+            for(TileEntity entity:mc.theWorld.loadedTileEntityList) {
+                if (entity instanceof TileEntitySkull) {
+                    TileEntitySkull skull = (TileEntitySkull) entity;
+                    BlockPos pos = entity.getPos();
+                    if(Utils.GetMC().thePlayer.getDistanceSq(pos)>30*30) continue;
+                    NBTTagCompound entityData = new NBTTagCompound();
+                    skull.writeToNBT(entityData);
+                    Boolean witherSkull = entityData.toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2JjYmJmOTRkNjAzNzQzYTFlNzE0NzAyNmUxYzEyNDBiZDk4ZmU4N2NjNGVmMDRkY2FiNTFhMzFjMzA5MTRmZCJ9fX0");
+                    Boolean bloodSkull = entityData.toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWQ5ZDgwYjc5NDQyY2YxYTNhZmVhYTIzN2JkNmFkYWFhY2FiMGMyODgzMGZiMzZiNTcwNGNmNGQ5ZjU5MzdjNCJ9fX0");
+                    if(!witherSkull&&!bloodSkull) continue;
+                    
+                    if(mc.theWorld.getBlockState(pos.add(4, 0, 4)).getBlock() instanceof BlockSkull) {
+                        if(witherSkull||bloodSkull) {
+                            Color c = witherSkull?Color.black:new Color(255,65,65); 
+                            GlStateManager.disableDepth();
+                            AxisAlignedBB aabb = new AxisAlignedBB(pos.getX()+1, pos.getY()-1, pos.getZ()+1, pos.getX()+1+3, pos.getY()-1+4, pos.getZ()+1+3);
+                            RenderUtil.drawOutlinedFilledBoundingBox(aabb, c, event.partialTicks);
+                            GlStateManager.enableDepth();
+                        }
+                    }
+                }
             }
         }
     }
@@ -109,7 +144,7 @@ public class DungeonsFeatures {
             }
         }
 
-        if(text.contains("Granted you ") && text.contains("and")) {
+        if(text.contains("Granted you ") && text.contains("and") && skyblockfeatures.config.blessingViewer) {
             int stat1 = 0;
             try {
                 stat1 = Integer.parseInt(text.split(" ")[2]);
@@ -141,7 +176,7 @@ public class DungeonsFeatures {
         }
         if (text.equals("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")) {
             if(count == 1) {
-                ChatComponentText message = new ChatComponentText(EnumChatFormatting.LIGHT_PURPLE+"[SBF] "+EnumChatFormatting.GOLD + "Dungeon finished! ");
+                ChatComponentText message = new ChatComponentText(EnumChatFormatting.AQUA+"[SBF] "+EnumChatFormatting.GOLD + "Dungeon finished! ");
                 ChatComponentText warpout = new ChatComponentText(EnumChatFormatting.GREEN+""+EnumChatFormatting.BOLD + " [WARP-OUT]  ");
                 ChatComponentText frag = new ChatComponentText(EnumChatFormatting.GREEN+""+EnumChatFormatting.BOLD + "[REPARTY]");
     
@@ -279,7 +314,7 @@ public class DungeonsFeatures {
                                 GlStateManager.disableDepth();
                                 GlStateManager.disableBlend();
                                 GlStateManager.translate(0, 0, 1);
-                                if (shouldDrawBkg)Gui.drawRect(x - 2, y - 2, x + fr.getStringWidth(text) + 2, y + fr.FONT_HEIGHT + 2, new Color(47, 40, 40).getRGB());
+                                if (shouldDrawBkg) Gui.drawRect(x - 2, y - 2, x + fr.getStringWidth(text) + 2, y + fr.FONT_HEIGHT + 2, new Color(47, 40, 40).getRGB());
                                 fr.drawStringWithShadow(text, x, y, new Color(255, 255, 255).getRGB());
                                 GlStateManager.scale(scale, scale, scale);
                                 fr.drawString(dungeonClass, (float) (scaleReset * (x + 7)), (float) (scaleReset * (guiTop + slot.yDisplayPosition + 18)), new Color(255, 255, 0).getRGB(), true);
@@ -287,7 +322,6 @@ public class DungeonsFeatures {
                                 GlStateManager.translate(0, 0, -1);
                                 GlStateManager.enableLighting();
                                 GlStateManager.enableDepth();
-
                             }
                         }
                     }
@@ -300,12 +334,12 @@ public class DungeonsFeatures {
     public void onDrawSlot(GuiContainerEvent.DrawSlotEvent.Pre event) {
         if (!Utils.inSkyblock) return;
         Slot slot = event.slot;
-        if (event.container instanceof ContainerChest) {
+        if (event.container instanceof ContainerChest && skyblockfeatures.config.spiritLeapNames) {
             ContainerChest cc = (ContainerChest) event.container;
             String displayName = cc.getLowerChestInventory().getDisplayName().getUnformattedText().trim();
             if (slot.getHasStack()) {
                 ItemStack item = slot.getStack();
-                if (skyblockfeatures.config.spiritLeapNames && displayName.equals("Spirit Leap")) {
+                if (displayName.equals("Spirit Leap")) {
                     if (item.getItem() == Item.getItemFromBlock(Blocks.stained_glass_pane)) {
                         event.setCanceled(true);
                     }

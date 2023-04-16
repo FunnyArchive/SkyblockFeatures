@@ -99,9 +99,9 @@ public class GemstoneMiningOverlay {
                 }
                 String[] lines = {
                     ChatFormatting.LIGHT_PURPLE+""+ChatFormatting.BOLD+"Gemstone Mining Info",
-                    ChatFormatting.LIGHT_PURPLE+"Time Spent Mining: "+ChatFormatting.GREEN+Utils.secondsToTime(seconds),
-                    ChatFormatting.LIGHT_PURPLE+"Gemstone Coins Per hour: §6"+NumberUtil.nf.format(total*12),
-                    ChatFormatting.LIGHT_PURPLE+"Pristine Count: §a"+gemstones.size()
+                    ChatFormatting.LIGHT_PURPLE+" Time Spent Mining: "+ChatFormatting.GREEN+Utils.secondsToTime(seconds),
+                    ChatFormatting.LIGHT_PURPLE+" Gemstone Coins Per hour: §6"+NumberUtil.nf.format(total*12),
+                    ChatFormatting.LIGHT_PURPLE+" Pristine Count: §a"+gemstones.size()
                 };
                 int lineCount = 0;
                 for(String line:lines) {

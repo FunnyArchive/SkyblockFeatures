@@ -18,10 +18,13 @@ import org.lwjgl.util.vector.Vector2f;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import gg.essential.elementa.components.UIRoundedRectangle;
+import gg.essential.universal.UMatrixStack;
 import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
 import mrfast.skyblockfeatures.utils.graphics.SmartFontRenderer;
 import mrfast.skyblockfeatures.utils.graphics.colors.CommonColors;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.network.NetworkPlayerInfo;
@@ -34,10 +37,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.ScoreObjective;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 
 public class Utils {
 
@@ -307,29 +312,27 @@ public class Utils {
 
     public static void SendMessage(String string) {
         if (Utils.GetMC().ingameGUI != null || Utils.GetMC().thePlayer == null) {
-            Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(ChatFormatting.LIGHT_PURPLE+"[SBF] "+ChatFormatting.RESET+string));
+            Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(ChatFormatting.AQUA+"[SBF] "+ChatFormatting.RESET+string));
         }
     }
     public static void SendMessage(Integer string) {
         if (Utils.GetMC().ingameGUI != null || Utils.GetMC().thePlayer == null) {
-            Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(ChatFormatting.LIGHT_PURPLE+"[SBF] "+ChatFormatting.RESET+string));
+            Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(ChatFormatting.AQUA+"[SBF] "+ChatFormatting.RESET+string));
         }
     }
     public static void SendMessage(Double string) {
         if (Utils.GetMC().ingameGUI != null || Utils.GetMC().thePlayer == null) {
-            Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(ChatFormatting.LIGHT_PURPLE+"[SBF] "+ChatFormatting.RESET+string));
+            Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(ChatFormatting.AQUA+"[SBF] "+ChatFormatting.RESET+string));
         }
     }
     public static void SendMessage(IChatComponent msg) {
         if (Utils.GetMC().ingameGUI != null || Utils.GetMC().thePlayer == null) {
-            ChatComponentText prefix = new ChatComponentText(EnumChatFormatting.LIGHT_PURPLE+"[SBF] "+EnumChatFormatting.RESET);
+            ChatComponentText prefix = new ChatComponentText(EnumChatFormatting.AQUA+"[SBF] "+EnumChatFormatting.RESET);
             Utils.GetMC().thePlayer.addChatMessage(
                 new ChatComponentText("")
                 .appendSibling(prefix)
                 .appendSibling(msg)
             );
-            // Utils.GetMC().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(ChatFormatting.LIGHT_PURPLE+"[SBF] "+ChatFormatting.RESET+msg));
-            // MinecraftForge.EVENT_BUS.post(new ClientChatReceivedEvent((byte) 0, new ChatComponentText(string)));
         }
     }
 
@@ -396,14 +399,6 @@ public class Utils {
         }, ms);
     }
 
-    public static final ResourceLocation grayBox = new ResourceLocation("skyblockfeatures","grayBox.png");
-    public static void drawGraySquare(int x,int y,int width,int height) {
-        Utils.GetMC().getTextureManager().bindTexture(grayBox);
-        GL11.glColor4d(70, 70, 70, 0.5);
-        GlStateManager.disableLighting();
-        Utils.drawTexturedRect(x, y, width, height, 0, 1, 0, 1, GL11.GL_NEAREST);
-    }
-
     public static void drawLine(int x1, int y1, int x2, int y2,Color color,float width) {
         GlStateManager.disableLighting();
 		RenderHelper.disableStandardItemLighting();
@@ -459,23 +454,11 @@ public class Utils {
 	}
 
     public static void drawGraySquareWithBorder(int x,int y,int width,int height,int borderWidth) {
-        drawGraySquare(x,y,width,height);
-
-        Utils.GetMC().getTextureManager().bindTexture(grayBox);
-        GL11.glColor4d(1, 1, 1, 0.8);
-        GlStateManager.disableLighting();
-
-        // Top
-        Utils.drawTexturedRect(x, y, width, borderWidth, 0, 1, 0, 1, GL11.GL_NEAREST);
-
-        // Right
-        Utils.drawTexturedRect(x+width-borderWidth, y, borderWidth, height, 0, 1, 0, 1, GL11.GL_NEAREST);
-
-        // Bottom
-        Utils.drawTexturedRect(x, y+height-borderWidth, width, borderWidth, 0, 1, 0, 1, GL11.GL_NEAREST);
-
-        // Left
-        Utils.drawTexturedRect(x, y, borderWidth, height, 0, 1, 0, 1, GL11.GL_NEAREST);
+        UIRoundedRectangle.Companion.drawRoundedRectangle(new UMatrixStack(),x, y, x+width, height+2, 5, new Color(0,0,0,125));
+        UIRoundedRectangle.Companion.drawRoundedRectangle(new UMatrixStack(),x-2, y-2, x+width+2, height+2+2, 5, new Color(55,55,55,125));
+    }
+    public static void drawGraySquare(int x,int y,int width,int height,int borderWidth, Color c) {
+        UIRoundedRectangle.Companion.drawRoundedRectangle(new UMatrixStack(),x, y, x+width, height, 5, c);
     }
 
     public static void drawOnSlot(int size, int xSlotPos, int ySlotPos, int colour) {
@@ -491,4 +474,71 @@ public class Utils {
 		Gui.drawRect(x, y, x + 16, y + 16, colour);
 		GL11.glTranslated(0, 0, -1);
 	}
+    public static final double DEG_TO_RAD = Math.PI / 180.0;
+    public static final double RAD_TO_DEG = 180.0 / Math.PI;
+
+    public static Vec3 getVectorFromRotation(float yaw, float pitch) {
+        float f = MathHelper.cos(-yaw * (float) DEG_TO_RAD - (float) Math.PI);
+        float f1 = MathHelper.sin(-yaw * (float) DEG_TO_RAD - (float) Math.PI);
+        float f2 = -MathHelper.cos(-pitch * (float) DEG_TO_RAD);
+        float f3 = MathHelper.sin(-pitch * (float) DEG_TO_RAD);
+        return new Vec3( f1 * f2, f3, f * f2);
+    }
+    
+    public static List<Vec3> vectorsToRaytrace (int vectorQuantity) {
+        //real # of vectors is vectorQuantity^2
+        Minecraft mc = Minecraft.getMinecraft();
+        EntityPlayerSP player = mc.thePlayer;
+        List<Vec3> vectorList = new ArrayList<>();
+        //get vector location of player's eyes
+        Vec3 eyes = new Vec3(player.posX, player.posY + (double)player.getEyeHeight(), player.posZ);
+        float aspectRatio = (float) mc.displayWidth / (float) mc.displayHeight;
+
+        //Vertical FOV: Minecraft FOV setting multiplied by FOV modifier (sprinting, speed effect, etc)
+        double fovV = mc.gameSettings.fovSetting * mc.thePlayer.getFovModifier();
+        //Horizontal FOV: Thanks Minecraft for being weird and making it this complicated to calculate
+        double fovH = Math.atan(aspectRatio * Math.tan(fovV * DEG_TO_RAD / 2)) * 2 * RAD_TO_DEG;
+
+        float verticalSpacing = (float) (fovV * 0.8 / vectorQuantity); // * 0.8 to leave some boundary space
+        float horizontalSpacing = (float) (fovH * 0.9 / vectorQuantity); // * 0.9 to leave some boundary space
+
+        float playerYaw = player.rotationYaw;
+        float playerPitch = player.rotationPitch;
+
+        if (mc.gameSettings.thirdPersonView == 2) {
+            //dumb but easy method of modifying vector direction if player is in reverse 3rd person
+            //does not account for the increased 3rd person FOV, but all vectors are within player view so who cares
+            playerYaw = playerYaw + 180.0F;
+            playerPitch = -playerPitch;
+        }
+
+        for (float h = (float) -(vectorQuantity - 1) / 2; h <= (float) (vectorQuantity - 1) / 2; h++) {
+            for (float v = (float) -(vectorQuantity - 1) / 2; v <= (float) (vectorQuantity - 1) / 2; v++) {
+                float yaw = h * horizontalSpacing;
+                float pitch = v * verticalSpacing;
+
+                /*
+                yaw and pitch are evenly spread out, but yaw needs to be scaled because MC FOV stretching weird.
+                "* ((playerPitch*playerPitch/8100)+1)" because yaw otherwise doesn't get complete scan at higher pitches.
+                "/ (Math.abs(v/(vectorQuantity))+1)" because Higher FOVs do not stretch out the corners of the screen as
+                much as the rest of the screen, which would otherwise cause corner vectors to be outside FOV
+                */
+                float yawScaled = yaw  * ((playerPitch*playerPitch/8100)+1) / (Math.abs(v/(vectorQuantity))+1);
+
+                //turn rotation into vector
+                Vec3 direction = getVectorFromRotation(yawScaled + playerYaw, pitch + playerPitch);
+
+                //add the new direction vector * 64 (meaning when the vector is raytraced, it will return the first
+                // block up to 64 blocks away) to the eyes vector to create the vector which will be raytraced
+                vectorList.add(eyes.addVector(direction.xCoord * 64, direction.yCoord * 64, direction.zCoord * 64));
+            }
+        }
+        return vectorList;
+    }
+
+    public static Iterable<BlockPos> getBlocksWithinRangeAtSameY(BlockPos center, int radius, int y) {
+        BlockPos corner1 = new BlockPos(center.getX() - radius, y, center.getZ() - radius);
+        BlockPos corner2 = new BlockPos(center.getX() + radius, y, center.getZ() + radius);
+        return BlockPos.getAllInBox(corner1, corner2);
+    }
 }

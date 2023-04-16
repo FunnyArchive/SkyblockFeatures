@@ -13,7 +13,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import mrfast.skyblockfeatures.skyblockfeatures;
-import mrfast.skyblockfeatures.events.SetActionBarEvent;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -28,15 +27,6 @@ import net.minecraftforge.common.MinecraftForge;
 
 @Mixin(GuiIngame.class)
 public class MixinGuiIngame {
-
-    @Inject(method = "setRecordPlaying(Ljava/lang/String;Z)V", at = @At("HEAD"), cancellable = true)
-    private void onSetActionBar(String message, boolean isPlaying, CallbackInfo ci) {
-        try {
-            if (MinecraftForge.EVENT_BUS.post(new SetActionBarEvent(message, isPlaying))) ci.cancel();
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-    }
 
     @Inject(method = "renderScoreboard", at = @At("HEAD"), cancellable = true)
 	protected void renderScoreboard(ScoreObjective objective, ScaledResolution scaledRes, CallbackInfo ci) {
@@ -98,7 +88,8 @@ public class MixinGuiIngame {
             int k = j1 - j * mc.fontRendererObj.FONT_HEIGHT;
             int l = scaledRes.getScaledWidth() - k1 + 2;
             Gui.drawRect(l1 - 2, k, l, k + mc.fontRendererObj.FONT_HEIGHT, 1342177280);
-            mc.fontRendererObj.drawStringWithShadow(s1, l1, k, 553648127);
+            if(skyblockfeatures.config.drawTextWithShadow) mc.fontRendererObj.drawStringWithShadow(s1, l1, k, 553648127);
+            else mc.fontRendererObj.drawString(s1, l1, k, 553648127);
             if(!skyblockfeatures.config.hideRedNumbers) mc.fontRendererObj.drawString(s2, l - mc.fontRendererObj.getStringWidth(s2), k, 553648127);
 
             if (j == collection.size())
@@ -106,7 +97,8 @@ public class MixinGuiIngame {
                 String s3 = objective.getDisplayName();
                 Gui.drawRect(l1 - 2, k - mc.fontRendererObj.FONT_HEIGHT - 1, l, k - 1, 1610612736);
                 Gui.drawRect(l1 - 2, k - 1, l, k, 1342177280);
-                mc.fontRendererObj.drawStringWithShadow(s3, l1 + i / 2 - mc.fontRendererObj.getStringWidth(s3) / 2, k - mc.fontRendererObj.FONT_HEIGHT, 553648127);
+                if(skyblockfeatures.config.drawTextWithShadow) mc.fontRendererObj.drawStringWithShadow(s3, l1 + i / 2 - mc.fontRendererObj.getStringWidth(s3) / 2, k - mc.fontRendererObj.FONT_HEIGHT, 553648127);
+                else mc.fontRendererObj.drawString(s3, l1 + i / 2 - mc.fontRendererObj.getStringWidth(s3) / 2, k - mc.fontRendererObj.FONT_HEIGHT, 553648127);
             }
         }
 	}

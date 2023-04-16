@@ -1,12 +1,12 @@
 package mrfast.skyblockfeatures.core.structure;
 
+import java.awt.Color;
+
+import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
-import mrfast.skyblockfeatures.utils.RenderUtil;
-
-import java.awt.*;
 
 public class LocationButton extends GuiButton {
 
@@ -43,7 +43,10 @@ public class LocationButton extends GuiButton {
         refreshLocations();
         hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x2 && mouseY < this.y2;
         Color c = new Color(255,255,255, hovered ? 100 : 40);
-        RenderUtil.drawRect(0, 0, this.element.getWidth() + 4, this.element.getHeight() + 4, c.getRGB());
+        // GlStateManager.scale(0.5, 0.5, 0.5);
+        Utils.drawGraySquare(0, 0, this.element.getWidth() + 4, this.element.getHeight() + 4, 3,c);
+        
+        // RenderUtil.drawRect(0, 0, this.element.getWidth() + 4, this.element.getHeight() + 4, c.getRGB());
         GlStateManager.translate(2, 2, 0);
         this.element.demoRender();
         GlStateManager.translate(-2, -2, 0);

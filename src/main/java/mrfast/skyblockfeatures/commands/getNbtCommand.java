@@ -10,10 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.google.common.base.Objects;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import gg.essential.api.utils.GuiUtil;
+import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -28,9 +27,6 @@ import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
-import mrfast.skyblockfeatures.gui.TestGui;
-import mrfast.skyblockfeatures.utils.ColorCode;
-import mrfast.skyblockfeatures.utils.Utils;
 
 public class getNbtCommand extends CommandBase {
 

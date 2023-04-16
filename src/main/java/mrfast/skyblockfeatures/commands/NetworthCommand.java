@@ -71,7 +71,7 @@ public class NetworthCommand extends CommandBase {
 				username = arg1[0];
 				uuid = APIUtil.getUUID(username);
 			}
-			player.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Checking networth of " + EnumChatFormatting.DARK_GREEN + username+ChatFormatting.AQUA+" (Skycrypt API)"));
+			Utils.SendMessage(EnumChatFormatting.GREEN + "Checking networth of " + EnumChatFormatting.DARK_GREEN + username+ChatFormatting.AQUA+" (Skycrypt API)");
 			
 			// Find stats of latest profile
 			String latestProfile = APIUtil.getLatestProfileID(uuid, key);
@@ -80,9 +80,10 @@ public class NetworthCommand extends CommandBase {
 			String profileURL = "https://sky.shiiyu.moe/api/v2/profile/"+uuid;
 			System.out.println("Fetching profile... "+profileURL);
 			JsonObject profileResponse = APIUtil.getJSONResponse(profileURL);
+
 			if (profileResponse.has("error")) {
 				String reason = profileResponse.get("error").getAsString();
-				player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Failed with reason: " + reason));
+				Utils.SendMessage(EnumChatFormatting.RED + "Failed with reason: " + reason);
 				return;
 			}
 

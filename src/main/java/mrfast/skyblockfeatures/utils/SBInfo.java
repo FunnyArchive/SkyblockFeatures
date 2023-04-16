@@ -181,7 +181,12 @@ public class SBInfo {
                     objective = line;
                 }
                 if(line.contains("Purse")) {
-                    coins = Float.parseFloat(Utils.cleanColour(line).replaceAll("[^0-9]", ""))/10;
+                    coins = Float.parseFloat(Utils.cleanColour(line).replaceAll("[^0-9]", ""));;
+                    if(line.contains(".")) coins/=10;
+                }
+                if(line.contains("Piggy")) {
+                    coins = Float.parseFloat(Utils.cleanColour(line).replaceAll("[^0-9]", ""));;
+                    if(line.contains(".")) coins/=10;
                 }
                 objTextLast = line.equals("Objective");
             }

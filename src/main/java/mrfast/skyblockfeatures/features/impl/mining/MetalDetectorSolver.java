@@ -11,6 +11,7 @@ import java.awt.Color;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.GuiManager;
 import mrfast.skyblockfeatures.utils.RenderUtil;
+import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.block.BlockChest;
 import net.minecraft.client.renderer.GlStateManager;
@@ -125,7 +126,10 @@ public class MetalDetectorSolver {
     BlockPos LastPosition = null;
     @SubscribeEvent
     public void onRenderWorld(ClientTickEvent event) {
-        if(Utils.GetMC().thePlayer==null) return;
+        if(Utils.GetMC().thePlayer==null || !skyblockfeatures.config.MetalDetectorSolver) return;
+        if(SBInfo.getInstance().getLocation()!=null) {
+            if(!SBInfo.getInstance().getLocation().equals("crystal_hollows")) return;
+        }
         ticks++;
         if(ticks >= 4 && Utils.GetMC().thePlayer.getHeldItem() != null && Utils.GetMC().thePlayer.getHeldItem().getDisplayName().contains("Detector") && distanceToTreasure!=0 && center!=null) {
             if(bestPos != null) {

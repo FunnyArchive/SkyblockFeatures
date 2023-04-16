@@ -35,6 +35,8 @@ public class GhostTracker {
     
     @SubscribeEvent
     public void onload(WorldEvent.Load event) {
+        if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock || !skyblockfeatures.config.ghostTracker) return;
+
         try {
             seconds = 0;
             kills = 0;
@@ -48,26 +50,27 @@ public class GhostTracker {
 
     @SubscribeEvent
     public void onSecond(SecondPassedEvent event) {
-        if(Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null) {
-            if(oldKills == 0) {
-                oldKills = kills;
+        if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock || !skyblockfeatures.config.ghostTracker) return;
+        
+        if(oldKills == 0) {
+            oldKills = kills;
+        }
+        if(!hidden) {
+            totalSeconds++;
+        }
+        if(seconds >= 60) {
+            if(oldKills == kills) {
+                hidden = true;
+                totalSeconds=0;
             }
-            if(!hidden) {
-                totalSeconds++;
-            }
-            if(seconds >= 60) {
-                if(oldKills == kills) {
-                    hidden = true;
-                    totalSeconds=0;
-                }
-                oldKills = kills;
-                seconds = 0;
-            }
+            oldKills = kills;
+            seconds = 0;
         }
     }
 
     @SubscribeEvent
     public void onEntityDeath(LivingDeathEvent event) {
+        if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock || !skyblockfeatures.config.ghostTracker) return;
         Entity entity = event.entity;
         if(entity instanceof EntityCreeper) {
             if(Utils.GetMC().thePlayer.getDistanceToEntity(entity) < 10) {
@@ -79,7 +82,7 @@ public class GhostTracker {
 
     @SubscribeEvent
     public void onDrawSlot(SecondPassedEvent event) {
-        if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock) return;
+        if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock || !skyblockfeatures.config.ghostTracker) return;
         for(int i=0;i<Utils.GetMC().thePlayer.inventory.mainInventory.length;i++) {
             if(Utils.GetMC().thePlayer.inventory.mainInventory[i] != null) {
                 if(i == 0) {

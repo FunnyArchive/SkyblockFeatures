@@ -10,6 +10,7 @@ import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.GuiManager;
 import mrfast.skyblockfeatures.core.structure.GuiElement;
 import mrfast.skyblockfeatures.core.structure.LocationButton;
+import mrfast.skyblockfeatures.utils.Utils;
 
 import java.awt.*;
 import java.util.HashMap;

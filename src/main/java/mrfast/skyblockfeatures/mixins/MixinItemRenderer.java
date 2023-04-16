@@ -40,7 +40,9 @@ public class MixinItemRenderer {
         )
     )
     public void transformFirstPersonItem(CallbackInfo ci) {
-        if(Utils.GetMC().thePlayer.getHeldItem() != null) GlStateManager.translate(skyblockfeatures.config.armX*0.01, skyblockfeatures.config.armY*0.01, skyblockfeatures.config.armZ*0.01);
+        if(Utils.GetMC().thePlayer.getHeldItem() != null) {
+            GlStateManager.translate(skyblockfeatures.config.armX*0.01, skyblockfeatures.config.armY*0.01, skyblockfeatures.config.armZ*0.01);
+        }
     }
 
     @Inject(method = "renderItemInFirstPerson", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getItemUseAction()Lnet/minecraft/item/EnumAction;", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILEXCEPTION)

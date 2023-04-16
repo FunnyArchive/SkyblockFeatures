@@ -1,5 +1,6 @@
 package mrfast.skyblockfeatures.features.impl.misc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -11,6 +12,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.structure.FloatPair;
 import mrfast.skyblockfeatures.core.structure.GuiElement;
+import mrfast.skyblockfeatures.events.SecondPassedEvent;
 import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.Utils;
 import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
@@ -21,20 +23,31 @@ public class CropCounter {
     static int oldCount = 0;
     static int cropsPerSecond = 0;
     static int ticks = 0;
+    static List<Integer> averageCropsValues = new ArrayList<>();
+    @SubscribeEvent
+    public void onSecond(SecondPassedEvent event) {
+        if(mc.thePlayer == null||!skyblockfeatures.config.Counter||!Utils.inSkyblock) return;
+        if(averageCropsValues.size()>0) {
+            int total = 0;
+            for(int i=0;i<averageCropsValues.size();i++) {
+                total+=averageCropsValues.get(i);
+            }
+            cropsPerSecond = total/averageCropsValues.size();
+        }
+    }
 
     @SubscribeEvent
-    public void onSeconds(TickEvent.ClientTickEvent event) {
-        if(mc.thePlayer == null) return;
-
-        if (!skyblockfeatures.config.Counter) { return; }
-        if(!Utils.inSkyblock) { return; }
-
+    public void onTick(TickEvent.ClientTickEvent event) {
+        if(mc.thePlayer == null||!skyblockfeatures.config.Counter||!Utils.inSkyblock) return;
         ItemStack item = mc.thePlayer.getHeldItem();
-
         if(item == null) return;
-
         if(!item.getDisplayName().contains("Hoe")) return;
+
         ticks++;
+        if(averageCropsValues.size()>0 && ticks >= 10 && averageCropsValues.size()>5) {
+            averageCropsValues.remove(0);
+            System.out.println("removed index "+(0)+" new size:"+averageCropsValues.size());
+        }
         List<String> lore = ItemUtil.getItemLore(item);
         for (int i = 0; i < lore.size(); i++) {
             String line = lore.get(i);
@@ -47,7 +60,8 @@ public class CropCounter {
                     if(oldCount == 0) {
                         oldCount = counter;
                     } else {
-                        cropsPerSecond = (counter-oldCount)*2;
+                        averageCropsValues.add((counter-oldCount)*2);
+                        System.out.println("added "+((counter-oldCount)*2)+" new size:"+averageCropsValues.size());
                         oldCount = counter;
                     }
                 }
@@ -71,8 +85,8 @@ public class CropCounter {
                 try {
                     ItemStack item = mc.thePlayer.getHeldItem();
                     if(item == null) return;
-                    String hoes = "Euclides, Gauss, Pythagorean, Turing, Newton";
-                    for(String hoe: hoes.split(", ")) {
+                    String hoes = "Euclid Gauss Pythagorean Turing Newton";
+                    for(String hoe: hoes.split(" ")) {
                         if(Utils.cleanColour(item.getDisplayName()).contains(hoe)) {
                             mc.fontRendererObj.drawStringWithShadow(ChatFormatting.RED+"Counter: "+ChatFormatting.YELLOW+count, 0, 0, 0xFFFFFF);   
                             mc.fontRendererObj.drawStringWithShadow(ChatFormatting.RED+"Crops Per Second: "+ChatFormatting.YELLOW+cropsPerSecond, 0, ScreenRenderer.fontRenderer.FONT_HEIGHT, 0xFFFFFF);   

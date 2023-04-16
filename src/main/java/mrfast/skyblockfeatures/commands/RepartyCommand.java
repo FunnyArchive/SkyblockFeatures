@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class RepartyCommand extends CommandBase implements ICommand {
+public class RepartyCommand extends CommandBase {
     public static boolean gettingParty = false;
     public static int Delimiter = 0;
     public static boolean disbanding = false;

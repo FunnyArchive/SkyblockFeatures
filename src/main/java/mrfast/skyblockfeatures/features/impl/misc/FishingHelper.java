@@ -47,7 +47,7 @@ public class FishingHelper {
                 new Color(255,85,255); // Magenta
             RenderUtil.drawOutlinedFilledBoundingBox(new AxisAlignedBB(x-1, y-0.1, z-1, x+1, y-0.09, z+1),color,event.partialTicks);
         }
-        if(fishingHook != null && !clearingSoon) {
+        if(fishingHook != null && !clearingSoon && skyblockfeatures.config.fishthing) {
             Vec3 closestParticle = null;
             try {
                 for(Vec3 particle : fishingParticles) {
@@ -171,7 +171,7 @@ public class FishingHelper {
                 }
             }
             
-            if(Utils.GetMC().thePlayer.getHeldItem() != null && Utils.GetMC().thePlayer.getHeldItem().getDisplayName().contains("Ancestral")) {
+            if(Utils.GetMC().thePlayer.getHeldItem() != null && Utils.GetMC().thePlayer.getHeldItem().getDisplayName().contains("Ancestral") && skyblockfeatures.config.MythologicalHelper) {
                 if(type == EnumParticleTypes.DRIP_LAVA) {
                     double dist = Utils.GetMC().thePlayer.getDistance(packet.getXCoordinate(), packet.getYCoordinate(), packet.getZCoordinate());
                     if(dist>3 && dist<5) {
@@ -212,6 +212,8 @@ public class FishingHelper {
                         }
                         Utils.setTimeout(()->{
                             reelingIn = false;
+                            fishingParticles.clear();
+                            fishingHook = null;
                         }, 500);
                     }
                 } else {

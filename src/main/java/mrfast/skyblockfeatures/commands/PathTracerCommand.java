@@ -6,7 +6,6 @@ import java.util.Locale;
 
 import mrfast.skyblockfeatures.features.impl.mining.PathTracer;
 import mrfast.skyblockfeatures.utils.Utils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -14,7 +13,6 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.util.Vec3;
 
 public class PathTracerCommand extends CommandBase {

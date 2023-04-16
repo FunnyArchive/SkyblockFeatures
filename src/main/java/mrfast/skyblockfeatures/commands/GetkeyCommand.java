@@ -3,8 +3,6 @@ package mrfast.skyblockfeatures.commands;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.utils.Utils;
@@ -44,7 +42,7 @@ public class GetkeyCommand extends CommandBase {
 	    }
 	    
 	    clipboard.setContents(stringSelection, null);
-		Utils.SendMessage(EnumChatFormatting.GREEN + "Your set API key is " + EnumChatFormatting.DARK_GREEN + skyblockfeatures.config.apiKey + "\n" +EnumChatFormatting.GREEN + " Your set API key has been copied to the clipboard.");
+		Utils.SendMessage(EnumChatFormatting.GREEN + "Your set API key is " + EnumChatFormatting.DARK_GREEN + skyblockfeatures.config.apiKey);
 
 	}
 

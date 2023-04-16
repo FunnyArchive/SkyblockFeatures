@@ -1,17 +1,21 @@
 package mrfast.skyblockfeatures.utils;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.Constants;
-
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.WordUtils;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants;
 
 public class ItemUtil {
     private static final Pattern RARITY_PATTERN = Pattern.compile("(§[0-9a-f]§l§ka§r )?([§0-9a-fk-or]+)(?<rarity>[A-Z]+)");
@@ -64,7 +68,6 @@ public class ItemUtil {
 
         return extraAttributes.getString("id");
     }
-
 
     public static String getItemUUID(ItemStack item) {
         if (item == null) {
@@ -144,49 +147,6 @@ public class ItemUtil {
         }
 
         return Collections.emptyList();
-    }
-
-    public static String getReforgeFromItem(ItemStack item) {
-        if (item.hasTagCompound()) {
-            NBTTagCompound extraAttributes = item.getTagCompound();
-            if (extraAttributes.hasKey("ExtraAttributes")) {
-                extraAttributes = extraAttributes.getCompoundTag("ExtraAttributes");
-                if (extraAttributes.hasKey("modifier")) {
-                    String reforge = WordUtils.capitalizeFully(extraAttributes.getString("modifier"));
-
-                    reforge = reforge.replace("_sword", ""); //fixes reforges like "Odd_sword"
-                    reforge = reforge.replace("_bow", "");
-
-                    return reforge;
-                }
-            }
-        }
-        return "Error!";
-    }
-
-    public static String getReforge(ItemStack item) {
-        if (item == null) {
-            return null;
-        }
-
-        NBTTagCompound extraAttributes = getExtraAttributes(item);
-        if (extraAttributes == null) {
-            return null;
-        }
-
-        if (!extraAttributes.hasKey("modifier", ItemUtil.NBT_STRING)) {
-            return null;
-        }
-
-        return extraAttributes.getString("modifier").replace("_sword","").replace("_bow","");
-    }
-
-    public static boolean hasRightClickAbility(ItemStack itemStack) {
-        for (String line : ItemUtil.getItemLore(itemStack)) {
-            String stripped = Utils.cleanColour(line);
-            if (stripped.startsWith("Item Ability:") && stripped.endsWith("RIGHT CLICK")) return true;
-        }
-        return false;
     }
 
     /**
@@ -273,27 +233,145 @@ public class ItemUtil {
         // If the item doesn't have a valid rarity, return null
         return ItemRarity.COMMON;
     }
-
-    public static boolean isPet(ItemStack item) {
-        if (item == null || !item.hasTagCompound())  {
-            return false;
+    static HashMap<String,JsonObject> itemMap = new HashMap<>();
+    
+    public static double getEstimatedItemValue(ItemStack stack) {
+        if(itemMap.size()==0) {
+            JsonArray items = APIUtil.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
+            for(int i=0;i<items.size();i++) {
+                JsonObject a = items.get(i).getAsJsonObject();
+                itemMap.put(a.get("id").getAsString(), a);
+            }
         }
+        String id = AuctionData.getIdentifier(stack);
+        NBTTagCompound ExtraAttributes = getExtraAttributes(stack);
+        double total = 0;
 
-        NBTTagCompound display = item.getSubCompound("display", false);
-
-        if (display == null || !display.hasKey("Lore")) {
-            return false;
+        try {
+            // Add lowest bin as a base price
+            total+=AuctionData.lowestBINs.get(id);
+            // Add wither essence value
+            total+=getStarCost(ExtraAttributes);
+            // Add enchants
+            total+=getEnchantsWorth(ExtraAttributes);   
+            // Hbp, recombs
+            total+=getUpgradeCost(ExtraAttributes);   
+        } catch (Exception e) {
+            // TODO: handle exception
         }
-
-        String name = display.getString("Name");
-
-        Matcher petRarityMatcher = PET_PATTERN.matcher(name);
-
-        if (petRarityMatcher.find()) {
-            return true;
-        } else {
-            return false;
-        }
+        
+        return (int) total;
     }
 
+    public static Integer getEstimatedItemValue(NBTTagCompound ExtraAttributes) {
+        if(itemMap.size()==0) {
+            JsonArray items = APIUtil.getArrayResponse("https://raw.githubusercontent.com/Altpapier/SkyHelper-Networth/abb278d6be1e13b3204ccb05f47c5e8aaf614733/constants/items.json");
+            for(int i=0;i<items.size();i++) {
+                JsonObject a = items.get(i).getAsJsonObject();
+                itemMap.put(a.get("id").getAsString(), a);
+            }
+        }
+        String id = ExtraAttributes.getString("id");
+        if(!AuctionData.averageLowestBINs.containsKey(id)) return 0;
+        double total = 0;
+
+        try {
+            // Add lowest bin as a base price
+            total+=AuctionData.lowestBINs.get(id);
+            // Add wither essence value
+            total+=getStarCost(ExtraAttributes);
+            // Add enchants
+            total+=getEnchantsWorth(ExtraAttributes);   
+            // Hbp, recombs
+            total+=getUpgradeCost(ExtraAttributes);   
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        
+        return (int) total;
+    }
+
+    public static double getUpgradeCost(NBTTagCompound ExtraAttributes) {
+        double total = 0;
+        // Hot potato books
+        if (ExtraAttributes.hasKey("hot_potato_count")) {
+            int hpb = ExtraAttributes.getInteger("hot_potato_count");
+            if (hpb > 10) {
+            if(AuctionData.bazaarPrices.get("FUMING_POTATO_BOOK")!=null) total+= (AuctionData.bazaarPrices.get("FUMING_POTATO_BOOK")*0.6);
+            }
+            if(AuctionData.bazaarPrices.get("HOT_POTATO_BOOK")!=null) {
+                total+= (AuctionData.bazaarPrices.get("HOT_POTATO_BOOK")*Math.min(hpb, 10));
+            }
+        }
+
+        if (ExtraAttributes.hasKey("rarity_upgrades") && !ExtraAttributes.hasKey("item_tier")) {
+            if(AuctionData.bazaarPrices.get("RECOMBOBULATOR_3000")!=null) {
+                total+= AuctionData.bazaarPrices.get("RECOMBOBULATOR_3000");
+            }
+        }
+        return total;
+    }
+
+    public static double getStarCost(NBTTagCompound extraAttributes) {
+        String id = extraAttributes.getString("id");
+        int stars = 0;
+        int masterStars = 0;
+        int totalEssence = 0;
+        String essenceType = "WITHER";
+        try {
+            if(extraAttributes.hasKey("upgrade_level")) {
+                stars = extraAttributes.getInteger("upgrade_level");
+                if(stars>5) {
+                    masterStars = stars-5;
+                    stars = 5;
+                }
+            }
+            else if(extraAttributes.hasKey("dungeon_item_level")) {
+                stars = extraAttributes.getInteger("dungeon_item_level");
+                if(stars>5) {
+                    masterStars = stars-5;
+                    stars = 5;
+                }
+            } else {
+                return 0;
+            }
+            JsonArray upgradeCosts = itemMap.get(id).get("upgrade_costs").getAsJsonArray();
+            for(int i=0;i<stars;i++) {
+                JsonElement b = upgradeCosts.get(i).getAsJsonArray().get(0);
+                totalEssence+=b.getAsJsonObject().get("amount").getAsInt();
+                essenceType=b.getAsJsonObject().get("essence_type").getAsString();
+            }
+        } catch (Exception e) {
+            // e.printStackTrace();
+            // TODO: handle exception
+        }
+        Double pricePerEssence = AuctionData.bazaarPrices.get("ESSENCE_"+essenceType);
+        Double masterStarPrice = 0d;
+        try {
+            if(masterStars>0) {
+                if(masterStars>=1) masterStarPrice+=AuctionData.bazaarPrices.get("FIRST_MASTER_STAR");
+                if(masterStars>=2) masterStarPrice+=AuctionData.bazaarPrices.get("SECOND_MASTER_STAR");
+                if(masterStars>=3) masterStarPrice+=AuctionData.bazaarPrices.get("THIRD_MASTER_STAR");
+                if(masterStars>=4) masterStarPrice+=AuctionData.bazaarPrices.get("FOURTH_MASTER_STAR");
+                if(masterStars==5) masterStarPrice+=AuctionData.bazaarPrices.get("FIFTH_MASTER_STAR");
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return (totalEssence*pricePerEssence)+masterStarPrice;
+    }
+
+    public static double getEnchantsWorth(NBTTagCompound extraAttributes) {
+        if(!extraAttributes.hasKey("enchantments")) return 0;
+        NBTTagCompound nbt = extraAttributes.getCompoundTag("enchantments");
+        int total = 0;
+        for(String enchant:nbt.getKeySet()) {
+            String id = "ENCHANTMENT_"+enchant.toUpperCase()+"_"+nbt.getInteger(enchant);
+            if(AuctionData.bazaarPrices.get(id)!=null) {
+                if(id.contains("ENCHANTMENT_SCAVENGER")||id.contains("ENCHANTMENT_INFINITE_QUIVER")) continue;
+                total+=AuctionData.bazaarPrices.get(id)*0.85;
+            }
+        }
+        return total;
+    }
 }

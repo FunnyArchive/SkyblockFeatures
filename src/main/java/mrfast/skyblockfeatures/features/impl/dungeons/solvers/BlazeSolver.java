@@ -105,6 +105,7 @@ public class BlazeSolver {
                 blazes.sort((a,b)->{
                     return a.health-b.health;
                 });
+
                 
                 Entity currentBlaze = null;
                 Entity nextBlaze = null;

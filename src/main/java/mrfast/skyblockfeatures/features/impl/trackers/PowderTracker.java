@@ -27,6 +27,7 @@ public class PowderTracker {
     static double coinsPerHour = 0;
     @SubscribeEvent
     public void onload(WorldEvent.Load event) {
+        if(!skyblockfeatures.config.PowderTracker) return;
         try {
             seconds = 0;
             hidden = true;
@@ -40,6 +41,7 @@ public class PowderTracker {
 
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event) {
+        if(!skyblockfeatures.config.PowderTracker) return;
         String raw = event.message.getUnformattedText();
         if(raw.contains("You uncovered a treasure chest!")) {
             seconds = 300;

@@ -21,18 +21,22 @@ import net.minecraft.util.Vec3;
 
 public class RenderUtil {
     public static void drawOutlinedFilledBoundingBox(AxisAlignedBB aabb, Color color, float partialTicks) {
-        aabb = aabb.offset(-0.001, -0.001, 0);
-        aabb = aabb.expand(0.002, 0.002, 0.001);
+        aabb = aabb.offset(-0.001, -0.001, -0.001);
+        aabb = aabb.expand(0.002, 0.002, 0.002);
         GlStateManager.enableBlend();
-        GlStateManager.disableLighting();
-        GlStateManager.enableCull();
         GlStateManager.disableTexture2D();
-        double width = Math.max(1-(Utils.GetMC().thePlayer.getDistance(aabb.minX, aabb.minY, aabb.minZ)/10-2),1);
+        GlStateManager.depthMask(false);
+
+        double width = Math.max(1-(Utils.GetMC().thePlayer.getDistance(aabb.minX, aabb.minY, aabb.minZ)/10-2),2);
         RenderUtil.drawBoundingBox(aabb, color, partialTicks);
-        RenderUtil.drawOutlinedBoundingBox(aabb, color, (float)width, partialTicks);
+
+        // GlStateManager.disableDepth();
+        RenderUtil.drawOutlinedBoundingBox(aabb.offset(-0.001, -0.001, -0.001).expand(0.002, 0.002, 0.002), color, (float)width, partialTicks);
+        // GlStateManager.enableDepth();
+
+        GlStateManager.depthMask(true);
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
-        GlStateManager.disableCull();
     }
 
     public static void draw3DString(Vec3 pos, String text, int colour, float partialTicks) {
@@ -136,26 +140,26 @@ public class RenderUtil {
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(-realX, -realY, -realZ);
-        GlStateManager.disableTexture2D();
+        // GlStateManager.disableTexture2D();
+        // GlStateManager.enableBlend();
+        // GlStateManager.disableLighting();
+        // GlStateManager.disableAlpha();
+        // GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+
         GlStateManager.enableBlend();
-        GlStateManager.disableLighting();
-        GlStateManager.disableAlpha();
-        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+		GlStateManager.disableTexture2D();
         GL11.glLineWidth(width);
 
         RenderGlobal.drawOutlinedBoundingBox(aabb, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-
         GlStateManager.translate(realX, realY, realZ);
-        GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableTexture2D();
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.popMatrix();
     }
     
     public static void drawBoundingBox(AxisAlignedBB aa,Color c, float partialTicks) {
         Entity render = Minecraft.getMinecraft().getRenderViewEntity();
-
+        aa = aa.offset(-0.002, -0.001, -0.002);
+        aa = aa.expand(0.004, 0.005, 0.004);
         double realX = render.lastTickPosX + (render.posX - render.lastTickPosX) * partialTicks;
         double realY = render.lastTickPosY + (render.posY - render.lastTickPosY) * partialTicks;
         double realZ = render.lastTickPosZ + (render.posZ - render.lastTickPosZ) * partialTicks;
@@ -336,9 +340,9 @@ public class RenderUtil {
             if(i%2==0)continue;
             if(i!=solution.size()-1) {
                 draw3DLine(solution.get(i), solution.get(i+2), 3, color, partialTicks);
-                Vec3 p=solution.get(i);
-                AxisAlignedBB box = new AxisAlignedBB(p.xCoord-0.1,p.yCoord-0.1,p.zCoord-0.1,p.xCoord+0.1,p.yCoord+0.1,p.zCoord+0.1);
-                drawOutlinedFilledBoundingBox(box, color, partialTicks);
+                // Vec3 p=solution.get(i);
+                // AxisAlignedBB box = new AxisAlignedBB(p.xCoord-0.1,p.yCoord-0.1,p.zCoord-0.1,p.xCoord+0.1,p.yCoord+0.1,p.zCoord+0.1);
+                // drawOutlinedFilledBoundingBox(box, color, partialTicks);
             }
         }
     }

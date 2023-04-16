@@ -21,9 +21,9 @@ public class MayorJerry {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
     public void onChat(ClientChatReceivedEvent event) {
-        if (!Utils.inSkyblock) return;
+        if (!Utils.inSkyblock || !skyblockfeatures.config.hiddenJerryAlert) return;
         String unformatted = Utils.cleanColour(event.message.getUnformattedText());
-        if (skyblockfeatures.config.hiddenJerryAlert && unformatted.contains("☺") && unformatted.contains("Jerry") && !unformatted.contains("Jerry Box")) {
+        if (unformatted.contains("☺") && unformatted.contains("Jerry") && !unformatted.contains("Jerry Box")) {
             Matcher matcher = jerryType.matcher(event.message.getFormattedText());
             if (matcher.find()) {
                 String color = matcher.group(1);
@@ -49,7 +49,7 @@ public class MayorJerry {
         }
     }
 
-    private double interpolate(double previous, double current, float delta) {
+    public static double interpolate(double previous, double current, float delta) {
         return (previous + (current - previous) * delta);
     }
 

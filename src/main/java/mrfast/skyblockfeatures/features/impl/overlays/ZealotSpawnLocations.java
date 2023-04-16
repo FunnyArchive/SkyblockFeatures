@@ -71,7 +71,8 @@ public class ZealotSpawnLocations {
     );
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
-        if(SBInfo.getInstance().location.contains("Dragons Nest") && skyblockfeatures.config.showZealotSpawns) {
+        if(!skyblockfeatures.config.showZealotSpawns) return;
+        if(SBInfo.getInstance().location.contains("Dragons Nest")) {
             for(BlockPos pos:zealotSpawns) {
                 if(pos != null) {
                     Color color = canSpawnZealots? new Color(0x55FF55):new Color(0xFF5555);
@@ -79,7 +80,7 @@ public class ZealotSpawnLocations {
                 }
             }
         }
-        if(SBInfo.getInstance().location.contains("Bruiser") && skyblockfeatures.config.showZealotSpawns) {
+        if(SBInfo.getInstance().location.contains("Bruiser")) {
             for(BlockPos pos:bruiserSpawns) {
                 if(pos != null) {
                     Color color = canSpawnBruisers? new Color(0x55FF55):new Color(0xFF5555);
@@ -87,7 +88,7 @@ public class ZealotSpawnLocations {
                 }
             }
         }
-        // Track Spawn lOcations
+        // Track Spawn locations
         // if(SBInfo.getInstance().location.contains("Bruiser")) {
         //     for(Entity e:bruisers.keySet()) {
         //         BlockPos pos = bruisers.get(e);
@@ -110,8 +111,8 @@ public class ZealotSpawnLocations {
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if(Utils.GetMC().theWorld == null || Utils.GetMC().thePlayer == null) return;
-        if(skyblockfeatures.config.showZealotSpawns && Utils.inSkyblock) {
+        if(Utils.GetMC().theWorld == null || Utils.GetMC().thePlayer == null || SBInfo.getInstance().getLocation()==null) return;
+        if(skyblockfeatures.config.showZealotSpawns && Utils.inSkyblock && SBInfo.getInstance().getLocation().equals("combat_3")) {
             for(Entity entity:Utils.GetMC().theWorld.loadedEntityList) {
                 if(entity instanceof EntityArmorStand && !zealots.contains(entity) && SBInfo.getInstance().location.contains("Dragons Nest")) {
                     if(entity.getCustomNameTag().contains("Zealot")) {

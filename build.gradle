@@ -8,7 +8,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
-version = "1.0"
+version = "1.2.5-BETA"
 group = "mrfast.skyblockfeatures"
 archivesBaseName = "Skyblock-Features"
 
@@ -101,6 +101,7 @@ processResources
 // Runs a script once built to crash my game so i can quickly restart with updated version
 task finalize {
     doLast {
+        println 'Mod Compiled at \u001B[33m'+(new Date())+"\u001B[0m"
         Runtime.getRuntime().exec("cmd /c start \"\" finish.bat");
     }
 }

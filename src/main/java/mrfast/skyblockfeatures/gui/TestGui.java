@@ -1,7 +1,11 @@
 package mrfast.skyblockfeatures.gui;
 
 import java.awt.Color;
+import java.awt.Desktop;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,92 +16,134 @@ import java.util.TreeMap;
 import gg.essential.api.utils.GuiUtil;
 import gg.essential.elementa.ElementaVersion;
 import gg.essential.elementa.UIComponent;
+import gg.essential.elementa.UIConstraints;
 import gg.essential.elementa.WindowScreen;
 import gg.essential.elementa.components.ScrollComponent;
 import gg.essential.elementa.components.UIBlock;
+import gg.essential.elementa.components.UIContainer;
 import gg.essential.elementa.components.UIRoundedRectangle;
 import gg.essential.elementa.components.UIText;
 import gg.essential.elementa.components.UIWrappedText;
 import gg.essential.elementa.components.inspector.Inspector;
-import gg.essential.elementa.constraints.CenterConstraint;
-import gg.essential.elementa.constraints.PixelConstraint;
 import gg.essential.elementa.constraints.animation.AnimatingConstraints;
 import gg.essential.elementa.constraints.animation.Animations;
+import gg.essential.elementa.dsl.AnimationsKt;
 import gg.essential.elementa.effects.OutlineEffect;
 import gg.essential.elementa.effects.RecursiveFadeEffect;
 import gg.essential.elementa.effects.ScissorEffect;
+import gg.essential.vigilance.data.DividerItem;
 import gg.essential.vigilance.data.Property;
 import gg.essential.vigilance.data.PropertyType;
+import gg.essential.vigilance.gui.Divider;
 import gg.essential.vigilance.gui.common.input.UITextInput;
+import gg.essential.vigilance.gui.common.shadow.ShadowIcon;
+import gg.essential.vigilance.gui.settings.ButtonComponent;
 import gg.essential.vigilance.gui.settings.CheckboxComponent;
+import gg.essential.vigilance.gui.settings.ColorComponent;
 import gg.essential.vigilance.gui.settings.SelectorComponent;
 import gg.essential.vigilance.gui.settings.SliderComponent;
 import gg.essential.vigilance.gui.settings.SwitchComponent;
 import gg.essential.vigilance.gui.settings.TextComponent;
+import gg.essential.vigilance.utils.ResourceImageFactory;
 import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.Config;
+import mrfast.skyblockfeatures.utils.CapeUtils;
 import mrfast.skyblockfeatures.utils.Utils;
+import gg.essential.elementa.constraints.*;
+import net.minecraft.client.gui.GuiScreen;
+
+import java.awt.*;
+
 public class TestGui extends WindowScreen {
     public static SortedMap<String, SortedMap<String,List<Property>>> catagories = new TreeMap<>();
     public static HashMap<Property, Object> valueMap = new HashMap<>();
     public static String selectedCatagory = "General";
     public String searchQuery = "";
-    // @Override
-    // public void OnG
     @Override
 	public void onScreenClose() {
 		skyblockfeatures.config.markDirty();
         skyblockfeatures.config.writeData();
 	}
 
+    // Text/Lines colors
+    Color titleColor = skyblockfeatures.config.titleColor;//new Color(0x00FFFF);
+    Color guiLines = skyblockfeatures.config.guiLines;
+    Color selectedCategory = skyblockfeatures.config.selectedCategory;
+    Color hoveredCategory = skyblockfeatures.config.hoveredCategory;
+    Color defaultCategory = skyblockfeatures.config.defaultCategory;
+    Color versionText = skyblockfeatures.config.versionColor;//new Color(0xFFFFFF);
+    Color editGuiText = skyblockfeatures.config.editGuiText;
+    Color featureBoxOutline = skyblockfeatures.config.featureBoxOutline;
+    Color featureDescription = skyblockfeatures.config.featureDescription;
+
+    // Background colors
+    Color mainBackground = skyblockfeatures.config.mainBackground;
+    Color searchBoxBackground = skyblockfeatures.config.searchBoxBackground;
+
+    Color editGuiUnhovered = skyblockfeatures.config.editGuiUnhovered;
+    Color editGuiHovered = skyblockfeatures.config.editGuiHovered;
+    
+    // #006DF0
+    // #B200F0
+    // #F01900
     Color clear = new Color(0,0,0,0);
     public TestGui(Boolean doAnimation) {
         super(ElementaVersion.V2);
         reloadAllCatagories();
         
-        int screenWidth = Utils.GetMC().currentScreen.width;
         int screenHeight = Utils.GetMC().currentScreen.height;
-        UIComponent box = new UIRoundedRectangle(15f)
+        UIComponent box = new UIRoundedRectangle(10f)
             .setX(new CenterConstraint())
             .setY(new CenterConstraint())
-            .setWidth(new PixelConstraint(0.70f*screenWidth))
-            .setHeight(new PixelConstraint(0.70f*screenHeight))
+            .setWidth(new RelativeConstraint(0.70f))
+            .setHeight(new RelativeConstraint(0.70f))
             .setChildOf(getWindow())
-            .setColor(new Color(25,25,25,200))
+            .setColor(mainBackground)
             .enableEffect(new ScissorEffect());
-
-        // Animate, set color, etc.
-        
+        new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/largeOutline.png",false),false).setChildOf(box)
+            .setX(new PixelConstraint(0f))
+            .setY(new PixelConstraint(0f))
+            .setWidth(new RelativeConstraint(1f))
+            .setHeight(new RelativeConstraint(1f));
         float guiWidth = box.getWidth();
         float guiHeight = box.getHeight();
         double fontScale = screenHeight/540d;
         
-        UIComponent titleArea = new UIBlock().setColor(clear).setChildOf(getWindow())
+        UIComponent titleArea = new UIBlock().setColor(clear).setChildOf(box)
             .setX(new CenterConstraint())
             .setWidth(new PixelConstraint(guiWidth))
             .setHeight(new PixelConstraint(0.15f*guiHeight))
             .enableEffect(new ScissorEffect());
-            
+        // Title text
         UIComponent titleText = new UIText("Skyblock Features")
-            .setColor(new Color(0x00FFFF))
+            .setColor(titleColor)
             .setChildOf(titleArea)
             .setX(new CenterConstraint())
             .setY(new CenterConstraint())
             .enableEffect(new ScissorEffect())
             .setTextScale(new PixelConstraint((float) (doAnimation?1*fontScale:4*fontScale)));
+        
+        new UIText("v"+skyblockfeatures.VERSION)
+            .setColor(versionText)
+            .setChildOf(titleArea)
+            .setX(new RelativeConstraint(0.77f))
+            .setY(new RelativeConstraint(0.7f))
+            .enableEffect(new ScissorEffect())
+            .setTextScale(new PixelConstraint((float) fontScale));
 
         new Inspector(getWindow()).setChildOf(getWindow());
         
-        UIComponent searchBox = new UIBlock()
+        UIComponent searchBox = new UIRoundedRectangle(5f)
             .setChildOf(titleArea)
             .setX(new PixelConstraint(guiWidth-90))
             .setY(new CenterConstraint())
             .setWidth(new PixelConstraint(80))
-            .setColor(new Color(120,120,120,60))
+            .setColor(searchBoxBackground)
             .setHeight(new PixelConstraint(15f));
 
-        UITextInput input = (UITextInput) new UITextInput("Search...")
+        UITextInput input = (UITextInput) new UITextInput("Search")
             .setChildOf(searchBox)
             .setX(new PixelConstraint(5f))
             .setWidth(new PixelConstraint(80))
@@ -110,20 +156,20 @@ public class TestGui extends WindowScreen {
         
         // Gray horizontal line 1px from bottom of the title area
         new UIBlock().setChildOf(titleArea)
-            .setWidth(new PixelConstraint(guiWidth))
+            .setWidth(new PixelConstraint(guiWidth-2))
             .setHeight(new PixelConstraint(1f))
             .setX(new CenterConstraint())
             .setY(new PixelConstraint(titleArea.getHeight()-1))
-            .setColor(new Color(0x808080));
+            .setColor(guiLines);
 
         // Area of where the currently selected catagorie's feature will be displayed
-        UIComponent loadedFeaturesList = new ScrollComponent("No Matching Settings Found", 10f, new Color(0xa9a9a9), false, true, false, false, 25f, 1f, null)
+        UIComponent loadedFeaturesList = new ScrollComponent("No Matching Settings Found", 10f, featureBoxOutline, false, true, false, false, 25f, 1f, null)
             .setX(new PixelConstraint(0.25f*guiWidth))
             .setY(new PixelConstraint(titleArea.getHeight()))
-            .setColor(Color.red)
+            // .setColor(Color.red)
             .enableEffect(new ScissorEffect())
             .setWidth(new PixelConstraint(0.75f*guiWidth))
-            .setHeight(new PixelConstraint((0.85f*guiHeight)));
+            .setHeight(new PixelConstraint(((0.85f*guiHeight)-1)));
         loadedFeaturesList.clearChildren();
         reloadFeatures(loadedFeaturesList,guiHeight,guiWidth,fontScale);
 
@@ -146,26 +192,33 @@ public class TestGui extends WindowScreen {
         // Seperator to the right side of the sidebar
         UIComponent sidebarSeperator = new UIBlock()
             .setWidth(new PixelConstraint(1f))
-            .setHeight(new PixelConstraint(0.85f*guiHeight))
+            .setHeight(new PixelConstraint((0.85f*guiHeight)-1))
             .setX(new PixelConstraint(0.25f*guiWidth))
             .setY(new PixelConstraint(titleArea.getHeight()))
-            .setColor(new Color(0x808080));
+            .setColor(guiLines);
         int Index = 0;
 
         // Draw catagorys on sidebar
         for(String catagoryName:catagories.keySet()) {
             UIComponent ExampleCatagory = new UIText(Utils.capitalizeString(catagoryName))
                 .setChildOf(sidebarArea)
-                .setColor(new Color(0xFFFFFF))
+                .setColor(defaultCategory)
                 .setX(new CenterConstraint())
                 .setY(new PixelConstraint(10f+(Index*20)))
                 .enableEffect(new RecursiveFadeEffect())
                 .setTextScale(new PixelConstraint((float) fontScale*2));
+                
+            // Set color of selected category
+            if(catagoryName.equals(selectedCatagory)) {
+                ExampleCatagory.setColor(selectedCategory);
+            }
             ExampleCatagory.onMouseEnterRunnable(()->{
-                ExampleCatagory.setColor(new Color(0x52cbff));
+                if(!catagoryName.equals(selectedCatagory)) {
+                    ExampleCatagory.setColor(hoveredCategory);
+                }
             });
             ExampleCatagory.onMouseLeaveRunnable(()->{
-                if(catagoryName!=selectedCatagory) ExampleCatagory.setColor(new Color(0xFFFFFF));
+                if(!catagoryName.equals(selectedCatagory)) ExampleCatagory.setColor(defaultCategory);
             });
             ExampleCatagory.onMouseClickConsumer((event)->{
                 selectedCatagory = catagoryName;
@@ -174,44 +227,97 @@ public class TestGui extends WindowScreen {
             Index++;
         }
 
-        UIComponent editGuiButton = new UIRoundedRectangle(10f).setColor(new Color(0,0,0,50))
+        UIComponent editGuiButton = new UIRoundedRectangle(10f).setColor(editGuiUnhovered)
             .setX(new PixelConstraint(0.15f*0.25f*guiWidth))
             .setY(new PixelConstraint(0.90f*guiHeight))
             .setHeight(new PixelConstraint(0.85f*0.10f*guiHeight))
             .setWidth(new PixelConstraint(0.70f*0.25f*guiWidth))
             .setChildOf(sidebarArea);
-        new UIText("Edit Gui Locations").setColor(Color.white).setChildOf(editGuiButton)
+        new UIText("Edit Gui Locations").setColor(editGuiText).setChildOf(editGuiButton)
             .setTextScale(new PixelConstraint((float) fontScale))
             .setX(new CenterConstraint())
             .setY(new CenterConstraint());
 
         editGuiButton.onMouseEnterRunnable(()->{
-            editGuiButton.setColor(new Color(0,0,0,75));
+            editGuiButton.setColor(editGuiHovered);
         });
         editGuiButton.onMouseLeaveRunnable(()->{
-            editGuiButton.setColor(new Color(0,0,0,50));
+            editGuiButton.setColor(editGuiUnhovered);
         });
         // Open gui locations gui when clicked
         editGuiButton.onMouseClickConsumer((event)->{
             GuiUtil.open(new LocationEditGui());
+        });
+        UIComponent discordButton = new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/discord.png",true),true)
+            .setX(new PixelConstraint(5))
+            .setWidth(new PixelConstraint(30))
+            .setHeight(new PixelConstraint(30))
+            .setChildOf(titleArea)
+            .setY(new CenterConstraint());
+        discordButton.onMouseClickConsumer((event)->{
+            try {
+                Desktop.getDesktop().browse(new URI("https://discord.gg/MDTEAjbNw8"));
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         });
         box.addChild(titleArea);
         box.addChild(sidebarArea);
         box.addChild(sidebarSeperator);
         box.addChild(loadedFeaturesList);
         box.addChild(editGuiButton);
+        
         if(doAnimation) {
             box.setWidth(new PixelConstraint(0f));
 
             AnimatingConstraints anim = box.makeAnimation();
-            anim.setWidthAnimation(Animations.OUT_EXP, 0.5f, new PixelConstraint(0.70f*screenWidth));
+            anim.setWidthAnimation(Animations.OUT_EXP, 0.5f, new RelativeConstraint(0.70f));
             box.animateTo(anim);
 
             AnimatingConstraints animation = titleText.makeAnimation();
             animation.setTextScaleAnimation(Animations.OUT_EXP, 0.5f, new PixelConstraint((float) (4.0*fontScale)));
             titleText.animateTo(animation);
         }
-        
+        if(selectedCatagory.contains("Gui")) {
+            UIComponent resetGuiColorsButton = new UIRoundedRectangle(10f).setColor(editGuiUnhovered)
+                .setX(new RelativeConstraint(0.65f))
+                .setY(new PixelConstraint(0.01f*guiHeight))
+                .setHeight(new PixelConstraint(0.85f*0.10f*guiHeight))
+                .setWidth(new PixelConstraint(0.23f*guiWidth))
+                .setChildOf(loadedFeaturesList);
+            new UIText("§cReset Colors").setColor(editGuiText).setChildOf(resetGuiColorsButton)
+                .setTextScale(new PixelConstraint((float) fontScale*2))
+                .setX(new CenterConstraint())
+                .setY(new CenterConstraint());
+
+            resetGuiColorsButton.onMouseEnterRunnable(()->{
+                resetGuiColorsButton.setColor(editGuiHovered);
+            });
+            resetGuiColorsButton.onMouseLeaveRunnable(()->{
+                resetGuiColorsButton.setColor(editGuiUnhovered);
+            });
+            // Open gui locations gui when clicked
+            resetGuiColorsButton.onMouseClickConsumer((event)->{
+                skyblockfeatures.config.guiLines = new Color(0x808080);
+                skyblockfeatures.config.selectedCategory = new Color(0x02A9EA);
+                skyblockfeatures.config.hoveredCategory = new Color(0x2CC8F7);
+                skyblockfeatures.config.defaultCategory = new Color(0xFFFFFF);
+                skyblockfeatures.config.featureBoxOutline = new Color(0xa9a9a9);
+                skyblockfeatures.config.featureDescription = new Color(0xbbbbbb);
+                skyblockfeatures.config.mainBackground = new Color(25,25,25,200);
+                skyblockfeatures.config.searchBoxBackground = new Color(120,120,120,60);
+                skyblockfeatures.config.editGuiUnhovered = new Color(0,0,0,50);
+                skyblockfeatures.config.editGuiHovered = new Color(0,0,0,75);
+                skyblockfeatures.config.editGuiText = new Color(0xFFFFFF);
+                skyblockfeatures.config.titleColor = new Color(0x00FFFF);
+                skyblockfeatures.config.versionColor = new Color(0xFFFFFF);
+                GuiUtil.open(new TestGui(false));
+            });
+        }
     }
 
     public void reloadAllCatagories() {
@@ -248,6 +354,8 @@ public class TestGui extends WindowScreen {
 
     public void reloadFeatures(UIComponent loadedFeaturesList, float guiHeight, float guiWidth, double fontScale) {
         int index = 0; 
+        int yOffset = 0;
+        float Margin = 6f;
         // Default catagory
         for(String catagoryName:catagories.keySet()) {
             if(searchQuery.isEmpty()) {
@@ -255,6 +363,7 @@ public class TestGui extends WindowScreen {
                     continue;
                 }
             }
+
             for(String subcatagoryName:catagories.get(catagoryName).keySet()) {
                 List<Property> subcatagory = catagories.get(catagoryName).get(subcatagoryName);
                 int featuresVisible = 0;
@@ -266,46 +375,87 @@ public class TestGui extends WindowScreen {
                 }
                 // Dont show subcatagory names if no elements of it are visible
                 if(featuresVisible==0) continue;
-
                 // Render subcatagory name
-                new UIText(subcatagoryName).setChildOf(loadedFeaturesList)
-                        .setY(new PixelConstraint(15+((5+0.15f*0.85f*guiHeight)*index)-20))
-                        .setX(new CenterConstraint())
-                        .setTextScale(new PixelConstraint((float) fontScale*3));
+
+                UIComponent container = new UIBlock(clear).setChildOf(loadedFeaturesList)
+                    .setX(new CenterConstraint())
+                    .setHeight(new ChildBasedSizeConstraint())
+                    .setWidth(new RelativeConstraint(1f))
+                    .setY(new PixelConstraint(yOffset+Margin));
+
+                // new Divider(subcatagoryName,null).setChildOf(container);
+                new UIText(subcatagoryName).setChildOf(container)
+                    .setY(new CenterConstraint())
+                    .setX(new CenterConstraint())
+                    .setTextScale(new PixelConstraint((float) fontScale*3));
+
                 index++;
+                yOffset += container.getHeight() + Margin;
                 for(Property feature:subcatagory) {
                     if((!feature.name().toLowerCase().contains(searchQuery) && !feature.description().toLowerCase().contains(searchQuery)) || feature.hidden()) {
                         continue;
                     }
-                    
-                    // allFeatures
-                    UIComponent exampleFeature = new UIBlock().setChildOf(loadedFeaturesList).setColor(new Color(0,0,0,150))
+                    UIComponent border = new ShadowIcon(new ResourceImageFactory("/assets/skyblockfeatures/gui/outline.png",false),false).setChildOf(loadedFeaturesList)
                         .setX(new CenterConstraint())
-                        .setY(new PixelConstraint(((5+0.15f*0.85f*guiHeight)*index)-20))
+                        .setWidth(new RelativeConstraint(0.92f))
+                        .setY(new PixelConstraint(yOffset+Margin));
+                    
+                    UIComponent exampleFeature = new UIBlock().setChildOf(loadedFeaturesList).setColor(clear)
+                        .setX(new CenterConstraint())
+                        .setY(new PixelConstraint(yOffset+Margin))
                         .setWidth(new PixelConstraint(0.90f*0.75f*guiWidth))
-                        .setHeight(new PixelConstraint(0.15f*0.85f*guiHeight))
-                        .enableEffect(new OutlineEffect(new Color(0xa9a9a9),1f));
+                        .setHeight(new ChildBasedSizeConstraint());
+                        
+                    if(feature.type() == PropertyType.SLIDER) {
+                        exampleFeature.setHeight(new RelativeConstraint(0.15f));
+                    }
+                    if(feature.type() == PropertyType.COLOR) {
+                        // Color Title
+                        new UIText(feature.name()).setChildOf(exampleFeature)
+                            .setY(new CenterConstraint())
+                            .setX(new PixelConstraint(4f))
+                            .setTextScale(new PixelConstraint((float) fontScale*2f));
+                        new UIBlock((Color) valueMap.get(feature))
+                            .setChildOf(exampleFeature)
+                            .setY(new CenterConstraint())
+                            .setX(new RelativeConstraint(0.66f))
+                            .setWidth(new PixelConstraint(0.08f*0.75f*guiWidth))
+                            .setHeight(new PixelConstraint(0.08f*0.75f*guiHeight))
+                            .enableEffect(new OutlineEffect(Color.yellow, 1f));
+                            
+                        exampleFeature.setHeight(new RelativeConstraint(0.29f));
+                    } else {
+                        // Feature Title
+                        new UIText(feature.name()).setChildOf(exampleFeature)
+                            .setY(new PixelConstraint(4f))
+                            .setX(new PixelConstraint(4f))
+                            .setTextScale(new PixelConstraint((float) fontScale*2f));
+                    }
+                    
         
-                    // Feature Title
-                    new UIText(feature.name()).setChildOf(exampleFeature)
-                        .setY(new PixelConstraint(4f))
-                        .setX(new PixelConstraint(4f))
-                        .setTextScale(new PixelConstraint((float) fontScale*2f));
-        
+                    // Feature description
                     if(feature.type() == PropertyType.PARAGRAPH) {
                         new UIWrappedText(feature.description()).setChildOf(exampleFeature)
                             .setX(new PixelConstraint(4f))
-                            .setWidth(new PixelConstraint(200))
-                            .setColor(new Color(187,187,187))
+                            .setWidth(new RelativeConstraint(0.5f))
+                            .setColor(featureDescription)
+                            .setY(new PixelConstraint(23f*(float) fontScale))
+                            .setTextScale(new PixelConstraint((float) fontScale*1f));
+                    } else if(feature.type() == PropertyType.TEXT) {
+                        new UIWrappedText(feature.description()).setChildOf(exampleFeature)
+                            .setX(new PixelConstraint(4f))
+                            .setWidth(new RelativeConstraint(0.75f))
+                            .setColor(featureDescription)
                             .setY(new PixelConstraint(23f*(float) fontScale))
                             .setTextScale(new PixelConstraint((float) fontScale*1f));
                     } else {
-                        new UIWrappedText(feature.description()).setChildOf(exampleFeature)
+                        UIComponent text =  new UIWrappedText(feature.description()).setChildOf(exampleFeature)
                             .setX(new PixelConstraint(4f))
-                            .setWidth(new PixelConstraint(350))
-                            .setColor(new Color(187,187,187))
+                            .setWidth(new RelativeConstraint(0.75f))
+                            .setColor(featureDescription)
                             .setY(new PixelConstraint(23f*(float) fontScale))
                             .setTextScale(new PixelConstraint((float) fontScale*1f));
+                        text.setHeight(new PixelConstraint(text.getHeight()+6));
                     }
                     
         
@@ -314,6 +464,15 @@ public class TestGui extends WindowScreen {
                         comp.onMouseClickConsumer((event)->{
                             Boolean val = (Boolean) getVariable(feature.name());
                             setVariable(feature.name(),!val);
+                        });
+                    }
+
+                    if(feature.type() == PropertyType.COLOR) {
+                        UIComponent comp = new ColorComponent((Color) valueMap.get(feature),false).setChildOf(exampleFeature);
+                        ((ColorComponent) comp).onValueChange((value)->{
+                            setVariable(feature.name(),value);
+                            GuiUtil.open(new TestGui(false));
+                            return Unit.INSTANCE;
                         });
                     }
         
@@ -359,7 +518,10 @@ public class TestGui extends WindowScreen {
                             return Unit.INSTANCE;
                         });
                     }
+                    border.setHeight(new PixelConstraint(exampleFeature.getHeight()));
+
                     index++;
+                    yOffset += exampleFeature.getHeight() + Margin;
                 }
             }
         }

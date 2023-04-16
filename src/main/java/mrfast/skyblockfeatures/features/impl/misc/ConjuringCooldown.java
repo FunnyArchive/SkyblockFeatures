@@ -11,6 +11,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
+import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.events.SecondPassedEvent;
 import mrfast.skyblockfeatures.utils.Utils;
 
@@ -22,8 +23,7 @@ public class ConjuringCooldown {
     
     @SubscribeEvent
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
-        if(!Utils.inSkyblock ) { return; }
-        if(mc.thePlayer.getHeldItem() == null) return;
+        if(!Utils.inSkyblock|| !skyblockfeatures.config.ConjuringCooldown ||mc.thePlayer.getHeldItem() == null) return;
         if(mc.thePlayer.getHeldItem().getDisplayName().toLowerCase().contains("conjuring")) {
             if(ready) {
                 seconds = 25;
@@ -34,8 +34,7 @@ public class ConjuringCooldown {
 
     @SubscribeEvent
 	public void getBone(RenderTickEvent event) {
-		if(!Utils.inSkyblock ) { return; }
-		if (Minecraft.getMinecraft().currentScreen instanceof GuiScreen) return;
+		if(!Utils.inSkyblock || Minecraft.getMinecraft().currentScreen instanceof GuiScreen || !skyblockfeatures.config.ConjuringCooldown) return;
 		
 		ItemStack item = Minecraft.getMinecraft().thePlayer.getHeldItem();
 		
@@ -70,7 +69,8 @@ public class ConjuringCooldown {
     static boolean ready = false;
     @SubscribeEvent
     public void onSeconds(SecondPassedEvent event) {
-        if(!Utils.inSkyblock) { return; }
+        if(!Utils.inSkyblock || !skyblockfeatures.config.ConjuringCooldown) return;
+
         if (seconds < 26 && seconds > 0) {
             seconds--;
         }

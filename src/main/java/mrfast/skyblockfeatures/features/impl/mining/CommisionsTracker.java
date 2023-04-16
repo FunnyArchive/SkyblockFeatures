@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import net.minecraft.client.Minecraft;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.structure.FloatPair;
 import mrfast.skyblockfeatures.core.structure.GuiElement;
@@ -15,8 +14,7 @@ import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.TabListUtils;
 import mrfast.skyblockfeatures.utils.Utils;
 import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
-import mrfast.skyblockfeatures.utils.graphics.SmartFontRenderer;
-import mrfast.skyblockfeatures.utils.graphics.colors.CommonColors;
+import net.minecraft.client.Minecraft;
 
 public class CommisionsTracker {
   private static final Minecraft mc = Minecraft.getMinecraft();

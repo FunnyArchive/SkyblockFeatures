@@ -1,5 +1,10 @@
 package mrfast.skyblockfeatures.commands;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.command.CommandBase;
@@ -36,25 +41,14 @@ public class SkyCommand extends CommandBase {
         } else {
             username = arg1[0];
         }
-        String delimiter = EnumChatFormatting.AQUA.toString() + EnumChatFormatting.STRIKETHROUGH.toString() + "" + EnumChatFormatting.BOLD + "--------------------------------------";
-        
-        ClickEvent versionCheckChatClickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, 
-        "https://sky.shiiyu.moe/stats/"+username);
 
-        ChatStyle clickableChatStyle = new ChatStyle().setChatClickEvent(versionCheckChatClickEvent);
+        try {
+            Desktop.getDesktop().browse(new URI("https://sky.shiiyu.moe/stats/"+username));
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-        ChatComponentText versionWarningChatComponent = 
-
-        new ChatComponentText(ChatFormatting.LIGHT_PURPLE+"Click Here for "+username+"'s Skycrypt stats");
-        versionWarningChatComponent.setChatStyle(clickableChatStyle);
-
-        // mc.thePlayer.addChatMessage(versionWarningChatComponent);
-        Utils.GetMC().thePlayer.addChatMessage(
-                new ChatComponentText(delimiter)
-                .appendText("\n")
-                .appendSibling(versionWarningChatComponent)
-                .appendText("\n")
-                .appendSibling(new ChatComponentText(delimiter))
-        );
+        Utils.SendMessage(ChatFormatting.LIGHT_PURPLE+"Opening "+username+"'s Skycrypt stats");
 	}
 }

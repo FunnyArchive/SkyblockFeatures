@@ -1,28 +1,34 @@
 package mrfast.skyblockfeatures.core;
 
+import java.util.Map;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import mrfast.skyblockfeatures.skyblockfeatures;
-import mrfast.skyblockfeatures.features.impl.mining.MiningFeatures;
+
 import mrfast.skyblockfeatures.features.impl.misc.ItemFeatures;
 import mrfast.skyblockfeatures.utils.APIUtil;
 import mrfast.skyblockfeatures.utils.Utils;
-
-import java.util.Map;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class DataFetcher {
 
     private static long lastReload = 0;
 
-    private static void clearData() {
-        ItemFeatures.sellPrices.clear();
+    public DataFetcher() {
+        loadData();
+    }
+
+    private static void loadData() {
+        new Thread(() -> {
+            for (Map.Entry<String, JsonElement> sellPrice : APIUtil.getJSONResponse("https://skytilsmod-data.pages.dev/constants/sellprices.json").entrySet()) {
+                ItemFeatures.sellPrices.put(sellPrice.getKey(), sellPrice.getValue().getAsDouble());
+            }
+        }).start();
     }
 
     public static void reloadData() {
-        clearData();
+        loadData();
     }
 
     public static String[] getStringArrayFromJsonArray(JsonArray jsonArray) {

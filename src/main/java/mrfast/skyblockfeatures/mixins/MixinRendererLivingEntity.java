@@ -3,8 +3,6 @@ package mrfast.skyblockfeatures.mixins;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-
-import mrfast.skyblockfeatures.features.impl.misc.DamageSplash;
 import mrfast.skyblockfeatures.features.impl.misc.MiscFeatures;
 import mrfast.skyblockfeatures.features.impl.misc.PlayerDiguiser;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
@@ -19,11 +17,8 @@ public abstract class MixinRendererLivingEntity<T extends EntityLivingBase> {
     @Redirect(method = "renderName", at=@At(value = "INVOKE", target =
             "Lnet/minecraft/entity/EntityLivingBase;getDisplayName()Lnet/minecraft/util/IChatComponent;"))
     public IChatComponent renderName_getDisplayName(EntityLivingBase entity) {
-        if(entity instanceof EntityArmorStand) {
-            return DamageSplash.replaceName(entity);
-        } else {
-            if(PlayerDiguiser.tracker.get(entity)!=null) return new ChatComponentText("");
-            return entity.getDisplayName();
-        }
+        if(PlayerDiguiser.tracker.get(entity)!=null) return new ChatComponentText("");
+        return entity.getDisplayName();
+        
     }
 }

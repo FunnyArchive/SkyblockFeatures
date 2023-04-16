@@ -37,7 +37,7 @@ public class GiftCompassWaypoints {
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
       Minecraft mc = Minecraft.getMinecraft();
-      if(mc.theWorld == null || Utils.inDungeons) return;
+      if(mc.theWorld == null || Utils.inDungeons || !Utils.inSkyblock || !skyblockfeatures.config.presentWaypoints) return;
       if(skyblockfeatures.config.icecaveHighlightWalls) GlStateManager.disableDepth();
       for(Entity entity:mc.theWorld.loadedEntityList) {
          if (skyblockfeatures.config.presentWaypoints && entity instanceof EntityArmorStand && !skyblockfeatures.locationString.contains("Glacial")&& ((EntityArmorStand)entity).getCurrentArmor(3) != null && ((EntityArmorStand)entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTBmNTM5ODUxMGIxYTA1YWZjNWIyMDFlYWQ4YmZjNTgzZTU3ZDcyMDJmNTE5M2IwYjc2MWZjYmQwYWUyIn19fQ=")) {
@@ -52,6 +52,7 @@ public class GiftCompassWaypoints {
             }
          }
          if(skyblockfeatures.locationString.contains("Glacial")) {
+
             Block blockstate = mc.theWorld.getBlockState(entity.getPosition()).getBlock();
             if(skyblockfeatures.config.icecaveHighlight && (blockstate instanceof BlockIce || blockstate instanceof BlockPackedIce) && entity instanceof EntityArmorStand && ((EntityArmorStand)entity).getCurrentArmor(3) != null) {
                String texture = ((EntityArmorStand)entity).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("display").getString("Name");

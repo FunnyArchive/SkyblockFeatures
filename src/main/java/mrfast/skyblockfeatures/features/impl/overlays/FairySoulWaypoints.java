@@ -16,6 +16,7 @@ import com.google.gson.JsonPrimitive;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.DataFetcher;
 import mrfast.skyblockfeatures.utils.RenderUtil;
+import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
@@ -31,6 +32,8 @@ public class FairySoulWaypoints {
 
    @SubscribeEvent
    public void onAttack(AttackEntityEvent event) {
+      if(!skyblockfeatures.config.fairy) return;
+
       if (event.target != null && event.target instanceof EntityArmorStand && ((EntityArmorStand)event.target).getCurrentArmor(3) != null && ((EntityArmorStand)event.target).getCurrentArmor(3).serializeNBT().getCompoundTag("tag").getCompoundTag("SkullOwner").getCompoundTag("Properties").toString().contains("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjk2OTIzYWQyNDczMTAwMDdmNmFlNWQzMjZkODQ3YWQ1Mzg2NGNmMTZjMzU2NWExODFkYzhlNmIyMGJlMjM4NyJ9fX0=") && !soullocations.contains(event.target.getPosition().toString())) {
          soullocations.add(event.target.getPosition().toString());
          writeSave();
@@ -81,7 +84,7 @@ public class FairySoulWaypoints {
 
       Minecraft mc = Minecraft.getMinecraft();
 
-      if (mc.theWorld != null) {
+      if (mc.theWorld != null && Utils.inSkyblock) {
          Iterator<Entity> var3 = mc.theWorld.loadedEntityList.iterator();
 
          while(var3.hasNext()) {

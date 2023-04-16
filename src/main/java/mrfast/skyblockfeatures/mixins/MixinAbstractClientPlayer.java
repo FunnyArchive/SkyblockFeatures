@@ -15,7 +15,7 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.util.ResourceLocation;
 
-@Mixin(value={AbstractClientPlayer.class})
+@Mixin(AbstractClientPlayer.class)
 public abstract class MixinAbstractClientPlayer {
     @Shadow
     @Nullable
@@ -26,7 +26,7 @@ public abstract class MixinAbstractClientPlayer {
         NetworkPlayerInfo info = this.getPlayerInfo();
         if(info != null) {
             if (CapeUtils.is_name_valid(info.getGameProfile().getName())) {
-                callbackInfoReturnable.setReturnValue(new ResourceLocation("skyblockfeatures","capes/cape.png"));
+                callbackInfoReturnable.setReturnValue(CapeUtils.getCape(info.getGameProfile().getName()));
             }
         }
     }

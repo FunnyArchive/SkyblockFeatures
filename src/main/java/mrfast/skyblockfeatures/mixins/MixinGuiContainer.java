@@ -45,8 +45,8 @@ public abstract class MixinGuiContainer extends GuiScreen {
     private void titlePostDrawn(int mouseX, int mouseY, float partialTicks,CallbackInfo ci) {
         try {
             MinecraftForge.EVENT_BUS.post(new GuiContainerEvent.TitleDrawnEvent(that, inventorySlots, mouseX, mouseY, partialTicks));
-        } catch (Exception e) {
-            
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
     }
 

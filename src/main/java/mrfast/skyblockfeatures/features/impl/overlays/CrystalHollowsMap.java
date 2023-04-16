@@ -8,6 +8,7 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
 
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.structure.FloatPair;
@@ -16,8 +17,13 @@ import mrfast.skyblockfeatures.utils.SBInfo;
 import mrfast.skyblockfeatures.utils.Utils;
 import mrfast.skyblockfeatures.utils.graphics.ScreenRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
@@ -56,6 +62,9 @@ public class CrystalHollowsMap {
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if(start && Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && skyblockfeatures.config.CrystalHollowsMap) {
+            if(SBInfo.getInstance().getLocation()!=null) {
+                if(!SBInfo.getInstance().getLocation().equals("crystal_hollows")) return;
+            }
             ticks++;
             BlockPos location = Utils.GetMC().thePlayer.getPosition().up(2);
             if(ticks%4==0) {
@@ -66,8 +75,11 @@ public class CrystalHollowsMap {
                         Vector2d p2 = vector;
                         double distance = Math.sqrt(Math.pow(Math.abs(p1.y-p2.y),2)+Math.pow(Math.abs(p1.x-p2.x),2));
                         if(distance<20) {
+                            if(playerBreadcrumbs.size()>5000) {
+                                playerBreadcrumbs.remove(0);
+                            }
                             playerBreadcrumbs.add(vector);
-                        } 
+                        }
                     } else {
                         playerBreadcrumbs.add(vector);
                     }
@@ -116,6 +128,7 @@ public class CrystalHollowsMap {
                             Utils.GetMC().getTextureManager().bindTexture(map);
                             Utils.drawTexturedRect(0, 0, 512/4,512/4, 0, 1, 0, 1, GL11.GL_NEAREST);
                         GlStateManager.popMatrix();
+
                         GlStateManager.pushMatrix();
                         for(int i=1;i<playerBreadcrumbs.size();i++) {
                             if(i<playerBreadcrumbs.size()-1) {
@@ -143,32 +156,32 @@ public class CrystalHollowsMap {
                         EntityPlayerSP player = Utils.GetMC().thePlayer;
                         double x = lastPlayerX;
                         double z = lastPlayerZ;
-                        double rotation = lastPlayerR;
-    
                         double newX = Math.round((player.posX-202)/4.9);
                         double newZ = Math.round((player.posZ-202)/4.9);
-                        double newRotation = player.rotationYawHead;
-
                         double deltaX = newX-x;
                         double deltaZ = newZ-z;
-                        double deltaR = newRotation-rotation;
 
                         x+=deltaX/50;
                         z+=deltaZ/50;
-                        rotation+=deltaR/50;
 
                         lastPlayerX = x;
                         lastPlayerZ = z;
-                        lastPlayerR = rotation;
-
-                        GlStateManager.color(1, 1, 1, 1);
-                        Utils.GetMC().getTextureManager().bindTexture(playerIcon);
-                        GlStateManager.pushMatrix();
-                            GlStateManager.translate(x, z, 0);
-                            GlStateManager.rotate(player.rotationYawHead-180, 0, 0, 1);
-                            GlStateManager.translate(-x, -z, 0);
-                            Utils.drawTexturedRect((float)(x-2.5),(float) (z-3.5), 5, 7, 0, 1, 0, 1, GL11.GL_NEAREST);
-                        GlStateManager.popMatrix();
+                        if(skyblockfeatures.config.CrystalHollowsMapHeads) {
+                            AbstractClientPlayer aplayer = (AbstractClientPlayer) player;
+                            ResourceLocation skin = aplayer.getLocationSkin();
+                            GlStateManager.pushMatrix();
+                            DrawHead(x, z, skin, (float) player.rotationYawHead);
+                            GlStateManager.popMatrix();
+                        } else {
+                            GlStateManager.color(1, 1, 1, 1);
+                            Utils.GetMC().getTextureManager().bindTexture(playerIcon);
+                            GlStateManager.pushMatrix();
+                                GlStateManager.translate(x, z, 0);
+                                GlStateManager.rotate(player.rotationYawHead-180, 0, 0, 1);
+                                GlStateManager.translate(-x, -z, 0);
+                                Utils.drawTexturedRect((float)(x-2.5),(float) (z-3.5), 5, 7, 0, 1, 0, 1, GL11.GL_NEAREST);
+                            GlStateManager.popMatrix();
+                        }
                     GlStateManager.popMatrix();
                 }
             } catch (Exception e) {
@@ -212,4 +225,38 @@ public class CrystalHollowsMap {
             return 128;
         }
     }
+
+    public static void DrawHead(Double x,Double z,ResourceLocation skin, Float rotation) {
+        GlStateManager.pushMatrix();
+		Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
+
+		GlStateManager.disableDepth();
+		GlStateManager.enableBlend();
+		GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+		GlStateManager.translate(x, z, -0.02F);
+		GlStateManager.rotate(rotation, 0.0F, 0.0F, 1.0F);
+		
+        GlStateManager.scale(0.75, 0.75, 1);
+		Gui.drawRect(-8/2-1,-8/2-1, 8/2+1, 8/2+1, 0xff111111);
+		GlStateManager.color(1, 1, 1, 1);
+
+		Tessellator tessellator = Tessellator.getInstance();
+		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+		worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+		worldrenderer.pos(-8/2f, 8/2f, 30).tex(8/64f, 8/64f).endVertex();
+		worldrenderer.pos(8/2f, 8/2f, 30).tex(16/64f, 8/64f).endVertex();
+		worldrenderer.pos(8/2f, -8/2f, 30).tex(16/64f, 16/64f).endVertex();
+		worldrenderer.pos(-8/2f, -8/2f, 30).tex(8/64f, 16/64f).endVertex();
+		tessellator.draw();
+
+		worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+		worldrenderer.pos(-8/2f, 8/2f, 30+0.001f).tex(8/64f+0.5f, 8/64f).endVertex();
+		worldrenderer.pos(8/2f, 8/2f, 30+0.001f).tex(16/64f+0.5f, 8/64f).endVertex();
+		worldrenderer.pos(8/2f, -8/2f, 30+0.001f).tex(16/64f+0.5f, 16/64f).endVertex();
+		worldrenderer.pos(-8/2f, -8/2f, 30+0.001f).tex(8/64f+0.5f, 16/64f).endVertex();
+		tessellator.draw();
+
+		GlStateManager.popMatrix();
+	}
 }

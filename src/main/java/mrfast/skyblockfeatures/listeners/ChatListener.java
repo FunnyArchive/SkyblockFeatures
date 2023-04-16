@@ -10,8 +10,9 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -25,6 +26,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
@@ -63,6 +65,43 @@ public class ChatListener {
         if (!Utils.isOnHypixel()) return;
         String delimiter1 = EnumChatFormatting.RED.toString() + EnumChatFormatting.STRIKETHROUGH.toString() + "" + EnumChatFormatting.BOLD + "---------------------------";
         String unformatted = Utils.cleanColour(event.message.getUnformattedText());
+
+        if(event.message.getFormattedText().contains(": ")) {
+            if (skyblockfeatures.config.DisguisePlayersAs == 8 && skyblockfeatures.config.playerDiguiser && Utils.inSkyblock) {
+                String name = event.message.getFormattedText().split(": ")[0];
+                String message = event.message.getFormattedText().split(": ")[1];
+                String monkiMessage = "";
+                for(String word:message.split(" ")) {
+                    List<String> words = Arrays.asList("Ooh","ooh","ah","Ee","Hoo","Grrr","uuh");
+                    monkiMessage+=words.get((int) Utils.randomNumber(0, 6))+" ";
+                }
+                event.setCanceled(true);
+                Utils.GetMC().thePlayer.addChatMessage(new ChatComponentText(name+": "+monkiMessage));
+            }
+        }
+
+        if(unformatted.contains("Click here to warp to the dungeon!") && skyblockfeatures.config.autoJoinDungeon)  {
+            List<IChatComponent> chatComponents = event.message.getSiblings();
+            for(IChatComponent chatComponent: chatComponents) {
+                if(chatComponent.getChatStyle().getChatClickEvent()!=null) {
+                    String joinDungeonCommand = chatComponent.getChatStyle().getChatClickEvent().getValue();
+                    Utils.GetMC().thePlayer.sendChatMessage(joinDungeonCommand);
+                    Utils.setTimeout(()->{
+                        Utils.SendMessage(EnumChatFormatting.YELLOW + "Auto Joining Dungeon..");
+                        Utils.playLoudSound("random.orb", 1);
+                    },10);
+                    break;
+                }
+            }
+        }
+
+        if(unformatted.startsWith("You have joined ") && unformatted.contains("party!") && skyblockfeatures.config.autoPartyChat) {
+            Utils.GetMC().thePlayer.sendChatMessage("/chat p");
+            Utils.setTimeout(()->{
+                Utils.SendMessage(EnumChatFormatting.YELLOW + "Auto Joined Party Chat.");
+            },10);
+        }
+
         if (unformatted.startsWith("Your new API key is ")) {
             String apiKey = event.message.getSiblings().get(0).getChatStyle().getChatClickEvent().getValue();
             skyblockfeatures.config.apiKey = apiKey;
@@ -96,7 +135,7 @@ public class ChatListener {
                     JsonObject profileResponse = APIUtil.getResponse(profileURL);
                     if (!profileResponse.get("success").getAsBoolean()) {
                         String reason = profileResponse.get("cause").getAsString();
-                        mc.thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Failed with reason: " + reason));
+                        Utils.SendMessage(EnumChatFormatting.RED + "Failed with reason: " + reason);
                         return;
                     }
         
@@ -105,7 +144,7 @@ public class ChatListener {
                     JsonObject playerResponse = APIUtil.getResponse(playerURL);
                     if(!playerResponse.get("success").getAsBoolean()){
                         String reason = profileResponse.get("cause").getAsString();
-                        mc.thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Failed with reason: " + reason));
+                        Utils.SendMessage(EnumChatFormatting.RED + "Failed with reason: " + reason);
                     }
                     int secrets = playerResponse.get("player").getAsJsonObject().get("achievements").getAsJsonObject().get("skyblock_treasure_hunter").getAsInt();
         
@@ -427,7 +466,7 @@ public class ChatListener {
         }
 
         if (skyblockfeatures.config.firstLaunch && unformatted.equals("Welcome to Hypixel SkyBlock!")) {
-            mc.thePlayer.addChatMessage(new ChatComponentText("§bThank you for downloading skyblockfeatures! Do /sf to start!"));
+            Utils.SendMessage("§bThank You for download Skyblock Features! Do /sbf for config!");
 
             skyblockfeatures.config.firstLaunch = false;
             skyblockfeatures.config.markDirty();

@@ -25,7 +25,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
@@ -79,7 +78,7 @@ public class MiningFeatures {
                                 System.out.println("Invalid Puzzler character: " + c);
                         }
                     }
-                    mc.thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Mine the block highlighted in " + EnumChatFormatting.RED + EnumChatFormatting.BOLD + "RED" + EnumChatFormatting.GREEN + "!"));
+                    Utils.SendMessage(EnumChatFormatting.GREEN + "Mine the block highlighted in " + EnumChatFormatting.RED + EnumChatFormatting.BOLD + "RED" + EnumChatFormatting.GREEN + "!");
                 }
             }
         }
@@ -190,7 +189,7 @@ public class MiningFeatures {
 
     @SubscribeEvent
     public void onRecievePacket(PacketEvent.ReceiveEvent event) {
-        if(event.packet instanceof S2APacketParticles) {
+        if(event.packet instanceof S2APacketParticles && skyblockfeatures.config.highlightEnderNodes) {
             S2APacketParticles packet = (S2APacketParticles) event.packet;
             EnumParticleTypes type = packet.getParticleType();
             Vec3 pos = new Vec3(packet.getXCoordinate(),packet.getYCoordinate(),packet.getZCoordinate());

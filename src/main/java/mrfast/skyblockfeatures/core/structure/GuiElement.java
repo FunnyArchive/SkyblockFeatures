@@ -21,7 +21,7 @@ public abstract class GuiElement {
     public GuiElement(String name, float scale, FloatPair fp) {
         this.name = name;
         this.scale = scale;
-        this.pos = GuiManager.GUIPOSITIONS.getOrDefault(name, fp);
+        this.pos = GuiManager.GuiPositions.getOrDefault(name, fp);
     }
 
     public abstract void render();
@@ -30,6 +30,10 @@ public abstract class GuiElement {
 
     public float getScale() {
         return this.scale;
+    }
+
+    public void setScale(float newScale) {
+        this.scale = newScale;
     }
 
     public abstract boolean getToggled();

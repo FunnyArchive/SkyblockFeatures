@@ -65,20 +65,10 @@ public class ItemFeatures {
                 String auctionIdentifier = AuctionData.getIdentifier(item);
                 if (auctionIdentifier != null && item!=null) {
                     Double valuePer = AuctionData.lowestBINs.get(auctionIdentifier);
-                    
-                    NBTTagCompound enchants = ItemUtil.getExtraAttributes(item).getCompoundTag("enchantments");
-                    Double enchantValue = 0d;
-                    Double starValue = 0d;
-                    try {
-                        starValue = AutoAuctionFlip.starValue(item.getDisplayName());
-                        for(String enchant:enchants.getKeySet()) {enchantValue+=AutoAuctionFlip.getEnchantWorth(enchant,enchants.getInteger(enchant));}
-                    } catch (Exception e) {
-                        // TODO: handle exception
-                    }
 
                     if (skyblockfeatures.config.showEstimatedPrice && valuePer!=null) {
-                        Double total = Math.floor(valuePer+starValue+enchantValue) * item.stackSize;
-                        event.toolTip.add("§6Estimated Price: §d" + NumberUtil.nf.format(total));
+                        Integer total = (int) ItemUtil.getEstimatedItemValue(item);//Math.floor(valuePer+starValue+enchantValue) * item.stackSize;
+                        event.toolTip.add("§6Estimated Price: §d" + NumberUtil.nf.format(total*item.stackSize));
                     }
 
                     if (skyblockfeatures.config.showLowestBINPrice && valuePer!=null) {
@@ -114,8 +104,7 @@ public class ItemFeatures {
 
     @SubscribeEvent
     public void onEntitySpawn(EntityJoinWorldEvent event) {
-        if (!Utils.inSkyblock) return;
-        if (!(event.entity instanceof EntityFishHook) || !skyblockfeatures.config.hideFishingHooks) return;
+        if (!(event.entity instanceof EntityFishHook) || !skyblockfeatures.config.hideFishingHooks || !Utils.inSkyblock) return;
         if (((EntityFishHook) event.entity).angler instanceof EntityOtherPlayerMP) {
             event.entity.setDead();
             event.setCanceled(true);

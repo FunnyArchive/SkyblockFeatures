@@ -6,15 +6,14 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import mrfast.skyblockfeatures.utils.ScoreboardUtil;
+import mrfast.skyblockfeatures.utils.TabListUtils;
+import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentText;
-import mrfast.skyblockfeatures.utils.ScoreboardUtil;
-import mrfast.skyblockfeatures.utils.TabListUtils;
-import mrfast.skyblockfeatures.utils.Utils;
 
 public class sidebarCommand extends CommandBase {
 

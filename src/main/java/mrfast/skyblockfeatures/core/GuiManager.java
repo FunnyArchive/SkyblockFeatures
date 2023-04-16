@@ -29,7 +29,9 @@ public class GuiManager {
 
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static File positionFile;
-    public static Map<String, FloatPair> GUIPOSITIONS;
+    public static Map<String, FloatPair> GuiPositions;
+    // private static File scaleFile;
+    // public static Map<String, Float> GuiScales;
 
     private static final Map<Integer, GuiElement> elements = new HashMap<>();
     private int counter = 0;
@@ -42,7 +44,9 @@ public class GuiManager {
 
     public GuiManager() {
         positionFile  = new File(skyblockfeatures.modDir, "guipositions.json");
-        GUIPOSITIONS = new HashMap<>();
+        GuiPositions = new HashMap<>();
+        // scaleFile  = new File(skyblockfeatures.modDir, "guiscales.json");
+        // GuiScales = new HashMap<>();
         readConfig();
     }
 
@@ -84,27 +88,52 @@ public class GuiManager {
             file = gson.fromJson(in, JsonObject.class);
             for (Map.Entry<String, JsonElement> e : file.entrySet()) {
                 try {
-                    GUIPOSITIONS.put(e.getKey(), new FloatPair(e.getValue().getAsJsonObject().get("x").getAsJsonObject().get("value").getAsFloat(), e.getValue().getAsJsonObject().get("y").getAsJsonObject().get("value").getAsFloat()));
+                    GuiPositions.put(e.getKey(), new FloatPair(e.getValue().getAsJsonObject().get("x").getAsJsonObject().get("value").getAsFloat(), e.getValue().getAsJsonObject().get("y").getAsJsonObject().get("value").getAsFloat()));
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
             }
         } catch (Exception e) {
-            GUIPOSITIONS = new HashMap<>();
+            GuiPositions = new HashMap<>();
             try (FileWriter writer = new FileWriter(positionFile)) {
-                gson.toJson(GUIPOSITIONS, writer);
+                gson.toJson(GuiPositions, writer);
             } catch (Exception ignored) {
 
             }
         }
+        // try (FileReader in = new FileReader(scaleFile)) {
+        //     file = gson.fromJson(in, JsonObject.class);
+        //     for (Map.Entry<String, JsonElement> e : file.entrySet()) {
+        //         try {
+        //             GuiScales.put(e.getKey(), );
+        //         } catch (Exception exception) {
+        //             exception.printStackTrace();
+        //         }
+        //     }
+        // } catch (Exception e) {
+        //     GuiScales = new HashMap<>();
+        //     try (FileWriter writer = new FileWriter(scaleFile)) {
+        //         gson.toJson(GuiScales, writer);
+        //     } catch (Exception ignored) {
+
+        //     }
+        // }
     }
 
     public static void saveConfig() {
         for (Map.Entry<String, GuiElement> e : names.entrySet()) {
-            GUIPOSITIONS.put(e.getKey(), e.getValue().getPos());
+            GuiPositions.put(e.getKey(), e.getValue().getPos());
         }
+        // for (Map.Entry<String, GuiElement> e : names.entrySet()) {
+        //     GuiScales.put(e.getKey(), e.getValue().getScale());
+        // }
+        // try (FileWriter writer = new FileWriter(scaleFile)) {
+        //     gson.toJson(GuiScales, writer);
+        // } catch (Exception ignored) {
+
+        // }
         try (FileWriter writer = new FileWriter(positionFile)) {
-            gson.toJson(GUIPOSITIONS, writer);
+            gson.toJson(GuiPositions, writer);
         } catch (Exception ignored) {
 
         }

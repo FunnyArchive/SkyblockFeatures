@@ -57,7 +57,7 @@ public class AutomatonTracker {
 
     @SubscribeEvent
     public void onSecond(SecondPassedEvent event) {
-        if(Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null) {
+        if(Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().theWorld != null && skyblockfeatures.config.AutomatonTracker) {
             if(oldKills == 0) {
                 oldKills = kills;
             }
@@ -78,7 +78,7 @@ public class AutomatonTracker {
     @SubscribeEvent
     public void onEntityDeath(LivingDeathEvent event) {
         Entity entity = event.entity;
-        if(entity instanceof EntityIronGolem) {
+        if(entity instanceof EntityIronGolem && skyblockfeatures.config.AutomatonTracker) {
             for(Entity thing:Utils.GetMC().theWorld.loadedEntityList) {
                 if(thing instanceof EntityArmorStand) {
                     boolean automaton = entity.getDistance(thing.posX,entity.posY,thing.posZ)<1 && thing.getCustomNameTag().contains("Automaton");
@@ -93,7 +93,7 @@ public class AutomatonTracker {
 
     @SubscribeEvent
     public void onDrawSlot(SecondPassedEvent event) {
-        if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock) return;
+        if(Utils.GetMC().thePlayer == null || !Utils.inSkyblock || !skyblockfeatures.config.AutomatonTracker) return;
         for(int i=0;i<Utils.GetMC().thePlayer.inventory.mainInventory.length;i++) {
             if(Utils.GetMC().thePlayer.inventory.mainInventory[i] != null) {
                 if(i == 0) {

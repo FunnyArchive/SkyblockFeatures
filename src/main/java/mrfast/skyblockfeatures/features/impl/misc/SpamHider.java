@@ -20,20 +20,16 @@ public class SpamHider {
 
     @SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = true)
     public void onChatPacket(PacketEvent.ReceiveEvent event) {
-        if (!(event.packet instanceof S02PacketChat)) return;
+        if (!(event.packet instanceof S02PacketChat) || !skyblockfeatures.config.hideAdvertisments || !Utils.inSkyblock) return;
         S02PacketChat packet = (S02PacketChat) event.packet;
         if (packet.getType() == 2) return;
         String unformatted = Utils.cleanColour(packet.getChatComponent().getUnformattedText());
-
-        if (!Utils.inSkyblock) return;
         
         try {
             if (unformatted.contains("[Auction]") || unformatted.contains("claimed") || unformatted.contains("Bid of") || unformatted.contains("created a") || unformatted.contains("Auction started")) return;
             String u = unformatted.toLowerCase();
             if (u.contains("cheap")||u.contains("/visit")||u.contains("lowballing")||u.contains("selling")||u.contains("buying")||u.contains("visit")||u.contains("ah")||u.contains("auction")) {
-                if (skyblockfeatures.config.hideAdvertisments) {
-                    cancelChatPacket(event, false);
-                }
+                cancelChatPacket(event, false);
             }
         } catch (Exception e) {
             e.printStackTrace();

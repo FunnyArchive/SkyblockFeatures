@@ -1,27 +1,25 @@
 package mrfast.skyblockfeatures.features.impl.handlers;
 
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import org.apache.commons.lang3.time.StopWatch;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import gg.essential.api.gui.EssentialGUI;
-import gg.essential.vigilance.VigilanceConfig;
-import gg.essential.vigilance.gui.VigilancePalette;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import org.apache.commons.lang3.time.StopWatch;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.core.AuctionUtil;
 import mrfast.skyblockfeatures.utils.APIUtil;
 import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.Utils;
-
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class AuctionData {
 
@@ -102,13 +100,13 @@ public class AuctionData {
                         averageLowestBINs.put(items.getKey(), Math.floor(items.getValue().getAsDouble()));
                     }
                 }, ()->{});
-            }, "skyblockfeatures-FetchAuctionData").start();
+            }).start();
             if (skyblockfeatures.config.auctionGuis || skyblockfeatures.config.autoAuctionFlip) {
                 new Thread(() -> {
                     AuctionUtil.getMyApiGZIPAsync("https://moulberry.codes/auction_averages/3day.json.gz", (jsonObject) -> {
                         auctionPricesJson = jsonObject;
                     }, ()->{});
-                }, "skyblockfeatures-FetchAuctionStuff").start();
+                }).start();
             }
             if (bazaarPrices.size() == 0 && skyblockfeatures.config.apiKey.length()>1) {
                 new Thread(() -> {
@@ -123,7 +121,7 @@ public class AuctionData {
                             bazaarPrices.put(id.replace("\"", ""), sellPrice);
                         }
                     }
-                }, "skyblockfeatures-FetchBazaarData").start();
+                }).start();
             }
         }
     }

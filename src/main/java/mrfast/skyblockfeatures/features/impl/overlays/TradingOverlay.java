@@ -10,14 +10,12 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.events.GuiContainerEvent;
 import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
-import mrfast.skyblockfeatures.features.impl.misc.AutoAuctionFlip;
 import mrfast.skyblockfeatures.utils.ItemUtil;
 import mrfast.skyblockfeatures.utils.NumberUtil;
 import mrfast.skyblockfeatures.utils.Utils;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class TradingOverlay {
@@ -53,14 +51,16 @@ public class TradingOverlay {
                 double totalSelf = 0;
 
                 for(int slotId = 0;slotId<inv.getSizeInventory();slotId++) {
+                    if(inv.getStackInSlot(slotId)==null) continue;
                     double value = 0;
-                    String id = ItemUtil.getSkyBlockItemID(inv.getStackInSlot(slotId));
+                    String id = AuctionData.getIdentifier(inv.getStackInSlot(slotId));
+                    boolean coins = inv.getStackInSlot(slotId).getDisplayName().contains("coins");
                     if(inv.getStackInSlot(slotId)!=null) {
-                        if(id==null && !inv.getStackInSlot(slotId).getDisplayName().contains("coins")) continue;
+                        if(id==null && !coins) continue;
                     } else {
                         if(id==null) continue;
                     }
-                    if(inv.getStackInSlot(slotId).getDisplayName().contains("coins")) {
+                    if(coins) {
                         String line = Utils.cleanColour(inv.getStackInSlot(slotId).getDisplayName());
                         line = line.replace("k", "000").replace("M", "000000").replace("B", "000000000");
                         double coinValue = Double.parseDouble(line.replaceAll("[^0-9]", ""));
@@ -76,23 +76,14 @@ public class TradingOverlay {
                         value = AuctionData.bazaarPrices.get(id);
                     }
                     else if(AuctionData.lowestBINs.containsKey(id)) {
-                        NBTTagCompound enchants = ItemUtil.getExtraAttributes(inv.getStackInSlot(slotId)).getCompoundTag("enchantments");
-                        Double enchantValue = 0d;
-                        Double starValue = 0d;
-                        try {
-                            starValue = AutoAuctionFlip.starValue(inv.getStackInSlot(slotId).getDisplayName());
-                            for(String enchant:enchants.getKeySet()) {enchantValue+=AutoAuctionFlip.getEnchantWorth(enchant,enchants.getInteger(enchant));}
-                        } catch (Exception e) {
-                            // TODO: handle exception
-                        }
-                        value = AuctionData.lowestBINs.get(id)+starValue+enchantValue;
+                        value = ItemUtil.getEstimatedItemValue(inv.getStackInSlot(slotId))*inv.getStackInSlot(slotId).stackSize;
                     }
                     if(selfSlots.contains(slotId)) {
-                        totalSelf+=value*inv.getStackInSlot(slotId).stackSize;
+                        totalSelf+=value*(coins?1:inv.getStackInSlot(slotId).stackSize);
                         selfItemsAndValues.put(inv.getStackInSlot(slotId).getDisplayName(), value);
                     }
                     if(otherSlots.contains(slotId)) {
-                        totalOther+=value*inv.getStackInSlot(slotId).stackSize;
+                        totalOther+=value*(coins?1:inv.getStackInSlot(slotId).stackSize);
                         otherItemsAndValues.put(inv.getStackInSlot(slotId).getDisplayName(), value);
                     }
                 }

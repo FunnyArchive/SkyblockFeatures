@@ -1,7 +1,11 @@
 package mrfast.skyblockfeatures;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +21,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import gg.essential.api.EssentialAPI;
-import gg.essential.api.utils.GuiUtil;
-import gg.essential.vigilance.gui.SettingsGui;
 import mrfast.skyblockfeatures.commands.*;
 import mrfast.skyblockfeatures.core.Config;
 import mrfast.skyblockfeatures.core.DataFetcher;
@@ -31,17 +33,14 @@ import mrfast.skyblockfeatures.features.impl.ItemFeatures.HideGlass;
 import mrfast.skyblockfeatures.features.impl.bar.*;
 import mrfast.skyblockfeatures.features.impl.dungeons.*;
 import mrfast.skyblockfeatures.features.impl.dungeons.solvers.*;
-import mrfast.skyblockfeatures.features.impl.events.JerryTimer;
-import mrfast.skyblockfeatures.features.impl.events.MayorJerry;
+import mrfast.skyblockfeatures.features.impl.events.*;
 import mrfast.skyblockfeatures.features.impl.handlers.AuctionData;
-import mrfast.skyblockfeatures.features.impl.handlers.KeyShortcuts;
 import mrfast.skyblockfeatures.features.impl.hidestuff.HideStuff;
 import mrfast.skyblockfeatures.features.impl.mining.*;
 import mrfast.skyblockfeatures.features.impl.misc.*;
 import mrfast.skyblockfeatures.features.impl.overlays.*;
-import mrfast.skyblockfeatures.features.impl.render.DynamicFullbright;
+import mrfast.skyblockfeatures.features.impl.render.*;
 import mrfast.skyblockfeatures.features.impl.trackers.*;
-import mrfast.skyblockfeatures.gui.TestGui;
 import mrfast.skyblockfeatures.listeners.ChatListener;
 import mrfast.skyblockfeatures.mixins.AccessorCommandHandler;
 import mrfast.skyblockfeatures.utils.CapeUtils;
@@ -62,11 +61,10 @@ import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Loader;
@@ -151,7 +149,25 @@ public class skyblockfeatures {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        // Get player uuid
+        String playerUUID = Utils.GetMC().getSession().getProfile().getId().toString();
+
+        // Load blacklist
+        try {
+            URL url = new URL("https://raw.githubusercontent.com/MrFast-js/SBF-Blacklist/main/blacklist.txt");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            String s;
+            while ((s = reader.readLine()) != null) {
+                if(s.equals(playerUUID)) {
+                    throw new Error("You're blacklisted from using SBF! If you think this is a mistake contact MrFast#7146 on discord.");
+                }
+            }
+        } catch (Exception ignored) {}
+
         config.preload();
+        skyblockfeatures.config.markDirty();
+        skyblockfeatures.config.writeData();
+        
         EssentialAPI.getCommandRegistry().registerCommand(new ViewModelCommand());
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -165,10 +181,8 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new ZealotSpawnLocations());
         MinecraftForge.EVENT_BUS.register(new ChestProfit());
         MinecraftForge.EVENT_BUS.register(new DungeonMap());
-        MinecraftForge.EVENT_BUS.register(new DamageSplash());
         MinecraftForge.EVENT_BUS.register(new DungeonsFeatures());
         MinecraftForge.EVENT_BUS.register(new ItemFeatures());
-        MinecraftForge.EVENT_BUS.register(new KeyShortcuts());
         MinecraftForge.EVENT_BUS.register(new CrystalHollowsMap());
         MinecraftForge.EVENT_BUS.register(new MayorJerry());
         MinecraftForge.EVENT_BUS.register(new MiningFeatures());
@@ -222,6 +236,21 @@ public class skyblockfeatures {
         MinecraftForge.EVENT_BUS.register(new GrandmaWolfTimer());
         MinecraftForge.EVENT_BUS.register(new RelicFinderWaypoints());
         MinecraftForge.EVENT_BUS.register(new DynamicFullbright());
+        MinecraftForge.EVENT_BUS.register(new BazaarOverlay());
+        MinecraftForge.EVENT_BUS.register(new GardenVisitorOverlay());
+        MinecraftForge.EVENT_BUS.register(new BaitCounterOverlay());
+        MinecraftForge.EVENT_BUS.register(new HighlightCropArea());
+        MinecraftForge.EVENT_BUS.register(new MythologicalEvent());
+        MinecraftForge.EVENT_BUS.register(new WaterBoardSolver());
+        MinecraftForge.EVENT_BUS.register(new TeleportPadSolver());
+        MinecraftForge.EVENT_BUS.register(new IceFillSolver());
+        MinecraftForge.EVENT_BUS.register(new TriviaSolver());
+        MinecraftForge.EVENT_BUS.register(new TicTacToeSolver());
+        MinecraftForge.EVENT_BUS.register(new IcePathSolver());
+        MinecraftForge.EVENT_BUS.register(new BoulderSolver());
+        MinecraftForge.EVENT_BUS.register(new ShadowAssasinFeatures());
+
+        // MinecraftForge.EVENT_BUS.register(new OneCycleWaterSolver());
         // MinecraftForge.EVENT_BUS.register(new Pathfinder());
 
         // Solvers
@@ -237,6 +266,8 @@ public class skyblockfeatures {
                 break;
             }
         }
+        skyblockfeatures.config.timeStartedUp++;
+        System.out.println("You have started Skyblock Features up "+skyblockfeatures.config.timeStartedUp+" times!");
     }
     // List files in a directory (Used only for the mods folder)
     public Set<String> listFilesUsingJavaIO(String dir) {
@@ -255,8 +286,6 @@ public class skyblockfeatures {
 
         if (!cch.getCommands().containsKey("getnbt")) cch.registerCommand(new getNbtCommand());
 
-        if (!cch.getCommands().containsKey("jerry")) cch.registerCommand(new jerryCommand());
-
         if (!cch.getCommands().containsKey("sky")) cch.registerCommand(new SkyCommand());
 
         if (!cch.getCommands().containsKey("skyblockfeatures")) cch.registerCommand(new configCommand());
@@ -265,13 +294,11 @@ public class skyblockfeatures {
 
         if (!cch.getCommands().containsKey("reparty")) cch.registerCommand(new RepartyCommand());
 
-        if (!cch.getCommands().containsKey("goodbye")) cch.registerCommand(new GoodbyeCommand());
-
-        if (!cch.getCommands().containsKey("hello")) cch.registerCommand(new HelloCommand());
-
         if (!cch.getCommands().containsKey("terminal")) cch.registerCommand(new TerminalCommand());
 
         if (!cch.getCommands().containsKey("shrug")) cch.registerCommand(new ShrugCommand());
+
+        if (!cch.getCommands().containsKey("flips")) cch.registerCommand(new FlipsCommand());
 
         if (!cch.getCommands().containsKey("bank")) cch.registerCommand(new BankCommand());
 
@@ -297,23 +324,15 @@ public class skyblockfeatures {
             ((AccessorCommandHandler) cch).getCommandSet().add(new RepartyCommand());
             ((AccessorCommandHandler) cch).getCommandMap().put("rp", new RepartyCommand());
         }
-        if (skyblockfeatures.config.overrideReparty) {
-            if (!cch.getCommands().containsKey("rp")) {
-                ((AccessorCommandHandler) cch).getCommandSet().add(new RepartyCommand());
-                ((AccessorCommandHandler) cch).getCommandMap().put("rp", new RepartyCommand());
-            }
-            for (Map.Entry<String, ICommand> entry : cch.getCommands().entrySet()) {
-                if (Objects.equals(entry.getKey(), "reparty") || Objects.equals(entry.getKey(), "rp")) {
-                    entry.setValue(new RepartyCommand());
-                }
-            }
-        }
     }
 
 
     public static boolean auctionPricesLoaded = false;
     public static boolean smallItems = false;
     public boolean start = true;
+    public boolean loadedBlacklist = false;
+    public boolean checkedIfBlacklisted = false;
+    ArrayList<String> blacklist = new ArrayList<>();
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
@@ -457,9 +476,9 @@ public class skyblockfeatures {
     public void onTsick(TickEvent.ClientTickEvent e) {
         if (toggleSprint.isPressed()) {
             if (toggled) {
-                mc.thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Togglesprint disabled."));
+                Utils.SendMessage(EnumChatFormatting.RED + "Togglesprint disabled.");
             } else {
-                mc.thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Togglesprint enabled."));
+                Utils.SendMessage(EnumChatFormatting.GREEN + "Togglesprint enabled.");
             }
             toggled = !toggled;
         }

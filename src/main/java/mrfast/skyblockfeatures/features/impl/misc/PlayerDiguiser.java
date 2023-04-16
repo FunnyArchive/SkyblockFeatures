@@ -1,6 +1,7 @@
 package mrfast.skyblockfeatures.features.impl.misc;
 
 import java.util.HashMap;
+import java.util.List;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
@@ -8,6 +9,7 @@ import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.events.CheckRenderEntityEvent;
 import mrfast.skyblockfeatures.utils.RenderUtil;
 import mrfast.skyblockfeatures.utils.Utils;
+import net.minecraft.client.renderer.tileentity.TileEntitySkullRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntityGiantZombie;
@@ -20,7 +22,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Team.EnumVisible;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntitySkull;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -67,6 +73,12 @@ public class PlayerDiguiser {
             case 7:
                 end = new EntityArrow(Utils.GetMC().theWorld);
                 break;
+            case 8:
+                end = new EntityArrow(Utils.GetMC().theWorld);
+                break;
+            case 9:
+                end = new EntityArrow(Utils.GetMC().theWorld);
+                break;
             default:
                 end = new EntityCow(Utils.GetMC().theWorld);
                 break;
@@ -96,6 +108,9 @@ public class PlayerDiguiser {
             if (event.entity instanceof EntityPlayer && skyblockfeatures.config.playerDiguiser && event.entity!=Utils.GetMC().thePlayer && !event.entity.isInvisible() && !event.entity.isDead) {
                 if(tracker.containsKey(event.entity)) {
                     if(skyblockfeatures.config.DisguisePlayersAs == 7) return;
+                    if(skyblockfeatures.config.DisguisePlayersAs == 8) return;
+                    if(skyblockfeatures.config.DisguisePlayersAs == 9) return;
+
                     Entity disguise = tracker.get(event.entity);
                     disguise.setPosition(event.entity.posX, event.entity.posY, event.entity.posZ);
                     disguise.rotationYaw = event.entity.rotationYaw;
@@ -107,11 +122,22 @@ public class PlayerDiguiser {
                     Entity disguise = getEntity();
                     Utils.GetMC().theWorld.addEntityToWorld((int) Math.floor(Math.random()*10000000), disguise);
                     if(skyblockfeatures.config.DisguisePlayersAs == 7) disguise.setInvisible(true);
+                    if(skyblockfeatures.config.DisguisePlayersAs == 8) disguise.setInvisible(true);
+                    if(skyblockfeatures.config.DisguisePlayersAs == 9) disguise.setInvisible(true);
+
                     tracker.put(event.entity, disguise);
                 }
             }
         } catch (Exception e) {
 
+        }
+    }
+    @SubscribeEvent
+    public void onRenderPlayerPre(RenderPlayerEvent.Pre event) {
+        // Check if the player is wearing a skull
+        if (event.entityPlayer.getEntityData().getByte("SkullOwner") == 3) { // Player skull type
+            // Cancel the rendering of player skulls
+            event.setCanceled(true);
         }
     }
 
@@ -140,6 +166,8 @@ public class PlayerDiguiser {
                         RenderUtil.draw3DStringWithShadow(original.getPositionVector().add(new Vec3(0,2.3,0)), ChatFormatting.YELLOW+""+ChatFormatting.BOLD+"CLICK", 0xFFFFFF, event.partialTicks);
                     } else if(skyblockfeatures.config.DisguisePlayersAs == 3) {
                         RenderUtil.draw3DStringWithShadow(original.getPositionVector().add(new Vec3(0,2.3,0)), originalName, 0xFFFFFF, event.partialTicks);
+                    } else if(skyblockfeatures.config.DisguisePlayersAs == 8) {
+                        RenderUtil.draw3DStringWithShadow(original.getPositionVector().add(new Vec3(0,1.8,0)), originalName, 0xFFFFFF, event.partialTicks);
                     } else if(skyblockfeatures.config.DisguisePlayersAs == 5) {
                         RenderUtil.draw3DStringWithShadow(original.getPositionVector().add(new Vec3(0,3.3,0)), originalName, 0xFFFFFF, event.partialTicks);
                     } else if(skyblockfeatures.config.DisguisePlayersAs == 7) {
@@ -153,4 +181,6 @@ public class PlayerDiguiser {
             // TODO: handle exception
         }
     }
+
+
 }

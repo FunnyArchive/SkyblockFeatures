@@ -7,6 +7,7 @@ import org.lwjgl.input.Keyboard;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import jline.Terminal;
 import mrfast.skyblockfeatures.skyblockfeatures;
 import mrfast.skyblockfeatures.commands.TerminalCommand;
 import mrfast.skyblockfeatures.commands.getNbtCommand;
@@ -56,40 +57,6 @@ public class HideGlass {
     // Just cuz i think it looks better idk
     @SubscribeEvent
     public void onTooltipLow(ItemTooltipEvent event) {
-        if(event.itemStack.getItem() instanceof ItemArmor && !Utils.inSkyblock) {
-            ItemArmor a = (ItemArmor) event.itemStack.getItem();
-            
-            for(int i = 0; i < event.toolTip.size(); i++) {
-                String line = Utils.cleanColour(event.toolTip.get(i));
-                if(line.contains("ility")) {
-                    event.toolTip.add(i+1, ChatFormatting.GRAY+"When equipped:");
-                    if(a.getArmorMaterial() == ArmorMaterial.DIAMOND) {
-                        event.toolTip.add(i+2, ChatFormatting.BLUE+" +2 Armor Toughness");
-                        event.toolTip.add(i+3, ChatFormatting.BLUE+" +"+a.damageReduceAmount+" Armor");
-                        event.toolTip.add(i+4, event.toolTip.get(i));
-                        event.toolTip.set(i, "");
-                        return;
-                    }
-                    event.toolTip.add(i+2, ChatFormatting.BLUE+" +"+a.damageReduceAmount+" Armor");
-                    event.toolTip.add(i+3, event.toolTip.get(i));
-                    event.toolTip.set(i, "");
-                    return;
-                } else if(line.contains("minecraft")) {
-                    event.toolTip.add(i+1, ChatFormatting.GRAY+"When equipped:");
-                    if(a.getArmorMaterial() == ArmorMaterial.DIAMOND) {
-                        event.toolTip.add(i+2, ChatFormatting.BLUE+" +2 Armor Toughness");
-                        event.toolTip.add(i+3, ChatFormatting.BLUE+" +"+a.damageReduceAmount+" Armor");
-                        event.toolTip.add(i+4, event.toolTip.get(i));
-                        event.toolTip.set(i, "");
-                        return;
-                    }
-                    event.toolTip.add(i+2, ChatFormatting.BLUE+" +"+a.damageReduceAmount+" Armor");
-                    event.toolTip.add(i+3, event.toolTip.get(i));
-                    event.toolTip.set(i, "");
-                    return;
-                }
-            }
-        }
         if(Utils.inSkyblock && skyblockfeatures.config.showSkyblockID) {
             for(int i = 0; i < event.toolTip.size(); i++) {
                 String line = Utils.cleanColour(event.toolTip.get(i));
@@ -138,7 +105,7 @@ public class HideGlass {
                         if(event.item.getUnlocalizedName().contains("red")) {
                             Utils.playLoudSound("note.pling", 2);
                             TerminalCommand.clicked.add(event.slot.slotNumber);
-                            event.inventory.setInventorySlotContents(event.slot.slotNumber, new ItemStack(Blocks.stained_glass_pane, 1, 5).setStackDisplayName(" "));
+                            event.inventory.setInventorySlotContents(event.slot.slotNumber, new ItemStack(Blocks.stained_glass_pane, 1, 5).setStackDisplayName(ChatFormatting.RESET+""));
                             if(TerminalCommand.clicked.size() == 14) {
                                 Utils.SendMessage(ChatFormatting.GREEN+"You completed 'Correct all the panes!' in "+(Math.floor((System.currentTimeMillis()-TerminalCommand.start)/10)/100)+"s");
                                 mc.thePlayer.closeScreen();
@@ -146,6 +113,11 @@ public class HideGlass {
                             if(TerminalCommand.start == 0) {
                                 TerminalCommand.start = System.currentTimeMillis();
                             }
+                        }
+                        if(event.item.getUnlocalizedName().contains("lime") && TerminalCommand.clicked.contains(event.slot.slotNumber)) {
+                            Utils.playLoudSound("note.pling", 2);
+                            TerminalCommand.clicked.remove(TerminalCommand.clicked.indexOf(event.slot.slotNumber));
+                            event.inventory.setInventorySlotContents(event.slot.slotNumber, new ItemStack(Blocks.stained_glass_pane, 1, 14).setStackDisplayName(ChatFormatting.RESET+""));
                         }
                     }
                 }
@@ -155,7 +127,7 @@ public class HideGlass {
                     if(event.item.getUnlocalizedName().contains("white")) {
                         Utils.playLoudSound("note.pling", 2);
                         TerminalCommand.clicked.add(event.slot.slotNumber);
-                        event.inventory.setInventorySlotContents(event.slot.slotNumber, new ItemStack(Blocks.stained_glass_pane, 1, 5).setStackDisplayName(" "));
+                        event.inventory.setInventorySlotContents(event.slot.slotNumber, new ItemStack(Blocks.stained_glass_pane, 1, 5).setStackDisplayName(ChatFormatting.RESET+""));
                         if(TerminalCommand.clicked.size() == TerminalCommand.mazeSlots.length) {
                             Utils.SendMessage(ChatFormatting.GREEN+"You completed 'Maze!' in "+(Math.floor((System.currentTimeMillis()-TerminalCommand.start)/10)/100)+"s");
                             mc.thePlayer.closeScreen();
@@ -167,6 +139,24 @@ public class HideGlass {
                     
                         TerminalCommand.mazeIndex++;
                     }
+                }
+            }
+            if(event.inventoryName.contains("Click in order") && event.item.getUnlocalizedName().contains("red")) {
+                if(event.item.stackSize==TerminalCommand.orderNumber) {
+                    if(TerminalCommand.orderNumber==14) {
+                        Utils.SendMessage(ChatFormatting.GREEN+"You completed 'Click in order!' in "+(Math.floor((System.currentTimeMillis()-TerminalCommand.start)/10)/100)+"s");
+                        mc.thePlayer.closeScreen();
+                        TerminalCommand.orderNumber = 1;
+                    }
+				    event.inventory.setInventorySlotContents(event.slot.slotNumber, new ItemStack(Blocks.stained_glass_pane, event.item.stackSize, 5).setStackDisplayName(ChatFormatting.RESET+""));
+                    Utils.playLoudSound("note.pling", 2);
+                    TerminalCommand.orderNumber++;
+                    if(TerminalCommand.start == 0) {
+                        TerminalCommand.start = System.currentTimeMillis();
+                    }
+                } else {
+                    mc.thePlayer.closeScreen();
+                    Utils.SendMessage(ChatFormatting.RED+"You failed 'Click in order!'");
                 }
             }
         }

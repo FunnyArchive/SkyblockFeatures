@@ -38,6 +38,7 @@ public class TrevorHelper {
     boolean animalKilled = false;
     @SubscribeEvent
     public void onWorldChange(WorldEvent.Load event) {
+        if(!skyblockfeatures.config.trevorHelper) return;
         tracking = null;
         biomeLocations.put("Settlement", new BlockPos(167,76,-377));
         biomeLocations.put("Gorge", new BlockPos(282,46,-488));
@@ -54,7 +55,7 @@ public class TrevorHelper {
         if(!SBInfo.getInstance().getLocation().contains("farming_1")) return;
 
         String msg = event.message.getUnformattedText();
-        if(msg.contains("[NPC] Trevor The Trapper")) {
+        if(msg.contains("[NPC] Trevor")) {
             tracking = null;
             animalKilled = false;
         }

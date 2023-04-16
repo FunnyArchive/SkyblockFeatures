@@ -137,7 +137,7 @@ public class MinionOverlay {
     }
     @SubscribeEvent
     public void onSlotClick(SlotClickEvent event) {
-        if(event.gui instanceof GuiChest) {
+        if(event.gui instanceof GuiChest && skyblockfeatures.config.minionOverlay) {
             GuiChest gui = (GuiChest) event.gui;
             ContainerChest chest = (ContainerChest) gui.inventorySlots;
             IInventory inv = chest.getLowerChestInventory();
@@ -161,7 +161,7 @@ public class MinionOverlay {
     Entity closestMinion = null;
     @SubscribeEvent
     public void onRecievePacket(RenderWorldLastEvent event) {
-        if(Utils.inSkyblock && SBInfo.getInstance().location.contains("Your Island")) {
+        if(Utils.inSkyblock && SBInfo.getInstance().location.contains("Your Island") && skyblockfeatures.config.minionOverlay) {
             for(Entity e : Utils.GetMC().theWorld.loadedEntityList){
                 if(e instanceof EntityArmorStand) {
                     if(isMinion((EntityArmorStand) e)) {

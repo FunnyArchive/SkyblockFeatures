@@ -20,7 +20,6 @@ import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
@@ -28,7 +27,6 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
 public class AccessoriesCommand extends CommandBase {
@@ -65,8 +63,6 @@ public class AccessoriesCommand extends CommandBase {
 		InventoryBasic TargetInventory = new InventoryBasic(title, true, 54);
 
 		new Thread(() -> {
-			EntityPlayer player = (EntityPlayer) arg0;
-			
 			// Check key
 			String key = skyblockfeatures.config.apiKey;
 			if (key.equals("")) {

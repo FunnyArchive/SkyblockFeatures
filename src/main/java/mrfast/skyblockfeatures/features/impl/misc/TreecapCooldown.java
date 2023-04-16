@@ -25,9 +25,7 @@ public class TreecapCooldown {
     
     @SubscribeEvent
     public void onPlayerInteractEvent(BlockChangeEvent event) {
-        if(!Utils.inSkyblock || mc.thePlayer.getHeldItem() == null) { 
-            return; 
-        }
+        if(!Utils.inSkyblock || mc.thePlayer.getHeldItem() == null || !skyblockfeatures.config.treecapitatorCooldown) return; 
 
         if(mc.thePlayer.getHeldItem().getDisplayName().toLowerCase().contains("treecapitator") && event.update.getBlock() instanceof BlockAir && event.old.getBlock() instanceof BlockLog && Utils.GetMC().thePlayer.getDistanceSq(event.pos) < 10) {
             if(ready) {
@@ -39,8 +37,7 @@ public class TreecapCooldown {
 
     @SubscribeEvent
 	public void onTick(RenderTickEvent event) {
-		if(!Utils.inSkyblock || !skyblockfeatures.config.treecapitatorCooldown) { return; }
-		if (Minecraft.getMinecraft().currentScreen instanceof GuiScreen) return;
+		if(!Utils.inSkyblock || !skyblockfeatures.config.treecapitatorCooldown || Minecraft.getMinecraft().currentScreen instanceof GuiScreen) return;
 		
 		ItemStack item = Minecraft.getMinecraft().thePlayer.getHeldItem();
 		

@@ -12,7 +12,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StringUtils;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -75,6 +74,7 @@ public class ChronomotronSolver {
 
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event) {
+        if(!skyblockfeatures.config.enchantingSolvers) return;
         lastChronomatronRound = 0;
         chronomatronPattern.clear();
         chronomatronMouseClicks = 0;
