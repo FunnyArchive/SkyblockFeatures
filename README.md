@@ -34,6 +34,7 @@
 - Type '/api new' into chat to set a new api key
 - Type '/sbf' for config
 
+<img src='https://i.imgur.com/VIdpwua.jpg'/>
 <h1 align="center">Top Feature List</h1>
 
 <details>
